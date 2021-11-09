@@ -12,13 +12,12 @@
         margin-top: 10px;
         cursor: pointer;
         width: max-content;
-        padding: 4px 25px 4px 5px;
         border-radius: 32px;
-        transition: background .15s ease;
+        transition: all .15s ease;
         
         &:hover {
-            // background: gray(g5);
             background: rgba($pbc, .3);
+            padding: 4px 25px 4px 5px;
         }
 
         .add-newnote {
