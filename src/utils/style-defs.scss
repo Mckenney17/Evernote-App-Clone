@@ -1,0 +1,73 @@
+$grays: (
+    "g1": #1a1a1a,
+    "g2": #262626,
+    "g3": #313131,
+    "g4": #333333,
+    "g5": #404040,
+    "g6": #4d4d4d,
+    "g7": #666666,
+    "g8": #737373,
+    "g9": #767676,
+    "g10": #777777,
+    "g11": #7a8083,
+    "g12": #a6a6a6,
+    "g13": #b3b3b3,
+    "g14": #cccccc,
+    "g15": #d9d9d9,
+    "g16": #e6e6e6,
+    "g17": #ededed,
+    "g18": #f2f2f2,
+    "g19": #f8f8f8,
+);
+
+@function gray($key) {
+    @return map-get($grays, $key)
+};
+
+$type-scale: (
+    "ts9": 9.52px,
+    "ts10": 10.16px,
+    "ts10l": 10.84px,
+    "ts11": 11.57px,
+    "ts12": 12.34px,
+    "ts13": 13.17px,
+    "ts14": 14.05px,
+    "ts15": 15px,
+    "ts16": 16px,
+    "ts17": 17.07px,
+    "ts18": 18.22px,
+    "ts19": 19.44px,
+    "ts20": 20.74px,
+    "ts22": 22.13px,
+    "ts23": 23.61px,
+);
+
+@function tscale($key) {
+    @return map-get($type-scale, $key)
+};
+
+$fweight: (
+    "medium": 500,
+    "semibold": 600,
+    "bold": 700,
+);
+
+@function weight($key) {
+    @return map-get($fweight, $key)
+};
+
+@mixin flex($jc:null, $ai:null, $fd:null, $fw:null) {
+    display: flex;
+    justify-content: $jc;
+    align-items: $ai;
+    flex-direction: $fd;
+    flex-wrap: $fw;
+};
+
+@mixin pos($type, $t:null, $r:null, $b:null, $l:null) {
+    position: $type;
+    top: $t;
+    right: $r;
+    bottom: $b;
+    left: $l;
+};
