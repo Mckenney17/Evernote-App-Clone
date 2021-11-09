@@ -7,30 +7,4 @@
         padding: 20px 10px 0;
     }
 
-    .input-wrapper {
-        @include flex($ai: center);
-        width: 100%;
-        height: 40px;
-        border-radius: 32px;
-        background: gray(g5);
-        padding: 0 10px;
-    }
-
-    .search-icon {
-        color: gray(g15);
-        max-height: 24px;
-    }
-
-    input {
-        background:transparent;
-        width: 100%;
-        margin-left: 3px;
-        height: 80%;
-        font-size: tscale(ts14);
-        line-height: 14px;
-        
-        &::placeholder {
-            color: lighten(gray(g5), 35);
-        }
-    }
 }
