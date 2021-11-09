@@ -3,4 +3,11 @@
 .notelist {
     background: gray(g19);
     border-right: 1px solid gray(g16);
+    position: relative;
+
+    span.resizer {
+        @include pos(absolute, 0, -0.5%, 0, 99.5%);
+        opacity: 0;
+        cursor: e-resize;
+    }
 }
