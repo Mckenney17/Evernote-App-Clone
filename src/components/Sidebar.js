@@ -1,8 +1,9 @@
 import React from 'react'
+import './Sidebar.scss'
 
 function Sidebar() {
     return (
-        <div>
+        <div className="sidebar">
             
         </div>
     )

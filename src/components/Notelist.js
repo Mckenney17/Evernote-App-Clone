@@ -1,8 +1,9 @@
 import React from 'react'
+import './Notelist.scss'
 
 function Notelist() {
     return (
-        <div>
+        <div className="notelist">
             
         </div>
     )

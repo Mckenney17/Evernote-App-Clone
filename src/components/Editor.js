@@ -2,7 +2,7 @@ import React from 'react'
 
 function Editor() {
     return (
-        <div>
+        <div className="editor">
             
         </div>
     )
