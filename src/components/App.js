@@ -12,7 +12,7 @@ import Sidebar from './Sidebar'
 function App() {
     const [activeTab, setActiveTab] = useState('Notes');
     const [notelistView, setNotelistView] = useState({ view: 'Snippets', checks: ['Show images', 'Show body text'] })
-    const [notes, setNotes] = useState([]);
+    const [notes, setNotes] = useState([{ title: 'Untitled', bodyText: 'Nothing here...', createdAt: new Date().valueOf(), updatedAt: new Date().valueOf() }]);
 
     const updateNotes = (updatedNotes) => {
         setNotes(updatedNotes)
