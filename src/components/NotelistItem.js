@@ -3,10 +3,10 @@ import './NotelistItem.scss'
 
 function NotelistItem({ title, bodyText, updatedAt }) {
     return (
-        <div className="notelist-item">
+        <div className="notelist-item active">
             <h4>{title}</h4>
             <p>{bodyText}</p>
-            <span>{}</span>
+            <span>5 minutes ago</span>
         </div>
     )
 }

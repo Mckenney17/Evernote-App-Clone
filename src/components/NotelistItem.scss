@@ -1,0 +1,31 @@
+@import '../utils/style-defs';
+
+.notelist-item {
+    padding: 15px 20px 20px;
+    border-bottom: 1px solid gray(g16);
+    cursor: pointer;
+    &:hover {
+        background: #fff;
+    }
+    &.active {
+        border: 2px solid $notelist-item-border;
+        background: #fff;
+    }
+    h4 {
+        color: gray(g4);
+        font-size: tscale(ts14);
+        font-weight: weight(bold);
+    }
+    p, span {
+        color: gray(g8);
+    }
+    p {
+        height: 50px;
+        font-size: tscale(ts13);
+        margin-top: 5px;
+    }
+    span {
+        display: block;
+        font-size: tscale(ts10l);
+    }
+}

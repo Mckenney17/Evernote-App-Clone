@@ -1,4 +1,4 @@
-const calcTimeElapsedHumanized = (time) => {
+const calcTimeElapsedHumanized = (time) => { // time: Number
     const elapsed = (Date.now() - time) / 1000
 
     if (elapsed < 60) return 'a few seconds ago'
@@ -21,6 +21,7 @@ const calcTimeElapsedHumanized = (time) => {
         return `${calcMonths} month${calcMonths > 1 ? 's' : ''} ago`
     }
     const calcYears = Math.trunc(elapsed / 31449600)
-    return `${calcYears} year${calcYears > 1 ? 's' : ''} ago`
-    
+    return `${calcYears} year${calcYears > 1 ? 's' : ''} ago`    
 }
+
+export default calcTimeElapsedHumanized
