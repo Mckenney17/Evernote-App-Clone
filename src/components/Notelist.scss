@@ -11,31 +11,50 @@
     }
 
     header {
-        padding: 20px 20px 0;
+        padding: 20px 20px 10px;
+        border-bottom: 1px solid gray(g16);
         .title {
             color: gray(g4);
             font-size: tscale(ts20);
+            margin-left: -2px;
             @include flex($ai: center);
             span:first-child {
                 max-height: 24px;
                 margin-right: 5px;
             }
-        }
-        svg {
-            transform: scale(1.5);
-            transform-origin: center;
+            svg {
+                transform: scale(1.5);
+                transform-origin: center;
+            }
         }
     }
 
     .subheader {
+        margin-top: 15px;
         @include flex(space-between, center);
 
         .notelist-count {
             color: gray(g7);
+            font-size: tscale(ts14);
         }
 
         .notelist-actions {
+            @include flex($ai: center);
+            width: max-content;
+        }
+        
+        .notelist-actions button {
             color: gray(g8);
+            display: block;
+            max-height: 24px;
+            margin-left: 3px;
+            cursor: pointer;
+            border-radius: 3px;
+            background: transparent;
+
+            &.active, &:hover {
+                background: gray(g18);
+            }
         }
     }
 }

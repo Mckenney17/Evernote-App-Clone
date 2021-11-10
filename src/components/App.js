@@ -11,7 +11,7 @@ import Sidebar from './Sidebar'
 
 function App() {
     const [activeTab, setActiveTab] = useState('Notes');
-    const [notelistView, setNotelistView] = useState('Snippets')
+    const [notelistView, setNotelistView] = useState({ view: 'Snippets', checks: ['Show images', 'Show body text'] })
 
     return (
         <AppContext.Provider value={{activeTab, setActiveTab, notelistView, setNotelistView}}>
