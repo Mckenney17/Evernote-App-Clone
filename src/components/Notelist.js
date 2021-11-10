@@ -1,10 +1,12 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import AppContext from '../utils/AppContext'
 import './Notelist.scss'
 import NotelistItem from './NotelistItem'
+import SortActionCard from './SortActionCard'
 
 function Notelist() {
     const { activeTab, notelistView, notes } = useContext(AppContext)
+    const [sortActions, setSortActions] = useState({ sortBy: 'Date Updated', order: 'desc', snig: true })
 
     useEffect(() => {
         const resize = (ev) => {
@@ -45,6 +47,7 @@ function Notelist() {
                             ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M4 18a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12zM5.25 6A.75.75 0 016 5.25h12a.75.75 0 01.75.75v.95H5.25V6zm0 2.2v1.705h13.5V8.2H5.25zm0 2.955h13.5V18a.75.75 0 01-.75.75H6a.75.75 0 01-.75-.75v-6.845z" fill="currentColor"></path></svg> : null}
                         </button>
                     </div>
+                    <SortActionCard sortActions={sortActions} setSortActions={setSortActions} />
                 </div>
             </header>
             <section className={`notelist-body ${!notes.length ? 'empty' : ''}`}>

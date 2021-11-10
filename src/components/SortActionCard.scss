@@ -1,0 +1,48 @@
+@import '../utils/style-defs';
+
+.sort-action-card {
+    @include pos(absolute, 30px, $r: -148px);
+    width: 200px;
+    background: #fff;
+    z-index: 2;
+    border-radius: 3px;
+    box-shadow: 0 0 7px rgba(#000, .3);
+
+    h5 {
+        padding: 15px 15px 5px;
+        font-weight: weight(bold);
+        font-size: tscale(ts12);
+        color: gray(g12);
+    }
+
+    li button, button.snig-option {
+        background: transparent;
+        width: 100%;
+        @include flex($ai: center);
+        color: gray(g4);
+        padding: 5px 15px;
+        font-weight: weight(bold);
+
+        &:hover {
+            background: gray(g18);
+        }
+
+        .option-icon {
+            opacity: 0;
+            max-height: 24px;
+        }
+        
+        .option-text {
+            font-size: tscale(ts13);
+            margin-left: 5px;
+        }
+    }
+    li.checked span, button.snig-option.checked span {
+        color: $sbc;
+        opacity: 1;
+    }
+    button.snig-option {
+        border-top: 1px solid gray(g18);
+        padding: 10px 0 12px 15px;
+    }
+}

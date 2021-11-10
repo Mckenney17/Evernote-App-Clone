@@ -32,6 +32,7 @@
     }
 
     .subheader {
+        position: relative;
         margin-top: 15px;
         @include flex(space-between, center);
 
