@@ -4,9 +4,8 @@
     background: gray(g1);
     position: relative;
     
-    span.resizer {
-        @include pos(absolute, 0, -0.5%, 0, 99.5%);
-        opacity: 0;
+    &-resizer {
+        @include pos(absolute, 0, -1%, 0, 99%);
         cursor: e-resize;
     }
 
@@ -55,12 +54,22 @@
         a {
             width: 100%;
             @include flex($ai: center);
-            margin-bottom: 5px;
             padding: 6px 20px;
             transition: background .15s ease;
 
             &:hover {
                 background: gray(g4);
+            }
+        }
+        a.active {
+            background: gray(g5);
+
+            span:first-child {
+                color: gray(g14);
+            }
+
+            span:last-child {
+                color: #fff;
             }
         }
 

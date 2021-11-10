@@ -5,9 +5,37 @@
     border-right: 1px solid gray(g16);
     position: relative;
 
-    span.resizer {
-        @include pos(absolute, 0, -0.5%, 0, 99.5%);
-        opacity: 0;
+    &-resizer {
+        @include pos(absolute, 0, -1%, 0, 99%);
         cursor: e-resize;
+    }
+
+    header {
+        padding: 20px 20px 0;
+        .title {
+            color: gray(g4);
+            font-size: tscale(ts20);
+            @include flex($ai: center);
+            span:first-child {
+                max-height: 24px;
+                margin-right: 5px;
+            }
+        }
+        svg {
+            transform: scale(1.5);
+            transform-origin: center;
+        }
+    }
+
+    .subheader {
+        @include flex(space-between, center);
+
+        .notelist-count {
+            color: gray(g7);
+        }
+
+        .notelist-actions {
+            color: gray(g8);
+        }
     }
 }
