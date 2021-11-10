@@ -4,6 +4,7 @@
     background: gray(g19);
     border-right: 1px solid gray(g16);
     position: relative;
+    @include flex($fd: column);
 
     &-resizer {
         @include pos(absolute, 0, -1%, 0, 99%);
@@ -16,6 +17,7 @@
         .title {
             color: gray(g4);
             font-size: tscale(ts20);
+            font-weight: weight(semibold);
             margin-left: -2px;
             @include flex($ai: center);
             span:first-child {
@@ -35,7 +37,7 @@
 
         .notelist-count {
             color: gray(g7);
-            font-size: tscale(ts14);
+            font-size: tscale(ts12);
         }
 
         .notelist-actions {
@@ -54,6 +56,36 @@
 
             &.active, &:hover {
                 background: gray(g18);
+            }
+        }
+    }
+
+    .notelist-body {
+        flex: 1;
+        &.empty {
+            @include flex(center, center);
+        }
+        .notelist-empty-state {
+            @include flex(center, center, column);
+
+            .intro {
+                font-weight: weight(bold);
+                margin: 15px 0;
+            
+
+            .info {
+                text-align: center;
+                color: gray(g8);
+                max-width: 300px;
+                line-height: 22px;
+                font-size: tscale(ts15);
+            }
+
+            .info a {
+                color: $pbc;
+                &:hover {
+                    text-decoration: underline;
+                }
             }
         }
     }

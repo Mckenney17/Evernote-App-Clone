@@ -12,9 +12,14 @@ import Sidebar from './Sidebar'
 function App() {
     const [activeTab, setActiveTab] = useState('Notes');
     const [notelistView, setNotelistView] = useState({ view: 'Snippets', checks: ['Show images', 'Show body text'] })
+    const [notes, setNotes] = useState([]);
+
+    const updateNotes = (updatedNotes) => {
+        setNotes(updatedNotes)
+    }
 
     return (
-        <AppContext.Provider value={{activeTab, setActiveTab, notelistView, setNotelistView}}>
+        <AppContext.Provider value={{ activeTab, setActiveTab, notelistView, setNotelistView, notes, updateNotes }}>
             <div className="app-wrapper">
                 <Sidebar />
                 <Notelist />
