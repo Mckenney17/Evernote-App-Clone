@@ -45,8 +45,8 @@ function NotelistViewActionCard({ viewActions, setViewActions }) {
             <React.Fragment>
             <h5 className="sub-options-h">COLUMNS</h5>
             <ul>
-                {[['Date updated', viewActions.showImages],
-                ['Date created', viewActions.showBodyText]].map(([optionText, optionValidate]) => (
+                {[['Date updated', viewActions.dateUpdated],
+                ['Date created', viewActions.dateCreated]].map(([optionText, optionValidate]) => (
                 <li key={optionText} className={optionValidate ? 'checked' : ''}>
                     <button>
                         <span className="check-mark-icon">
