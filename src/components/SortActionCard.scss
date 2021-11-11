@@ -1,12 +1,13 @@
 @import '../utils/style-defs';
 
 .sort-action-card {
-    @include pos(absolute, 30px, $r: -148px);
+    @include pos(absolute, 20px, $r: -148px);
     width: 200px;
     background: #fff;
     z-index: 2;
     border-radius: 3px;
     box-shadow: 0 0 7px rgba(#000, .3);
+    opacity: 0;
 
     h5 {
         padding: 15px 15px 5px;
@@ -31,7 +32,7 @@
             opacity: 0;
             max-height: 24px;
         }
-        
+
         .option-text {
             font-size: tscale(ts13);
             margin-left: 5px;
