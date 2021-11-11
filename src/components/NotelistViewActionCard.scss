@@ -1,7 +1,7 @@
 @import '../utils/style-defs';
 
-.sort-action-card {
-    @include pos(absolute, 30px, $r: -148px);
+.notelist-view-action-card {
+    @include pos(absolute, 30px, $r: -177px);
     width: 200px;
     background: #fff;
     z-index: 2;
@@ -14,8 +14,11 @@
         font-size: tscale(ts12);
         color: gray(g12);
     }
+    h5.sub-options-h {
+        border-top: 1px solid gray(g18);
+    }
 
-    li button, button.snig-option {
+    li button {
         background: transparent;
         width: 100%;
         @include flex($ai: center);
@@ -27,22 +30,23 @@
             background: gray(g18);
         }
 
-        .order-icon, .check-mark-icon {
+        .check-mark-icon {
             opacity: 0;
             max-height: 24px;
         }
         
         .option-text {
+            max-height: 24px;
+            @include flex($ai: center);
             font-size: tscale(ts13);
             margin-left: 5px;
         }
+        .option-text span {
+            margin-left: 3px;
+        }
     }
-    li.checked span, button.snig-option.checked span {
+    li.checked span {
         color: $sbc;
         opacity: 1;
-    }
-    button.snig-option {
-        border-top: 1px solid gray(g18);
-        padding: 10px 0 12px 15px;
     }
 }
