@@ -8,7 +8,7 @@ import SortActionCard from './SortActionCard'
 function Notelist() {
     const { activeTab, notelistView, notes } = useContext(AppContext)
     const [sortActions, setSortActions] = useState({ sortBy: 'Date Updated', order: 'desc', snig: true })
-    const [viewActions, setViewActions] = useState({ view: 'Snippets', showImages: true, showBodyText: true, dateUpdated: true, dateCreated: false })
+    const [viewActions, setViewActions] = useState({ view: 'Side list', showImages: true, showBodyText: true, dateUpdated: true, dateCreated: false })
 
     useEffect(() => {
         const resize = (ev) => {
