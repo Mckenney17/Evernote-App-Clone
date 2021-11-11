@@ -1,13 +1,14 @@
 @import '../utils/style-defs';
 
 .notelist-view-action-card {
-    @include pos(absolute, 30px, $r: -177px);
+    @include pos(absolute, 20px, $r: -177px);
     width: 200px;
     background: #fff;
     z-index: 2;
     border-radius: 3px;
     box-shadow: 0 0 7px rgba(#000, .3);
     padding-bottom: 10px;
+    opacity: 0;
 
     h5 {
         padding: 15px 15px 5px;

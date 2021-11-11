@@ -1,9 +1,10 @@
 import React from 'react'
+import { motion } from 'framer-motion'
 import './SortActionCard.scss'
 
 function SortActionCard({ sortActions, setSortActions }) {
     return (
-        <div className="sort-action-card">
+        <motion.div className="sort-action-card" animate={{ y: 10, opacity: 1, type: 'tween' }}>
             <h5>SORT BY</h5>
             <ul>
                 {['Title', 'Date Updated', 'Date Created'].map((optionText) => (
@@ -23,7 +24,7 @@ function SortActionCard({ sortActions, setSortActions }) {
                 </span>
                 <span className="option-text">Show notes in groups</span>
             </button>
-        </div>
+        </motion.div>
     )
 }
 

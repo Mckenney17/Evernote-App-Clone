@@ -1,9 +1,18 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
+import { motion } from 'framer-motion'
 import './NotelistViewActionCard.scss'
 
-function NotelistViewActionCard({ viewActions, setViewActions }) {
+function NotelistViewActionCard({ viewActions, setViewActions, setActiveAction }) {
+    const cardRef = useRef(null)
+    useEffect(() => {
+        document.addEventListener('click', (ev) => {
+            if (!ev.path.includes(cardRef.current)) {
+                setActiveAction(null)
+            }
+        })
+    }, [setActiveAction])
     return (
-        <div className="notelist-view-action-card">
+        <motion.div ref={cardRef} className="notelist-view-action-card" animate={{ y: 10, opacity: 1, type: 'tween' }}>
         <h5>NOTE LIST VIEW</h5>
         <ul>
             {[['Cards', <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M12.375 8.92V5.25H9.437v3.67h2.938zm0 1.25H9.437v3.655h2.938V10.17zm0 4.905H9.437v3.675h2.938v-3.675zM6 20a2 2 0 01-2-2V6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6zm7.625-14.75H18a.75.75 0 01.75.75v12a.75.75 0 01-.75.75h-4.375V5.25zM5.25 8.92V6A.75.75 0 016 5.25h2.188v3.67H5.25zm0 1.25v3.655h2.938V10.17H5.25zm2.938 4.905H5.25V18c0 .414.336.75.75.75h2.188v-3.675z" fill="currentColor"></path></svg>],
@@ -59,7 +68,7 @@ function NotelistViewActionCard({ viewActions, setViewActions }) {
             </ul>
             </React.Fragment>
         )}
-        </div>
+        </motion.div>
     )
 }
 
