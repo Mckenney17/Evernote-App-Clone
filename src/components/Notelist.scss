@@ -62,6 +62,7 @@
     }
 
     .notelist-body {
+        overflow-y: auto;
         flex: 1;
         &.empty {
             @include flex(center, center);
@@ -93,7 +94,5 @@
     .notelist-body.cards-container {
         @include flex(space-evenly, flex-start, $fw: wrap);
         padding: 7.5px;
-        overflow-y: auto;
-        height: min-content;
     }
 }

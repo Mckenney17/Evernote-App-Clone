@@ -1,11 +1,12 @@
 @import '../utils/style-defs';
 
 .notelist-item {
-    height: 100px;
+    height: 110px;
     @include flex($fd: column);
     padding: 15px 20px 20px;
-    border-bottom: 1px solid gray(g16);
     cursor: pointer;
+    border: 2px solid transparent;
+    border-bottom: 1px solid gray(g16);
     &:hover {
         background: #fff;
     }
