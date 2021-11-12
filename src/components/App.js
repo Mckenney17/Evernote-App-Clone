@@ -11,15 +11,18 @@ import Sidebar from './Sidebar'
 
 function App() {
     const [activeTab, setActiveTab] = useState('Notes');
-    const [notelistView, setNotelistView] = useState({ view: 'Snippets', checks: ['Show images', 'Show body text'] })
-    const [notes, setNotes] = useState([{ id: '53hdf82d', title: 'Untitled', bodyText: 'Nothing here...', createdAt: new Date().valueOf(), updatedAt: new Date().valueOf() }]);
+    const [notes, setNotes] = useState([
+        { id: '1', title: 'Untitled', bodyText: 'Nothing here...', createdAt: new Date().valueOf(), updatedAt: new Date().valueOf() },
+        { id: '2', title: 'Untitled', bodyText: 'Something here...', createdAt: new Date().valueOf() + 2, updatedAt: new Date().valueOf() + 1 },
+        { id: '3', title: 'Untitled', bodyText: 'Somenothing here...', createdAt: new Date().valueOf() + 4, updatedAt: new Date().valueOf() + 2 },
+    ]);
     const [activeNote, setActiveNote] = useState(notes.find((obj) => obj.updatedAt === Math.max(...notes.map((obj) => obj.updatedAt))).id)
     const updateNotes = (updatedNotes) => {
         setNotes(updatedNotes)
     }
 
     return (
-        <AppContext.Provider value={{ activeTab, setActiveTab, notelistView, setNotelistView, notes, updateNotes, activeNote, setActiveNote }}>
+        <AppContext.Provider value={{ activeTab, setActiveTab, notes, updateNotes, activeNote, setActiveNote }}>
             <div className="app-wrapper">
                 <Sidebar />
                 <Notelist />

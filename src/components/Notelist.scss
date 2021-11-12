@@ -90,8 +90,10 @@
             }
         }
     }
-}
-
-.notelist.cards-container {
-    display: grid;
+    .notelist-body.cards-container {
+        @include flex(space-evenly, flex-start, $fw: wrap);
+        padding: 7.5px;
+        overflow-y: auto;
+        height: min-content;
+    }
 }
