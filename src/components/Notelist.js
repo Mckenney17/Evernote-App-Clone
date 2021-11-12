@@ -8,7 +8,7 @@ import SortActionCard from './SortActionCard'
 function Notelist() {
     const { activeTab, notelistView, notes } = useContext(AppContext)
     const [sortActions, setSortActions] = useState({ sortBy: 'Date Updated', order: 'desc', snig: true })
-    const [viewActions, setViewActions] = useState({ view: 'Side list', showImages: true, showBodyText: true, dateUpdated: true, dateCreated: false })
+    const [viewActions, setViewActions] = useState({ view: 'Cards', showImages: true, showBodyText: true, dateUpdated: true, dateCreated: false })
     const [activeAction, setActiveAction] = useState(null)
     const sortActionBtnRef = useRef(null)
     const viewActionBtnRef = useRef(null)
@@ -57,9 +57,9 @@ function Notelist() {
                     ? <NotelistViewActionCard viewActions={viewActions} setViewActions={setViewActions} setActiveAction={setActiveAction} sortActionBtn={sortActionBtnRef.current} /> : null}
                 </div>
             </header>
-            <section className={`notelist-body ${!notes.length ? 'empty' : ''}`}>
+            <section className={`notelist-body ${viewActions.view.toLowerCase().replaceAll(' ', '-')}-container ${!notes.length ? 'empty' : ''}`}>
                 {notes.length ?
-                    notes.map(({ id, title, bodyText, updatedAt, createdAt }) => <NotelistItem key={createdAt} id={id} title={title} bodyText={bodyText} updatedAt={updatedAt} /> ) : (
+                    notes.map(({ id, title, bodyText, updatedAt, createdAt }) => <NotelistItem viewActions={viewActions} key={createdAt} id={id} title={title} bodyText={bodyText} updatedAt={updatedAt} /> ) : (
                     // work on snig here
                     <div className="notelist-empty-state">
                         <span className="write-note-icon">
