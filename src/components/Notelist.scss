@@ -14,16 +14,19 @@
     header {
         padding: 20px 20px 10px;
         border-bottom: 1px solid gray(g16);
+
         .title {
             color: gray(g4);
             font-size: tscale(ts20);
             font-weight: weight(semibold);
             margin-left: -2px;
             @include flex($ai: center);
+
             span:first-child {
                 max-height: 24px;
                 margin-right: 5px;
             }
+
             svg {
                 transform: scale(1.5);
                 transform-origin: center;
@@ -45,7 +48,7 @@
             @include flex($ai: center);
             width: max-content;
         }
-        
+
         .notelist-actions button {
             color: gray(g8);
             display: block;
@@ -55,7 +58,8 @@
             border-radius: 3px;
             background: transparent;
 
-            &.active, &:hover {
+            &.active,
+            &:hover {
                 background: gray(g18);
             }
         }
@@ -64,9 +68,11 @@
     .notelist-body {
         overflow-y: auto;
         flex: 1;
+
         &.empty {
             @include flex(center, center);
         }
+
         .notelist-empty-state {
             @include flex(center, center, column);
 
@@ -85,14 +91,21 @@
 
             .info a {
                 color: $pbc;
+
                 &:hover {
                     text-decoration: underline;
                 }
             }
         }
     }
+
     .notelist-body.cards-container {
         @include flex(space-evenly, flex-start, $fw: wrap);
         padding: 7.5px;
+    }
+
+    .notelist-body.side-list-container {
+        padding: 0;
+        
     }
 }

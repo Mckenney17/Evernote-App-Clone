@@ -8,7 +8,7 @@ import SortActionCard from './SortActionCard'
 function Notelist() {
     const { activeTab, notes } = useContext(AppContext)
     const [sortActions, setSortActions] = useState({ sortBy: 'Date Updated', order: 'desc', snig: true })
-    const [viewActions, setViewActions] = useState({ view: 'Snippets', showImages: true, showBodyText: true, dateUpdated: true, dateCreated: false })
+    const [viewActions, setViewActions] = useState({ view: 'Side list', showImages: true, showBodyText: true, dateUpdated: true, dateCreated: true })
     const [activeAction, setActiveAction] = useState(null)
     const sortActionBtnRef = useRef(null)
     const viewActionBtnRef = useRef(null)
@@ -58,6 +58,15 @@ function Notelist() {
                 </div>
             </header>
             <ul className={`notelist-body ${viewActions.view.toLowerCase().replaceAll(' ', '-')}-container ${!notes.length ? 'empty' : ''}`}>
+                {!['Cards', 'Snippets'].includes(viewActions.view) && (
+                    <div className="table-head">
+                        <div className="title-col">Title<span className="resizer title-col-resizer"></span></div>
+                        {['Date updated', 'Date created'].map((col, i, arr) => {
+                            const colProp = col.split(' ').map((str, i) => i === 0 ? str.toLowerCase() : str.replace(str[0], str[0].toUpperCase())).join('');
+                            return viewActions[colProp]  ? <div className={`${col.toLowerCase().replaceAll(' ', '-')}-col`}>{col}{i === arr.length - 1 ? '' : <span className={`resizer ${col.toLowerCase().replaceAll(' ', '-')}-col-resizer`}></span>}</div> : null
+                        })}
+                    </div>
+                )}
                 {notes.length ?
                     notes.map(({ id, title, bodyText, updatedAt, createdAt }) => <NotelistItem viewActions={viewActions} key={createdAt} id={id} title={title} bodyText={bodyText} updatedAt={updatedAt} /> ) : (
                     // work on snig here

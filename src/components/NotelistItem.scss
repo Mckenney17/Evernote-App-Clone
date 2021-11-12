@@ -49,3 +49,13 @@
         border-color: $notelist-item-border;
     }
 }
+
+.notelist-item.top-list {
+    width: 100%;
+    height: 25px;
+    border-bottom:  none;
+
+    &:nth-child(even) {
+        background: gray(g19);
+    }
+}
