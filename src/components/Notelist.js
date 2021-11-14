@@ -8,7 +8,7 @@ import SortActionCard from './SortActionCard'
 function Notelist() {
     const { activeTab, notes } = useContext(AppContext)
     const [sortActions, setSortActions] = useState({ sortBy: 'Date Updated', order: 'desc', snig: true })
-    const [viewActions, setViewActions] = useState({ view: 'Side list', showImages: true, showBodyText: true, dateUpdated: true, dateCreated: true })
+    const [viewActions, setViewActions] = useState({ view: 'Side list', showImages: true, showBodyText: true, dateUpdated: true, dateCreated: false })
     const [activeAction, setActiveAction] = useState(null)
     const sortActionBtnRef = useRef(null)
     const viewActionBtnRef = useRef(null)
@@ -60,15 +60,13 @@ function Notelist() {
             <ul className={`notelist-body ${viewActions.view.toLowerCase().replaceAll(' ', '-')}-container ${!notes.length ? 'empty' : ''}`}>
                 {!['Cards', 'Snippets'].includes(viewActions.view) && (
                     <div className="table-head">
-                        <div className="title-col">Title<span className="resizer title-col-resizer"></span></div>
-                        {['Date updated', 'Date created'].map((col, i, arr) => {
-                            const colProp = col.split(' ').map((str, i) => i === 0 ? str.toLowerCase() : str.replace(str[0], str[0].toUpperCase())).join('');
-                            return viewActions[colProp]  ? <div className={`${col.toLowerCase().replaceAll(' ', '-')}-col`}>{col}{i === arr.length - 1 ? '' : <span className={`resizer ${col.toLowerCase().replaceAll(' ', '-')}-col-resizer`}></span>}</div> : null
-                        })}
+                        <div className="title-col-th">Title<span className="resizer title-col-resizer"></span></div>
+                        {viewActions.dateUpdated && <div className="date-updated-col-th">UPDATED<span className="resizer date-updated-col-resizer"></span></div>}
+                        {viewActions.dateCreated && <div className="date-created-col-th">CREATED<span className="resizer date-created-col-resizer"></span></div>}
                     </div>
                 )}
                 {notes.length ?
-                    notes.map(({ id, title, bodyText, updatedAt, createdAt }) => <NotelistItem viewActions={viewActions} key={createdAt} id={id} title={title} bodyText={bodyText} updatedAt={updatedAt} /> ) : (
+                    notes.map(({ id, title, bodyText, updatedAt, createdAt }) => <NotelistItem viewActions={viewActions} key={createdAt} createdAt={createdAt} id={id} title={title} bodyText={bodyText} updatedAt={updatedAt} /> ) : (
                     // work on snig here
                     <li className="notelist-empty-state">
                         <span className="write-note-icon">
