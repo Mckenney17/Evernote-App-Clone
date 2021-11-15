@@ -7,7 +7,7 @@
     min-height: 100%;
     @include flex($fd: column);
 
-    &-resizer-ver {
+    &-resizer {
         @include pos(absolute, 0, -1%, 0, 99%);
         cursor: e-resize;
     }
@@ -147,7 +147,7 @@
     min-height: 200px;
     border-bottom: 1px solid gray(g16);
 
-    .notelist-resizer-hor {
+    .notelist-resizer {
         @include pos(absolute, 99%, 0, -1%, 0);
         cursor: n-resize;
         // display: none;

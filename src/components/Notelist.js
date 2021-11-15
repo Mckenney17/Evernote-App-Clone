@@ -23,44 +23,30 @@ function Notelist() {
 
     useEffect(() => {
         const resize = (ev) => {
-            document.querySelector('.notelist').style.width = `${ev.clientX - document.querySelector('.sidebar').getBoundingClientRect().width}px`
+            if (viewActions.view !== 'Top list') {
+                document.querySelector('.notelist').style.width = `${ev.clientX - document.querySelector('.sidebar').getBoundingClientRect().width}px`
+            } else {
+                document.querySelector('.notelist').style.height = `${ev.clientY}px`   
+            }
         }
         const triggerResize = () => {
             document.addEventListener('mousemove', resize, false)
         }
-        const resizerVer = document.querySelector('.notelist-resizer-ver')
+        const resizer = document.querySelector('.notelist-resizer')
 
-        if (!resizerVer) return
-        resizerVer.addEventListener('mousedown', triggerResize, false)
+        if (!resizer) return
+        resizer.addEventListener('mousedown', triggerResize, false)
         document.addEventListener('mouseup', () => {
             document.removeEventListener('mousemove', resize, false)
         }, false)
         return () => {
-            resizerVer.removeEventListener('mousedown', triggerResize)
-        }
-    }, [viewActions.view])
-    
-    useEffect(() => {
-        const resize = (ev) => {
-            document.querySelector('.notelist').style.height = `${ev.clientY}px`
-        }
-        const triggerResize = () => {
-            document.addEventListener('mousemove', resize, false)
-        }
-        const resizerHor = document.querySelector('.notelist-resizer-hor')
-        if (!resizerHor) return
-        resizerHor.addEventListener('mousedown', triggerResize, false)
-        document.addEventListener('mouseup', () => {
-            document.removeEventListener('mousemove', resize, false)
-        }, false)
-        return () => {
-            resizerHor.removeEventListener('mousedown', triggerResize, false)
+            resizer.removeEventListener('mousedown', triggerResize)
         }
     }, [viewActions.view])
 
     return (
         <div className={`notelist ${viewActions.view === 'Top list' ? 'top-list-view-active' : ''}`}>
-            <span className={`notelist-resizer-${viewActions.view !== 'Top list' ? 'ver' : 'hor'}`}></span>
+            <span className="notelist-resizer"></span>
             <header>
                 <div className="title">
                     <span className="title-icon">
