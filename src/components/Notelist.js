@@ -6,7 +6,7 @@ import NotelistViewActionCard from './NotelistViewActionCard'
 import SortActionCard from './SortActionCard'
 
 function Notelist() {
-    const { activeTab, notes } = useContext(AppContext)
+    const { activeTab, notes, setIsToplistView } = useContext(AppContext)
     const [sortActions, setSortActions] = useState({ sortBy: 'Date Updated', order: 'desc', snig: true })
     const [viewActions, setViewActions] = useState({ view: 'Side list', showImages: true, showBodyText: true, dateUpdated: true, dateCreated: false })
     const [activeAction, setActiveAction] = useState(null)
@@ -14,21 +14,53 @@ function Notelist() {
     const viewActionBtnRef = useRef(null)
 
     useEffect(() => {
+        if (viewActions.view === 'Top list') {
+            setIsToplistView(true)
+        } else {
+            setIsToplistView(false)
+        }
+    }, [viewActions.view, setIsToplistView])
+
+    useEffect(() => {
         const resize = (ev) => {
             document.querySelector('.notelist').style.width = `${ev.clientX - document.querySelector('.sidebar').getBoundingClientRect().width}px`
         }
-        const resizer = document.querySelector('.notelist-resizer');
-        resizer.addEventListener('mousedown', (ev) => {
+        const triggerResize = () => {
             document.addEventListener('mousemove', resize, false)
-        }, false)
+        }
+        const resizerVer = document.querySelector('.notelist-resizer-ver')
+
+        if (!resizerVer) return
+        resizerVer.addEventListener('mousedown', triggerResize, false)
         document.addEventListener('mouseup', () => {
             document.removeEventListener('mousemove', resize, false)
         }, false)
-    }, [])
+        return () => {
+            resizerVer.removeEventListener('mousedown', triggerResize)
+        }
+    }, [viewActions.view])
+    
+    useEffect(() => {
+        const resize = (ev) => {
+            document.querySelector('.notelist').style.height = `${ev.clientY}px`
+        }
+        const triggerResize = () => {
+            document.addEventListener('mousemove', resize, false)
+        }
+        const resizerHor = document.querySelector('.notelist-resizer-hor')
+        if (!resizerHor) return
+        resizerHor.addEventListener('mousedown', triggerResize, false)
+        document.addEventListener('mouseup', () => {
+            document.removeEventListener('mousemove', resize, false)
+        }, false)
+        return () => {
+            resizerHor.removeEventListener('mousedown', triggerResize, false)
+        }
+    }, [viewActions.view])
 
     return (
-        <div className="notelist">
-            <span className="notelist-resizer"></span>
+        <div className={`notelist ${viewActions.view === 'Top list' ? 'top-list-view-active' : ''}`}>
+            <span className={`notelist-resizer-${viewActions.view !== 'Top list' ? 'ver' : 'hor'}`}></span>
             <header>
                 <div className="title">
                     <span className="title-icon">

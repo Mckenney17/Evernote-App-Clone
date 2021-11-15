@@ -4,9 +4,10 @@
     background: gray(g19);
     border-right: 1px solid gray(g16);
     position: relative;
+    min-height: 100%;
     @include flex($fd: column);
 
-    &-resizer {
+    &-resizer-ver {
         @include pos(absolute, 0, -1%, 0, 99%);
         cursor: e-resize;
     }
@@ -137,5 +138,22 @@
                 }
             }
         }
+    }
+}
+
+.notelist.top-list-view-active {
+    min-width: 100%;
+    height: 300px;
+    min-height: 200px;
+    border-bottom: 1px solid gray(g16);
+
+    .notelist-resizer-hor {
+        @include pos(absolute, 99%, 0, -1%, 0);
+        cursor: n-resize;
+        // display: none;
+    }
+
+    .sort-action-card, .notelist-view-action-card {
+        right: 0;
     }
 }

@@ -11,6 +11,7 @@ import Sidebar from './Sidebar'
 
 function App() {
     const [activeTab, setActiveTab] = useState('Notes');
+    const [isToplistView, setIsToplistView] = useState(false)
     const [notes, setNotes] = useState([
         { id: '1', title: 'Untitled', bodyText: 'Nothing here...', createdAt: new Date().valueOf() + 8, updatedAt: new Date().valueOf() + 4 },
         { id: '2', title: 'Untitled', bodyText: 'Something here...', createdAt: new Date().valueOf() + 6, updatedAt: new Date().valueOf() + 3 },
@@ -24,11 +25,13 @@ function App() {
     }
 
     return (
-        <AppContext.Provider value={{ activeTab, setActiveTab, notes, updateNotes, activeNote, setActiveNote }}>
+        <AppContext.Provider value={{ activeTab, setActiveTab, notes, updateNotes, activeNote, setActiveNote, setIsToplistView }}>
             <div className="app-wrapper">
                 <Sidebar />
-                <Notelist />
-                <Editor/>
+                <div className={`notelist-with-editor ${isToplistView ? 'top-list-view-active' : ''}`}>
+                    <Notelist />
+                    <Editor/>
+                </div>
             </div>
         </AppContext.Provider>
     )

@@ -4,7 +4,7 @@
     background: gray(g1);
     position: relative;
     
-    &-resizer {
+    &-resizer-ver {
         @include pos(absolute, 0, -1%, 0, 99%);
         cursor: e-resize;
     }
