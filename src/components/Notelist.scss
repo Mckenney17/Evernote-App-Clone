@@ -104,8 +104,38 @@
         padding: 7.5px;
     }
 
-    .notelist-body.side-list-container {
+    .notelist-body.side-list-container, .notelist-body.top-list-container {
         padding: 0;
         
+        .table-head  {
+            @include flex($ai: center);
+            text-transform: uppercase;
+            color: gray(g8);
+            font-weight: weight(semibold);
+            font-size: tscale(ts11);
+            padding: 7px 20px;
+        }
+
+        .table-head div {
+            min-width: 100px;
+            position: relative;
+            // padding-left: 2px;
+
+            .resizer {
+                @include pos(absolute, 0, 0, 0, 98%);
+                background: gray(g16);
+                // margin-right: 2px;
+                cursor: col-resize;
+            }
+
+            &:last-child {
+                flex: 1;
+                margin-left: 4px;
+
+                .resizer {
+                    display: none;
+                }
+            }
+        }
     }
 }

@@ -6,7 +6,7 @@ import { hyphenate } from '../utils/utilFuncs'
 function NotelistItem({ id, title, bodyText, updatedAt, createdAt, viewActions }) {
     const { activeNote, setActiveNote } = useContext(AppContext)
     return (
-        <div onClick={() => setActiveNote(id)} className={`notelist-item ${hyphenate(viewActions.view)} ${activeNote === id ? 'active' : ''}`}>
+        <div onClick={() => setActiveNote(id)} className={`notelist-item ${activeNote === id ? 'active' : ''}`} id={hyphenate(viewActions.view)}>
             {['Cards', 'Snippets'].includes(viewActions.view) ? (
                 <React.Fragment>
                     <h4>{title}{id}</h4>

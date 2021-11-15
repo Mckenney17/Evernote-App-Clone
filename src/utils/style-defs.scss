@@ -52,7 +52,8 @@ $type-scale: (
 
 $fweight: (
     "medium": 500,
-    "bold": 600,
+    "semibold": 600,
+    "bold": 700,
 );
 
 @function weight($key) {
