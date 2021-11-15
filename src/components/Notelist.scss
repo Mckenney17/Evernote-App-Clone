@@ -107,6 +107,7 @@
 
     .notelist-body.side-list-container, .notelist-body.top-list-container {
         padding: 0;
+        position: relative;
         
         .table-head  {
             @include flex($ai: center);
@@ -115,6 +116,10 @@
             font-weight: weight(semibold);
             font-size: tscale(ts11);
             padding: 7px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background: gray(g19);
         }
 
         .table-head div {
