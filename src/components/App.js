@@ -17,7 +17,6 @@ function App() {
         { id: '2', title: 'Untitled', bodyText: 'Something here...', createdAt: new Date().valueOf() + 6, updatedAt: new Date().valueOf() + 3 },
         { id: '3', title: 'Untitled', bodyText: 'Somenothing here...', createdAt: new Date().valueOf() + 4, updatedAt: new Date().valueOf() + 2 },
         { id: '4', title: 'Untitled', bodyText: 'Hi there...', createdAt: new Date().valueOf() + 2, updatedAt: new Date().valueOf() + 1 },
-        { id: '5', title: 'Untitled', bodyText: 'Hi there...', createdAt: new Date().valueOf(), updatedAt: new Date().valueOf() },
     ]);
     const [activeNote, setActiveNote] = useState(notes.find((obj) => obj.updatedAt === Math.max(...notes.map((obj) => obj.updatedAt))).id)
     const updateNotes = (updatedNotes) => {
