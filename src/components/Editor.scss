@@ -1,0 +1,52 @@
+@import '../utils/style-defs';
+
+.editor {
+    header {
+        padding: 15px;
+    }
+
+    .top-bar {
+        margin-bottom: 20px;
+    }
+
+    .top-bar, .top-bar > div {
+        @include flex(space-between, center);
+    }
+
+    .left-side {
+        width: 200px;
+    }
+
+    .left-side .divider {
+        width: 1px;
+        height: 100%;
+        background: gray(g15);
+    }
+
+    .left-side .notebook-icon-text {
+        @include flex($ai: center);
+        color: gray(g11);
+        max-height: 14px;
+        font-size: tscale(ts11);
+        line-height: 14px;
+        svg {
+            margin-right: 5px;
+        }
+    }
+
+    .top-bar button {
+        background: transparent;
+        display: block;
+        color: gray(g11);
+        max-height: 24px;
+        border-radius: 3px;
+        &:hover {
+            background: gray(g18);
+
+        }
+    }
+
+    .editor-body {
+        padding: 30px;
+    }
+}
