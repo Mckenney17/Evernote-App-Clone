@@ -1,12 +1,12 @@
-import React, { useContext, useState } from 'react'
-import AppContext from '../utils/AppContext'
+import React, { /* useContext,  */useState } from 'react'
+// import AppContext from '../utils/AppContext'
 import { camelCase, capitalize } from '../utils/utilFuncs'
 import './Editor.scss'
 import FontFamiliesCard from './FontFamiliesCard'
 import TextLevelsCard from './TextLevelsCard'
 
 function Editor() {
-    const { activeNote } = useContext(AppContext)
+    // const { activeNote } = useContext(AppContext)
     const [toolsState, setToolsState] = useState({
         textLevel: 'Normal Text',
         fontFamily: 'Sans serif',
