@@ -17,7 +17,7 @@
         width: 200px;
     }
 
-    .left-side .divider {
+    .divider {
         width: 1px;
         height: 100%;
         background: gray(g15);
@@ -47,7 +47,80 @@
     }
 
     .tool-bar {
-        
+        @include flex($ai: center, $fw: wrap);
+        color: gray(g6);
+
+        .divider:last-child {
+            display: none;
+        }
+
+        button {
+            @include flex(space-between, center);
+            max-height: 24px;
+            white-space: nowrap;
+            font-weight: weight(medium);
+            border-radius: 3px;
+            margin: 0 2px;
+            font-size: tscale(ts12);
+            
+            &:hover {
+                background: gray(g19);
+            }
+
+            &:first-child {
+                margin-left: 0;
+                svg path {
+                    fill: $sbc;
+                }
+            }
+            &.text-level, &.font-family, &.font-size, &.fore-color {
+                padding: 0 5px;
+            }
+            &.back-color {
+                padding-right: 5px;
+            }
+            
+            &.text-level svg, &.font-family svg{
+                margin-left: 10px;
+            }
+            &.font-size svg {
+                margin-left: 15px;
+            }
+            &.fore-color, &.back-color{
+                & > svg:last-child {
+                    margin-left: 5px;
+                }
+            }
+
+            &.fore-color span {
+                margin: 0 6px 0 4px;
+                position: relative;
+                width: 10px;
+                height: 10px;
+                overflow: visible;
+                border-radius: 50%;
+
+                &::after {
+                    content: '';
+                    @include pos(absolute, 0, 0, 0, 0);
+                    z-index: 2;
+                    background: url(/img/fgcol-wrapper.png) no-repeat center center/cover;
+                    background-origin: border-box;
+                    background-clip: border-box;
+                    transform: scale(2.6);
+                }
+            }
+        }
+
+        button.back-color span {
+            position: relative;
+            width: 24px;
+            height: 24px;
+            // width: 50px;
+            svg {
+                @include pos(absolute, $l: 0)
+            }
+        }
     }
 
     .editor-body {
