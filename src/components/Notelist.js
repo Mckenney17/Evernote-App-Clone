@@ -79,8 +79,8 @@ function Notelist() {
                 {!['Cards', 'Snippets'].includes(viewActions.view) && (
                     <div className="table-head">
                         <div className="title-col-th">Title<span className="resizer title-col-resizer"></span></div>
-                        {viewActions.dateUpdated && <div className="date-updated-col-th">UPDATED<span className="resizer date-updated-col-resizer"></span></div>}
-                        {viewActions.dateCreated && <div className="date-created-col-th">CREATED<span className="resizer date-created-col-resizer"></span></div>}
+                        {viewActions.dateUpdated && <div className="date-updated-col-th">updated<span className="resizer date-updated-col-resizer"></span></div>}
+                        {viewActions.dateCreated && <div className="date-created-col-th">created<span className="resizer date-created-col-resizer"></span></div>}
                     </div>
                 )}
                 {notes.length ?
