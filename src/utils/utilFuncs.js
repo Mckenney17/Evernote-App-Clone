@@ -24,6 +24,8 @@ const calcTimeElapsedHumanized = (time) => { // time: Number
     return `${calcYears} year${calcYears > 1 ? 's' : ''} ago`    
 }
 
+const capitalize = (text) => `${text[0].toUpperCase()}${text.slice(1)}`
+
 const camelCase = (phrase) => phrase.split(/[\s-]/i).map((str, i) => i === 0 ? str.toLowerCase() : str.replace(str[0], str[0].toUpperCase())).join('')
 
 const hyphenate = (phrase) => phrase.toLowerCase().replaceAll(' ', '-')
@@ -32,4 +34,5 @@ export {
     calcTimeElapsedHumanized,
     camelCase,
     hyphenate,
+    capitalize,
 }
