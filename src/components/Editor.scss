@@ -50,12 +50,13 @@
     .tool-bar {
         @include flex($ai: center, $fw: wrap);
         color: gray(g6);
+        position: relative;
 
         .divider:last-child {
             display: none;
         }
 
-        button {
+        > button {
             @include flex(space-between, center);
             max-height: 24px;
             white-space: nowrap;

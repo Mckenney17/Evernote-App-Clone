@@ -1,1 +1,24 @@
+@import '../utils/style-defs';
 
+.font-families-card {
+    @include pos(absolute, 25px, $l: 190px);
+    // width: 200px;
+    background: #fff;
+    z-index: 3;
+    border-radius: 3px;
+    box-shadow: 0 0 7px rgba(#000, .3);
+    // opacity: 0;
+
+    li button {
+        font-size: tscale(ts16);
+        width: 100%;
+        color: gray(g3);
+        padding: 7px 20px;
+        text-align: left;
+        // font-weight: weight(bold);
+
+        &:hover {
+            background: gray(g18);
+        }
+    }
+}
