@@ -1,9 +1,10 @@
 @import '../utils/style-defs';
 
 .editor {
+    @include flex($fd: column);
     header {
         padding: 15px;
-        border-bottom: 1px solid gray(g17);
+        border-bottom: 1px solid gray(g18);
     }
 
     .top-bar {
@@ -126,6 +127,9 @@
     }
 
     .editor-body {
+        width: 100%;
+        flex: 1;
         padding: 30px;
+        overflow: auto;
     }
 }
