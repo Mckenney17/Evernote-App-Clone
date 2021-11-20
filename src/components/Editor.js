@@ -1,4 +1,4 @@
-import React, { /* useContext,  */useState } from 'react'
+import React, { /* useContext,  */useReducer, useState } from 'react'
 // import AppContext from '../utils/AppContext'
 import { camelCase, capitalize } from '../utils/utilFuncs'
 import './Editor.scss'
@@ -72,6 +72,12 @@ function Editor() {
         formatting: ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript'],
         style: ['textLevel', 'fontFamily', 'fontSize', 'color', 'background'],
     }
+
+    const selectTools = ['text-level', 'font-family', 'font-size', 'fore-color', 'back-color']
+    const [{ selectionDrop }, setSelectionDropTool] = useReducer((state, action) => {
+        return selectTools.includes(action.tool) ? { selectionDrop: action.tool } : { selectionDrop: null }
+    }, { selectionDrop: null })
+
     return (
         <div className="editor">
             <header>
@@ -91,19 +97,23 @@ function Editor() {
                     <React.Fragment key={`tni-${i}`}>
                         {toolName.map((toolNameInner, j) => (
                             <React.Fragment key={`tni-${j}`}>
-                                <button title={capitalize(toolNameInner.split('-').join(' '))} className={`${toolNameInner}${toolsState[camelCase(toolNameInner)] === true ? ' active' : ''}`}>{tools.allIcons[i][j]}</button>
+                                <button onClick={() => setSelectionDropTool({ tool: toolNameInner })} title={capitalize(toolNameInner.split('-').join(' '))} className={`${toolNameInner}${toolsState[camelCase(toolNameInner)] === true ? ' active' : ''}`}>{tools.allIcons[i][j]}</button>
                             </React.Fragment>
                         ))}
                         <span className="divider">&nbsp;</span>
                     </React.Fragment>
                     : <React.Fragment key={`tni-${i}`}>
-                        <button title={capitalize(toolName.split('-').join(' '))} className={`${toolName}${toolsState[camelCase(toolName)] === true ? ' active' : ''}`}>{tools.allIcons[i]}</button>
+                        <button onClick={() => setSelectionDropTool({ tool: toolName })} title={capitalize(toolName.split('-').join(' '))} className={`${toolName}${toolsState[camelCase(toolName)] === true ? ' active' : ''}`}>{tools.allIcons[i]}</button>
                         <span className="divider">&nbsp;</span>
                     </React.Fragment>
                     ))}
-                    <TextLevelsCard toolsState={toolsState} setToolsState={setToolsState} />
-                    <FontFamiliesCard toolsState={toolsState} setToolsState={setToolsState} />
-                    <FontSizeCard toolsState={toolsState} setToolsState={setToolsState} />
+                    {selectionDrop === 'text-level' ?
+                        <TextLevelsCard toolsState={toolsState} setToolsState={setToolsState} /> :
+                    selectionDrop === 'font-family' ?
+                        <FontFamiliesCard toolsState={toolsState} setToolsState={setToolsState} /> :
+                    selectionDrop === 'font-size' ?
+                        <FontSizeCard setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
+                    null}
                 </div>
             </header>
             <div className="editor-body">

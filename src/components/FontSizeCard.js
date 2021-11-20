@@ -1,9 +1,26 @@
-import React from 'react'
+import { motion } from 'framer-motion'
+import React, { useEffect, useRef } from 'react'
 import './FontSizeCard.scss'
 
-function FontSizeCard({ toolsState, setToolsState }) {
+function FontSizeCard({ setSelectionDropTool, toolsState, setToolsState }) {
+    const cardRef = useRef(null)
+    useEffect(() => {
+        const disappear = (ev) => {
+            if (!ev.path.includes(cardRef.current)) {
+                const otherEditTools = document.querySelectorAll('.tool-bar button:not(.font-size)')
+                if ([...otherEditTools].some((elem) => ev.path.includes(elem))) return
+                setSelectionDropTool({ tool: null })
+                return
+            }
+        }
+        document.addEventListener('click', disappear)
+
+        return () => {
+            document.removeEventListener('click', disappear)
+        }
+    }, [setSelectionDropTool])
     return (
-        <div className="font-size-card">
+        <motion.div className="font-size-card" ref={cardRef} animate={{ y: 10, opacity: 1, type: 'tween' }}>
             <ul>
             {[8,9,10,12,14,16,18,20,24,30,36,48,64,72,96].map((v, i) => (
                 <li key={`fz-${v}`} className={toolsState.fontSize === v ? 'checked' : ''}>
@@ -16,7 +33,7 @@ function FontSizeCard({ toolsState, setToolsState }) {
                 </li>
             ))}
             </ul>
-        </div>
+        </motion.div>
     )
 }
 

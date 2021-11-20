@@ -1,13 +1,13 @@
 @import '../utils/style-defs';
 
 .font-size-card {
-    @include pos(absolute, 25px, $l: 270px);
+    @include pos(absolute, 15px, $l: 270px);
     background: #fff;
     z-index: 3;
     border-radius: 3px;
     box-shadow: 0 0 7px rgba(#000, .3);
     padding: 10px 0;
-    // opacity: 0;
+    opacity: 0;
     
     li button {
         @include flex($ai: center);
