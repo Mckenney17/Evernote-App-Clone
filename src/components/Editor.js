@@ -112,7 +112,7 @@ function Editor() {
                     </React.Fragment>
                     ))}
                     {selectionDropTool === 'text-level' ?
-                        <TextLevelsCard toolsState={toolsState} setToolsState={setToolsState} /> :
+                        <TextLevelsCard setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
                     selectionDropTool === 'font-family' ?
                         <FontFamiliesCard setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
                     selectionDropTool === 'font-size' ?
