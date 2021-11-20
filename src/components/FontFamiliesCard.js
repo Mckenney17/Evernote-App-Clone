@@ -1,9 +1,26 @@
-import React from 'react'
+import { motion } from 'framer-motion'
+import React, { useEffect, useRef } from 'react'
 import './FontFamiliesCard.scss'
 
-function FontFamiliesCard({ toolsState, setToolsState }) {
+function FontFamiliesCard({ setSelectionDropTool, toolsState, setToolsState }) {
+    const cardRef = useRef(null)
+    useEffect(() => {
+        const disappear = (ev) => {
+            if (!ev.path.includes(cardRef.current)) {
+                const otherEditTools = document.querySelectorAll('.tool-bar button:not(.font-family)')
+                if ([...otherEditTools].some((elem) => ev.path.includes(elem))) return
+                setSelectionDropTool({ tool: null })
+                return
+            }
+        }
+        document.addEventListener('click', disappear)
+
+        return () => {
+            document.removeEventListener('click', disappear)
+        }
+    }, [setSelectionDropTool])
     return (
-        <div className="font-families-card">
+        <motion.div className="font-families-card" ref={cardRef} animate={{ y: 10, opacity: 1, type: 'tween' }}>
             <ul>
             {[['Sans serif', 'Source Sans Pro'], ['Serif', 'Source Serif Pro'], ['Slab serif', 'Zilla Slab'], ['Monospace', 'Source Code Pro'], ['Script', 'Dancing Script'], ['Handwritten', 'Kalam']].map(([superFamily, fontFamily]) => (
                 <li key={superFamily} className={toolsState.fontFamily === superFamily ? 'checked' : ''}>
@@ -11,7 +28,7 @@ function FontFamiliesCard({ toolsState, setToolsState }) {
                 </li>
             ))}
             </ul>
-        </div>
+        </motion.div>
     )
 }
 

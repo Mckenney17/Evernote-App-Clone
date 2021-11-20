@@ -2,7 +2,7 @@
 @import '../utils/style-defs';
 
 .text-level-card {
-    @include pos(absolute, 25px, $l: 85px);
+    @include pos(absolute, 15px, $l: 85px);
     // width: 200px;
     background: #fff;
     z-index: 3;

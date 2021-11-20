@@ -74,9 +74,13 @@ function Editor() {
     }
 
     const selectTools = ['text-level', 'font-family', 'font-size', 'fore-color', 'back-color']
-    const [{ selectionDrop }, setSelectionDropTool] = useReducer((state, action) => {
-        return selectTools.includes(action.tool) ? { selectionDrop: action.tool } : { selectionDrop: null }
-    }, { selectionDrop: null })
+    // [state, dispatch] of useReducer === [state, setState] of useState
+    // the first argument to reducer is the function to use to conditionally change the state
+    // (state, action) // state is the state obj, while, action is the new value you want to be read
+    // the second argument is the initial state like you'll pass to useState
+    const [{ selectionDropTool }, setSelectionDropTool] = useReducer((state, action) => {
+        return selectTools.includes(action.tool) ? { selectionDropTool: action.tool } : { selectionDropTool: null }
+    }, { selectionDropTool: null })
 
     return (
         <div className="editor">
@@ -107,11 +111,11 @@ function Editor() {
                         <span className="divider">&nbsp;</span>
                     </React.Fragment>
                     ))}
-                    {selectionDrop === 'text-level' ?
+                    {selectionDropTool === 'text-level' ?
                         <TextLevelsCard toolsState={toolsState} setToolsState={setToolsState} /> :
-                    selectionDrop === 'font-family' ?
-                        <FontFamiliesCard toolsState={toolsState} setToolsState={setToolsState} /> :
-                    selectionDrop === 'font-size' ?
+                    selectionDropTool === 'font-family' ?
+                        <FontFamiliesCard setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
+                    selectionDropTool === 'font-size' ?
                         <FontSizeCard setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
                     null}
                 </div>

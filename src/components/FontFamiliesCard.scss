@@ -1,7 +1,7 @@
 @import '../utils/style-defs';
 
 .font-families-card {
-    @include pos(absolute, 25px, $l: 187px);
+    @include pos(absolute, 15px, $l: 187px);
     // width: 200px;
     background: #fff;
     z-index: 3;
