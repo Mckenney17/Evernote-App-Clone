@@ -5,9 +5,9 @@ function TextLevelsCard() {
     return (
         <div className="text-level-card">
             <ul>
-                <li><button><h1>Heading Text</h1></button></li>
-                <li><button><h3>Sub-heading Text</h3></button></li>
-                <li><button>Normal Text</button></li>
+            {[<h1>Heading Text</h1>, <h3>Sub-heading Text</h3>, 'Normal Text'].map((v, i) => (
+                <li key={`tl-${i}`}><button>{v}</button></li>
+            ))}
             </ul>
         </div>
     )

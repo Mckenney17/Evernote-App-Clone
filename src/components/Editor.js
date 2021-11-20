@@ -3,6 +3,7 @@ import React, { /* useContext,  */useState } from 'react'
 import { camelCase, capitalize } from '../utils/utilFuncs'
 import './Editor.scss'
 import FontFamiliesCard from './FontFamiliesCard'
+import FontSizeCard from './FontSizeCard'
 import TextLevelsCard from './TextLevelsCard'
 
 function Editor() {
@@ -102,6 +103,7 @@ function Editor() {
                     ))}
                     <TextLevelsCard toolsState={toolsState} setToolsState={setToolsState} />
                     <FontFamiliesCard toolsState={toolsState} setToolsState={setToolsState} />
+                    <FontSizeCard toolsState={toolsState} setToolsState={setToolsState} />
                 </div>
             </header>
             <div className="editor-body">

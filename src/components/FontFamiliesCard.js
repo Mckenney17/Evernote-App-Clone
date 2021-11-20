@@ -5,12 +5,9 @@ function FontFamiliesCard() {
     return (
         <div className="font-families-card">
             <ul>
-                <li><button style={{ fontFamily: 'Source Sans Pro' }}>Sans serif</button></li>
-                <li><button style={{ fontFamily: 'Source Serif Pro' }}>Serif</button></li>
-                <li><button style={{ fontFamily: 'Zilla Slab' }}>Slab serif</button></li>
-                <li><button style={{ fontFamily: 'Source Code Pro' }}>Monospace</button></li>
-                <li><button style={{ fontFamily: 'Dancing Script' }}>Script</button></li>
-                <li><button style={{ fontFamily: 'Kalam' }}>Handwritten</button></li>
+            {[['Sans serif', 'Source Sans Pro'], ['Serif', 'Source Serif Pro'], ['Slab serif', 'Zilla Slab'], ['Monospace', 'Source Code Pro'], ['Script', 'Dancing Script'], ['Handwritten', 'Kalam']].map(([superFamily, fontFamily]) => (
+                <li key={superFamily}><button style={{ fontFamily }}>{superFamily}</button></li>
+            ))}
             </ul>
         </div>
     )
