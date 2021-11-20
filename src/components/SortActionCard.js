@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import './SortActionCard.scss'
+import { allDocument } from '../utils/utilFuncs'
 
 function SortActionCard({ sortActions, setSortActions, viewActionBtn, setActiveAction }) {
     const cardRef = useRef(null)
@@ -12,10 +13,10 @@ function SortActionCard({ sortActions, setSortActions, viewActionBtn, setActiveA
                 return
             }
         }
-        document.addEventListener('click', disappear)
+        allDocument.addEventListener('click', disappear)
 
         return () => {
-            document.removeEventListener('click', disappear)
+            allDocument.removeEventListener('click', disappear)
         }
     }, [setActiveAction, viewActionBtn])
     return (

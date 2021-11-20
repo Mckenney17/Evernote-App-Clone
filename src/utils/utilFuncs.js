@@ -30,9 +30,20 @@ const camelCase = (phrase) => phrase.split(/[\s-]/i).map((str, i) => i === 0 ? s
 
 const hyphenate = (phrase) => phrase.toLowerCase().replaceAll(' ', '-')
 
+const allDocument = {
+    addEventListener(type, handler) {
+        [document, document.querySelector('iframe').contentWindow].map((doc) => doc.addEventListener(type, handler))
+    },
+    
+    removeEventListener(type, handler) {
+        [document, document.querySelector('iframe').contentWindow].map((doc) => doc.removeEventListener(type, handler))
+    }
+}
+
 export { 
     calcTimeElapsedHumanized,
     camelCase,
     hyphenate,
     capitalize,
+    allDocument,
 }

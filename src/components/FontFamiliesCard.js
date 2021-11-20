@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import React, { useEffect, useRef } from 'react'
+import { allDocument } from '../utils/utilFuncs'
 import './FontFamiliesCard.scss'
 
 function FontFamiliesCard({ setSelectionDropTool, toolsState, setToolsState }) {
@@ -13,10 +14,10 @@ function FontFamiliesCard({ setSelectionDropTool, toolsState, setToolsState }) {
                 return
             }
         }
-        document.addEventListener('click', disappear)
+        allDocument.addEventListener('click', disappear)
 
         return () => {
-            document.removeEventListener('click', disappear)
+            allDocument.removeEventListener('click', disappear)
         }
     }, [setSelectionDropTool])
     return (

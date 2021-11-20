@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import './NotelistViewActionCard.scss'
+import { allDocument } from '../utils/utilFuncs'
 
 function NotelistViewActionCard({ viewActions, setViewActions, sortActionBtn, setActiveAction }) {
     const cardRef = useRef(null)
@@ -12,10 +13,10 @@ function NotelistViewActionCard({ viewActions, setViewActions, sortActionBtn, se
                 return
             }
         }
-        document.addEventListener('click', disappear)
+        allDocument.addEventListener('click', disappear)
 
         return () => {
-            document.removeEventListener('click', disappear)
+            allDocument.removeEventListener('click', disappear)
         }
     }, [setActiveAction, sortActionBtn])
     return (

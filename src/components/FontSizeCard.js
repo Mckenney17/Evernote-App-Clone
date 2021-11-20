@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import React, { useEffect, useRef } from 'react'
+import { allDocument } from '../utils/utilFuncs'
 import './FontSizeCard.scss'
 
 function FontSizeCard({ setSelectionDropTool, toolsState, setToolsState }) {
@@ -13,10 +14,10 @@ function FontSizeCard({ setSelectionDropTool, toolsState, setToolsState }) {
                 return
             }
         }
-        [document, document.querySelector('iframe').contentWindow].map((doc) => doc.addEventListener('click', disappear))
-
+        allDocument.addEventListener('click', disappear)
+        
         return () => {
-            [document, document.querySelector('iframe').contentWindow].map((doc) => doc.removeEventListener('click', disappear))
+            allDocument.removeEventListener('click', disappear)
         }
     }, [setSelectionDropTool])
     return (
