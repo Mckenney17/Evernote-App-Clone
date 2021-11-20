@@ -1,7 +1,7 @@
 @import '../utils/style-defs';
 
 .font-size-card {
-    @include pos(absolute, 15px, $l: 270px);
+    @include pos(absolute, 15px, $l: 274px);
     background: #fff;
     z-index: 3;
     border-radius: 3px;
