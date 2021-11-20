@@ -13,10 +13,10 @@ function FontSizeCard({ setSelectionDropTool, toolsState, setToolsState }) {
                 return
             }
         }
-        document.addEventListener('click', disappear)
+        [document, document.querySelector('iframe').contentWindow].map((doc) => doc.addEventListener('click', disappear))
 
         return () => {
-            document.removeEventListener('click', disappear)
+            [document, document.querySelector('iframe').contentWindow].map((doc) => doc.removeEventListener('click', disappear))
         }
     }, [setSelectionDropTool])
     return (
