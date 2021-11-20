@@ -6,19 +6,33 @@
     z-index: 3;
     border-radius: 3px;
     box-shadow: 0 0 7px rgba(#000, .3);
-    // padding: 10px 0;
+    padding: 10px 0;
     // opacity: 0;
-
+    
     li button {
+        @include flex($ai: center);
         font-size: tscale(ts14);
+        padding: 3px 15px;
         width: 100%;
         color: gray(g3);
-        padding: 7px 20px;
         text-align: left;
+        line-height: 14px;
         // font-weight: weight(bold);
 
         &:hover {
             background: gray(g18);
+        }
+    }
+
+    .check-mark-icon {
+        max-height: 24px;
+        opacity: 0;
+    }
+
+    li.checked {
+        span, button {
+            color: $sbc;
+            opacity: 1;
         }
     }
 }
