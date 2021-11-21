@@ -1,25 +1,12 @@
 import { motion } from 'framer-motion'
-import React, { useEffect, useRef } from 'react'
-import { allDocument } from '../utils/utilFuncs'
+import React, { useRef } from 'react'
+import useSelectionDrop from '../hooks/selectionDrop'
 import './FontFamiliesCard.scss'
 
 function FontFamiliesCard({ setSelectionDropTool, toolsState, setToolsState }) {
     const cardRef = useRef(null)
-    useEffect(() => {
-        const disappear = (ev) => {
-            if (!ev.path.includes(cardRef.current)) {
-                const otherEditTools = document.querySelectorAll('.tool-bar button:not(.font-family)')
-                if ([...otherEditTools].some((elem) => ev.path.includes(elem))) return
-                setSelectionDropTool({ tool: null })
-                return
-            }
-        }
-        allDocument.addEventListener('click', disappear)
+    useSelectionDrop({ cardRef, exSelector: 'font-family', setSelectionDropTool })
 
-        return () => {
-            allDocument.removeEventListener('click', disappear)
-        }
-    }, [setSelectionDropTool])
     return (
         <motion.div className="font-families-card" ref={cardRef} animate={{ y: 10, opacity: 1, type: 'tween' }}>
             <ul>
