@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { allDocument } from '../utils/utilFuncs'
 
-function useSelectionDrop({ cardRef, exSelector, setSelectionDropTool }) {
+const useSelectionDrop = ({ cardRef, exSelector, setSelectionDropTool }) => {
     useEffect(() => {
         const disappear = (ev) => {
             if (!ev.path.includes(cardRef.current)) {

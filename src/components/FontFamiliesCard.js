@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import React, { useRef } from 'react'
-import useSelectionDrop from '../hooks/selectionDrop'
+import useSelectionDrop from '../hooks/useSelectionDrop'
 import './FontFamiliesCard.scss'
 
 function FontFamiliesCard({ setSelectionDropTool, toolsState, setToolsState }) {

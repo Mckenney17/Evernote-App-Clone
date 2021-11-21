@@ -1,24 +1,12 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { motion } from 'framer-motion'
 import './SortActionCard.scss'
-import { allDocument } from '../utils/utilFuncs'
+import useNotelistActionsDrop from '../hooks/useNotelistActionsDrop'
 
 function SortActionCard({ sortActions, setSortActions, viewActionBtn, setActiveAction }) {
     const cardRef = useRef(null)
-    useEffect(() => {
-        const disappear = (ev) => {
-            if (!ev.path.includes(cardRef.current)) {
-                if (ev.path.includes(viewActionBtn)) return
-                setActiveAction(null)
-                return
-            }
-        }
-        allDocument.addEventListener('click', disappear)
+    useNotelistActionsDrop({ cardRef, setActiveAction, otherActionBtn: viewActionBtn })
 
-        return () => {
-            allDocument.removeEventListener('click', disappear)
-        }
-    }, [setActiveAction, viewActionBtn])
     return (
         <motion.div ref={cardRef} className="sort-action-card" animate={{ y: 10, opacity: 1, type: 'tween' }}>
             <h5>SORT BY</h5>

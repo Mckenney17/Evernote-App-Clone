@@ -1,12 +1,12 @@
 import { motion } from 'framer-motion'
 import React, { useRef } from 'react'
-import useSelectionDrop from '../hooks/selectionDrop'
+import useSelectionDrop from '../hooks/useSelectionDrop'
 import './FontSizeCard.scss'
 
 function FontSizeCard({ setSelectionDropTool, toolsState, setToolsState }) {
     const cardRef = useRef(null)
     useSelectionDrop({ cardRef, exSelector: 'font-size', setSelectionDropTool })
-    
+
     return (
         <motion.div className="font-size-card" ref={cardRef} animate={{ y: 10, opacity: 1, type: 'tween' }}>
             <ul>
