@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import React, { useRef } from 'react'
 import useSelectionDrop from '../hooks/useSelectionDrop'
+import { hyphenate } from '../utils/utilFuncs'
 import './FontFamiliesCard.scss'
 
 function FontFamiliesCard({ setSelectionDropTool, toolsState, setToolsState }) {
@@ -10,9 +11,9 @@ function FontFamiliesCard({ setSelectionDropTool, toolsState, setToolsState }) {
     return (
         <motion.div className="font-families-card" ref={cardRef} animate={{ y: 10, opacity: 1, type: 'tween' }}>
             <ul>
-            {[['Sans serif', 'Source Sans Pro'], ['Serif', 'Source Serif Pro'], ['Slab serif', 'Zilla Slab'], ['Monospace', 'Source Code Pro'], ['Script', 'Dancing Script'], ['Handwritten', 'Kalam']].map(([superFamily, fontFamily]) => (
+            {['Sans serif', 'Serif', 'Slab serif', 'Monospace', 'Script', 'Handwritten'].map((superFamily) => (
                 <li key={superFamily} className={toolsState.fontFamily === superFamily ? 'checked' : ''}>
-                    <button style={{ fontFamily }}>{superFamily}</button>
+                    <button className={hyphenate(superFamily)}>{superFamily}</button>
                 </li>
             ))}
             </ul>

@@ -1,0 +1,14 @@
+
+@import '../utils/style-defs';
+
+.fore-colors-card {
+    @include pos(absolute, 40px, $l: 85px);
+    background: #fff;
+    z-index: 3;
+    border-radius: 3px;
+    box-shadow: 0 0 7px rgba(#000, .3);
+    opacity: 0;
+    padding: 10px;
+
+
+}
