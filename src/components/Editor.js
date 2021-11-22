@@ -2,9 +2,11 @@ import React, { /* useContext,  */useReducer, useState } from 'react'
 // import AppContext from '../utils/AppContext'
 import { camelCase, capitalize } from '../utils/utilFuncs'
 import './Editor.scss'
-import FontFamiliesCard from './FontFamiliesCard'
-import FontSizeCard from './FontSizeCard'
 import TextLevelsCard from './TextLevelsCard'
+import FontSizeCard from './FontSizeCard'
+import FontFamiliesCard from './FontFamiliesCard'
+import ForeColorsCard from './ForeColorsCard'
+import BackColorsCard from './BackColorsCard'
 
 function Editor() {
     // const { activeNote } = useContext(AppContext)
@@ -117,7 +119,11 @@ function Editor() {
                         <FontFamiliesCard setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
                     selectionDropTool === 'font-size' ?
                         <FontSizeCard setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
-                    null}
+                    selectionDropTool === 'fore-color' ?
+                        <ForeColorsCard setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
+                    selectionDropTool === 'back-color' ?
+                        <BackColorsCard setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
+                    null }
                 </div>
             </header>
             <div className="editor-body">
