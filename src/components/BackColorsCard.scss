@@ -1,0 +1,36 @@
+
+@import '../utils/style-defs';
+
+.back-colors-card {
+    @include pos(absolute, 40px, $l: 300px);
+    background: #fff;
+    z-index: 3;
+    border-radius: 4px;
+    box-shadow: 0 0 7px rgba(#000, .3);
+    opacity: 0;
+    padding: 10px;
+
+
+    button {
+        width: 30px;
+        height: 30px;
+        border: 2px solid transparent;
+        border-radius: 50%;
+        margin: 0 3px;
+    }
+
+    button.checked {
+        border-color: lighten($sbc, 25);
+    }
+
+    ul {
+        @include flex(space-between, center);
+    }
+
+    li:first-child {
+        margin-left: 0;
+    }
+    li:last-child {
+        margin-right: 0;
+    }
+}

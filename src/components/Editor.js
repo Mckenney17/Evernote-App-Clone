@@ -15,7 +15,7 @@ function Editor() {
         fontFamily: 'Sans serif',
         fontSize: 16,
         foreColor: '#000',
-        backColor: 'pink',
+        backColor: 'transparent',
         bold: false,
         italic: false,
         underline: false,
