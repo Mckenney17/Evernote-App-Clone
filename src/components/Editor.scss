@@ -83,11 +83,11 @@
                     fill: $sbc;
                 }
             }
-            &.text-level, &.font-family, &.font-size, &.fore-color {
+            &.text-level, &.font-family, &.font-size {
                 padding: 0 5px;
             }
-            &.back-color {
-                padding-right: 5px;
+            &.fore-color {
+                padding-left: 5px;
             }
             
             &.text-level svg, &.font-family svg{
