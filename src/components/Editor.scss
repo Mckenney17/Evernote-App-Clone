@@ -70,6 +70,13 @@
                 background: gray(g19);
             }
 
+            &.checked {
+                background: lighten($sbc, 35);
+                > svg path {
+                    fill: #fff;
+                }
+            }
+
             &:first-child {
                 margin-left: 0;
                 svg path {
