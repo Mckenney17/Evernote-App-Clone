@@ -98,21 +98,22 @@ function Editor() {
                     </div>
                 </div>
                 <div className="tool-bar">
-                    {tools.allNames.map((toolName, i) => (
-                    Array.isArray(toolName) ?
+                    {tools.allNames.map((toolName, i) => {
+                    const checkables = ['fore-color', 'bold', 'italic', 'underline', 'back-color', 'indent', 'outdent', 'strikethrough', 'superscript', 'subscript']
+                    return Array.isArray(toolName) ?
                     <React.Fragment key={`tni-${i}`}>
                         {toolName.map((toolNameInner, j) => (
                             <React.Fragment key={`tni-${j}`}>
-                                <button onClick={() => setSelectionDropTool({ tool: toolNameInner })} title={capitalize(toolNameInner.split('-').join(' '))} className={`${toolNameInner}${toolsState[camelCase(toolNameInner)] === true ? ' active' : ''}`}>{tools.allIcons[i][j]}</button>
+                                <button onClick={() => setSelectionDropTool({ tool: toolNameInner })} title={capitalize(toolNameInner.split('-').join(' '))} className={`${toolNameInner}${checkables.includes(toolNameInner) && toolsState[camelCase(toolNameInner)] === true ? ' checked' : ''}`}>{tools.allIcons[i][j]}</button>
                             </React.Fragment>
                         ))}
                         <span className="divider">&nbsp;</span>
                     </React.Fragment>
                     : <React.Fragment key={`tni-${i}`}>
-                        <button onClick={() => setSelectionDropTool({ tool: toolName })} title={capitalize(toolName.split('-').join(' '))} className={`${toolName}${toolsState[camelCase(toolName)] === true ? ' active' : ''}`}>{tools.allIcons[i]}</button>
+                        <button onClick={() => setSelectionDropTool({ tool: toolName })} title={capitalize(toolName.split('-').join(' '))} className={`${toolName}${checkables.includes(toolName) && toolsState[camelCase(toolName)] === true ? ' checked' : ''}`}>{tools.allIcons[i]}</button>
                         <span className="divider">&nbsp;</span>
                     </React.Fragment>
-                    ))}
+                    })}
                     {selectionDropTool === 'text-level' ?
                         <TextLevelsCard setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
                     selectionDropTool === 'font-family' ?
