@@ -8,6 +8,15 @@ import FontFamiliesCard from './FontFamiliesCard'
 import ForeColorsCard from './ForeColorsCard'
 import BackColorsCard from './BackColorsCard'
 
+/* 
+Undo & Redo logic
+if the iframe content !== '' // undo is active esle undo is inactive
+onkeyup event on the iframe document // pass the iframe's content in a string
+any changes made without a keyup don't update the string
+If that happens test whether string === iframe content // if false, make redo active
+else deactivate redo
+*/
+
 function Editor() {
     // const { activeNote } = useContext(AppContext)
     const [toolsState, setToolsState] = useState({
