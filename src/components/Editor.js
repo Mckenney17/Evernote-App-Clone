@@ -48,7 +48,7 @@ function Editor() {
             <React.Fragment>{toolsState.fontFamily}<svg width="8" height="24" viewBox="0 0 8 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M4 13.293L6.293 11a.5.5 0 01.707.707l-2.695 2.695a.431.431 0 01-.61 0L1 11.707A.5.5 0 111.707 11L4 13.293z"></path></svg></React.Fragment>,
             <React.Fragment>{toolsState.fontSize}<svg width="8" height="24" viewBox="0 0 8 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M4 13.293L6.293 11a.5.5 0 01.707.707l-2.695 2.695a.431.431 0 01-.61 0L1 11.707A.5.5 0 111.707 11L4 13.293z"></path></svg></React.Fragment>,
             [
-                <React.Fragment><span className="circle" style={{ background: !toolsState.foreColor ? '#000' : toolsState.foreColor }}></span><svg width="20" height="24" viewBox="0 0 8 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M4 13.293L6.293 11a.5.5 0 01.707.707l-2.695 2.695a.431.431 0 01-.61 0L1 11.707A.5.5 0 111.707 11L4 13.293z"></path></svg></React.Fragment>,
+                <React.Fragment><span className="circle" style={{ background: !toolsState.foreColor ? '#000' : toolsState.foreColor }}></span><svg className="chevron" width="20" height="24" viewBox="0 0 8 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M4 13.293L6.293 11a.5.5 0 01.707.707l-2.695 2.695a.431.431 0 01-.61 0L1 11.707A.5.5 0 111.707 11L4 13.293z"></path></svg></React.Fragment>,
                 <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" fillRule="evenodd" d="M9.125 6C8.504 6 8 6.504 8 7.125v10c0 .621.504 1.125 1.125 1.125h4.5a3.625 3.625 0 002.027-6.63A3.625 3.625 0 0012.625 6h-3.5zm1.125 5V8.25h2.375a1.375 1.375 0 010 2.75H10.25zm0 5v-2.75h3.375a1.375 1.375 0 010 2.75H10.25z"></path></svg>,
                 <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M9.5 6a.625.625 0 100 1.25h3.182L10.022 17H6.5a.625.625 0 100 1.25h8a.625.625 0 100-1.25h-3.182l2.66-9.75H17.5a.625.625 0 100-1.25h-8z"></path></svg>,
                 <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M8.5 5.734a.625.625 0 00-.625.625v5.5a4.125 4.125 0 008.25 0v-5.5a.625.625 0 10-1.25 0v5.5a2.875 2.875 0 01-5.75 0v-5.5a.625.625 0 00-.625-.625zM5.5 17.734a.625.625 0 100 1.25h13a.625.625 0 100-1.25h-13z"></path></svg>,
@@ -57,7 +57,7 @@ function Editor() {
                         <svg width="24" height="24"  viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill={!toolsState.backColor ? 'transparent' : toolsState.backColor} d="M9.4 7.345a.8.8 0 01.492-.738l3.598-1.5a.8.8 0 011.108.74v5.311H9.4V7.345z"></path></svg>
                         <svg width="24" height="24"  viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M9.4 14.38v-2.02h5.2v2.02c0 .319.11.63.31.878l1.246 1.544a.2.2 0 01.044.126v1.13a.6.6 0 101.2 0v-1.13c0-.32-.11-.63-.31-.88l-1.246-1.543a.2.2 0 01-.044-.126v-2.218a1 1 0 00-1-1H9.2a1 1 0 00-1 1v2.218a.2.2 0 01-.044.126L6.91 16.049a1.4 1.4 0 00-.31.879v1.13a.6.6 0 101.2 0v-1.13a.2.2 0 01.044-.126l1.246-1.544c.2-.249.31-.559.31-.879z"></path></svg>
                     </span>
-                    <svg width="20" height="24" viewBox="0 0 8 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M4 13.293L6.293 11a.5.5 0 01.707.707l-2.695 2.695a.431.431 0 01-.61 0L1 11.707A.5.5 0 111.707 11L4 13.293z"></path></svg>
+                    <svg className="chevron" width="20" height="24" viewBox="0 0 8 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M4 13.293L6.293 11a.5.5 0 01.707.707l-2.695 2.695a.431.431 0 01-.61 0L1 11.707A.5.5 0 111.707 11L4 13.293z"></path></svg>
                 </React.Fragment>,
             ],
             [
@@ -115,7 +115,7 @@ function Editor() {
                             <React.Fragment key={`tni-${j}`}>
                                 <button onClick={(ev) => {
                                     // fixing bugs
-                                    if (['fore-color', 'back-color'].includes(toolNameInner) && ev.path[0].nodeName !== 'svg') return;
+                                    if (['fore-color', 'back-color'].includes(toolNameInner) && !ev.nativeEvent.path[0].classList.contains('chevron')) return;
                                     return setSelectionDropTool({ tool: toolNameInner })
                                 }} title={capitalize(toolNameInner.split('-').join(' '))} className={`${toolNameInner}${checkables.includes(toolNameInner) && toolsState[camelCase(toolNameInner)] ? ' checked' : ''}`}>{tools.allIcons[i][j]}</button>
                             </React.Fragment>
