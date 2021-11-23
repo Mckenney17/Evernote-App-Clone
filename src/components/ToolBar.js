@@ -18,14 +18,14 @@ else deactivate redo
 
 function ToolBar({ toolsState, setToolsState, selColor, setSelColor }) {
     const tools = {
-        allNames: ['insert', ['undo', 'redo'], 'text-level', 'font-family', 'font-size', ['fore-color', 'bold', 'italic', 'underline', 'back-color'], ['unordered-list', 'ordered-list'], 'insert-link', ['left-align', 'center-align', 'right-align', 'indent', 'outdent'], ['strikethrough', 'subscript', 'superscript']],
+        allNames: ['insert', ['undo', 'redo'], 'text-level', 'super-family', 'font-size', ['fore-color', 'bold', 'italic', 'underline', 'back-color'], ['unordered-list', 'ordered-list'], 'insert-link', ['left-align', 'center-align', 'right-align', 'indent', 'outdent'], ['strikethrough', 'subscript', 'superscript']],
         allIcons: [<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" fillRule="evenodd" d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM11 9v2H9a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V9a1 1 0 10-2 0z"></path></svg>,
             [
                 <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M10.739 4.683a.625.625 0 010 .884L8.705 7.6l4.823-.015a5.948 5.948 0 01.001 11.895l-8.403.02a.625.625 0 01-.002-1.25l8.403-.02h.001a4.697 4.697 0 00.001-9.395l-4.833.015 2.043 2.043a.625.625 0 01-.884.884L6.75 8.672a.625.625 0 010-.884l3.105-3.105a.625.625 0 01.884 0z"></path></svg>,
                 <svg style={{ transform: 'rotateY(180deg)' }} width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M10.739 4.683a.625.625 0 010 .884L8.705 7.6l4.823-.015a5.948 5.948 0 01.001 11.895l-8.403.02a.625.625 0 01-.002-1.25l8.403-.02h.001a4.697 4.697 0 00.001-9.395l-4.833.015 2.043 2.043a.625.625 0 01-.884.884L6.75 8.672a.625.625 0 010-.884l3.105-3.105a.625.625 0 01.884 0z"></path></svg>,
             ],
             <React.Fragment>{toolsState.textLevel}<svg width="8" height="24" viewBox="0 0 8 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M4 13.293L6.293 11a.5.5 0 01.707.707l-2.695 2.695a.431.431 0 01-.61 0L1 11.707A.5.5 0 111.707 11L4 13.293z"></path></svg></React.Fragment>,
-            <React.Fragment>{toolsState.fontFamily}<svg width="8" height="24" viewBox="0 0 8 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M4 13.293L6.293 11a.5.5 0 01.707.707l-2.695 2.695a.431.431 0 01-.61 0L1 11.707A.5.5 0 111.707 11L4 13.293z"></path></svg></React.Fragment>,
+            <React.Fragment>{toolsState.superFamily}<svg width="8" height="24" viewBox="0 0 8 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M4 13.293L6.293 11a.5.5 0 01.707.707l-2.695 2.695a.431.431 0 01-.61 0L1 11.707A.5.5 0 111.707 11L4 13.293z"></path></svg></React.Fragment>,
             <React.Fragment>{toolsState.fontSize}<svg width="8" height="24" viewBox="0 0 8 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M4 13.293L6.293 11a.5.5 0 01.707.707l-2.695 2.695a.431.431 0 01-.61 0L1 11.707A.5.5 0 111.707 11L4 13.293z"></path></svg></React.Fragment>,
             [
                 <React.Fragment><span><span className="circle" style={{ background: selColor.fore }}></span></span><svg className="chevron" width="20" height="24" viewBox="0 0 8 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M4 13.293L6.293 11a.5.5 0 01.707.707l-2.695 2.695a.431.431 0 01-.61 0L1 11.707A.5.5 0 111.707 11L4 13.293z"></path></svg></React.Fragment>,
@@ -64,7 +64,7 @@ function ToolBar({ toolsState, setToolsState, selColor, setSelColor }) {
         style: ['textLevel', 'fontFamily', 'fontSize', 'color', 'background'],
     }
 
-    const selectTools = ['text-level', 'font-family', 'font-size', 'fore-color', 'back-color']
+    const selectTools = ['text-level', 'super-family', 'font-size', 'fore-color', 'back-color']
     // [state, dispatch] of useReducer === [state, setState] of useState
     // the first argument to reducer is the function to use to conditionally change the state
     // (state, action) // state is the state obj, while, action is the new value you want to be read
@@ -97,7 +97,7 @@ function ToolBar({ toolsState, setToolsState, selColor, setSelColor }) {
             })}
             {selectionDropTool === 'text-level' ?
                 <TextLevelsCard setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
-            selectionDropTool === 'font-family' ?
+            selectionDropTool === 'super-family' ?
                 <FontFamiliesCard setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
             selectionDropTool === 'font-size' ?
                 <FontSizeCard setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :

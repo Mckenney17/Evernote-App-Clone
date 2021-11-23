@@ -53,11 +53,11 @@
                 fill: $sbc;
             }
         }
-        &.text-level, &.font-family, &.font-size {
+        &.text-level, &.super-family, &.font-size {
             padding: 0 5px;
         }
         
-        &.text-level svg, &.font-family svg{
+        &.text-level svg, &.super-family svg{
             margin-left: 10px;
         }
         &.font-size svg {

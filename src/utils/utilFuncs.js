@@ -40,10 +40,21 @@ const allDocument = {
     }
 }
 
+const getFontFamily = (superFamily) => {
+    return superFamily === 'Sans serif' ? "'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+    : superFamily === 'Serif' ? "'Source Serif Pro', serif"
+    : superFamily === 'Slab serif' ? "'Zilla Slab', slab-serif"
+    : superFamily === 'Monospace' ? "'Source Code Pro', monospace"
+    : superFamily === 'Script' ? "'Dancing Script', script"
+    : superFamily === 'Handwritten' ? "Kalam, handwritten"
+    : null
+}
+
 export { 
     calcTimeElapsedHumanized,
     camelCase,
     hyphenate,
     capitalize,
     allDocument,
+    getFontFamily,
 }

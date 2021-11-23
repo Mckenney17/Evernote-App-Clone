@@ -1,4 +1,5 @@
-import React, { /* useContext,  */useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { getFontFamily } from '../utils/utilFuncs'
 // import AppContext from '../utils/AppContext'
 import './Editor.scss'
 import ToolBar from './ToolBar'
@@ -8,8 +9,8 @@ function Editor() {
     const [selColor, setSelColor] = useState({ fore: '#000', back: '#ffef9e' })
     const [toolsState, setToolsState] = useState({
         textLevel: 'Normal Text',
-        fontFamily: 'Sans serif',
-        fontSize: 16,
+        superFamily: 'Sans serif',
+        fontSize: 14,
         foreColor: false,
         bold: true,
         italic: false,
@@ -24,6 +25,17 @@ function Editor() {
         rightAlign: false,
         centerAlign: false,
     })
+
+    useEffect(() => {
+        const iframe = document.querySelector('iframe')
+        const iframeDocument = iframe.contentDocument
+        iframeDocument.designMode = 'on';
+        [['overflow-wrap', 'break-word'], ['font-family', getFontFamily(toolsState.superFamily)]]
+        .forEach(([prop, val]) => {
+            iframeDocument.body.style.setProperty(prop, val)
+        })
+    }, [toolsState])
+
 
     return (
         <div className="editor">

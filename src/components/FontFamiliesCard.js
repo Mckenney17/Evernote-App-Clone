@@ -12,7 +12,7 @@ function FontFamiliesCard({ setSelectionDropTool, toolsState, setToolsState }) {
         <motion.div className="font-families-card" ref={cardRef} animate={{ y: 10, opacity: 1, type: 'tween' }}>
             <ul>
             {['Sans serif', 'Serif', 'Slab serif', 'Monospace', 'Script', 'Handwritten'].map((superFamily) => (
-                <li key={superFamily} className={toolsState.fontFamily === superFamily ? 'checked' : ''}>
+                <li key={superFamily} className={toolsState.superFamily === superFamily ? 'checked' : ''}>
                     <button className={hyphenate(superFamily)}>{superFamily}</button>
                 </li>
             ))}
