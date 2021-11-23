@@ -70,7 +70,7 @@
                 background: gray(g19);
             }
             &.fore-color, &.back-color {
-                > span, svg {
+                > span, > svg {
                     border-radius: 3px;
 
                     &:hover {
