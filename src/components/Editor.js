@@ -1,18 +1,7 @@
 import React, { /* useContext,  */useState } from 'react'
 // import AppContext from '../utils/AppContext'
-
 import './Editor.scss'
-
 import ToolBar from './ToolBar'
-
-/* 
-Undo & Redo logic
-if the iframe content !== '' // undo is active esle undo is inactive
-onkeyup event on the iframe document // pass the iframe's content in a string
-any changes made [without a keyup] or [with a keyup(Z with ctrlKey set to true)] don't update the string
-If that happens test whether string === iframe content // if false, make redo active
-else deactivate redo
-*/
 
 function Editor() {
     // const { activeNote } = useContext(AppContext)

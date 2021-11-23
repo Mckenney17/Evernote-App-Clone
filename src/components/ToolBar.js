@@ -7,6 +7,15 @@ import FontFamiliesCard from './FontFamiliesCard'
 import ForeColorsCard from './ForeColorsCard'
 import BackColorsCard from './BackColorsCard'
 
+/* 
+Undo & Redo logic
+if the iframe content !== '' // undo is active esle undo is inactive
+onkeyup event on the iframe document // pass the iframe's content in a string
+any changes made [without a keyup] or [with a keyup(Z with ctrlKey set to true)] don't update the string
+If that happens test whether string === iframe content // if false, make redo active
+else deactivate redo
+*/
+
 function ToolBar({ toolsState, setToolsState, selColor, setSelColor }) {
     const tools = {
         allNames: ['insert', ['undo', 'redo'], 'text-level', 'font-family', 'font-size', ['fore-color', 'bold', 'italic', 'underline', 'back-color'], ['unordered-list', 'ordered-list'], 'insert-link', ['left-align', 'center-align', 'right-align', 'indent', 'outdent'], ['strikethrough', 'subscript', 'superscript']],
