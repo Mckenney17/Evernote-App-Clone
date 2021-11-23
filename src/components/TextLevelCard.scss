@@ -27,12 +27,15 @@
     li button {
         width: 100%;
         color: gray(g3);
-        padding: 7px 20px;
+        padding: 10px 20px;
         text-align: left;
         // font-weight: weight(bold);
 
         &:hover {
             background: gray(g18);
         }
+    }
+    li:not(:last-child) {
+        border-bottom: 1px solid gray(g19);
     }
 }
