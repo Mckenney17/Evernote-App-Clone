@@ -98,6 +98,12 @@ function Editor() {
                 return {...prevToolsState, bold: !prevToolsState.bold}
             })
         }
+        if (formatString === 'italic') {
+            execCommand('italic')
+            setToolsState((prevToolsState) => {
+                return {...prevToolsState, italic: !prevToolsState.italic}
+            })
+        }
     }
 
     return (
