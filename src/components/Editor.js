@@ -52,7 +52,10 @@ function Editor() {
             })
         }
         iframeDocumentBody.addEventListener('keyup', keyControls)
-    })
+        return () => {
+            iframeDocumentBody.removeEventListener('keyup', keyControls)
+        }
+    }, [])
 
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
@@ -76,6 +79,9 @@ function Editor() {
             })
         }
         iframeDocument.addEventListener('selectionchange', handleSelectionChange)
+        return () => {
+            iframeDocument.removeEventListener('selectionchange', handleSelectionChange)
+        }
     }, [])
 
     const format = (formatString) => {
