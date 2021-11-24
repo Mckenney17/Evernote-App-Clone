@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { getFontFamily } from '../utils/utilFuncs'
 // import AppContext from '../utils/AppContext'
 import './Editor.scss'
@@ -12,30 +12,87 @@ function Editor() {
         superFamily: 'Sans serif',
         fontSize: 14,
         foreColor: false,
-        bold: true,
+        bold: false,
         italic: false,
         underline: false,
         backColor: false,
         indent: false,
         outdent: false,
-        strikethrough: true,
+        strikethrough: false,
         superscript: false,
         subscript: false,
-        leftAlign: false,
-        rightAlign: false,
-        centerAlign: false,
     })
-
+    const iframe = useRef(document.querySelector('iframe'))
     useEffect(() => {
-        const iframe = document.querySelector('iframe')
-        const iframeDocument = iframe.contentDocument
+        const iframeDocument = iframe.current.contentDocument
         iframeDocument.designMode = 'on';
         [['overflow-wrap', 'break-word'], ['font-family', getFontFamily(toolsState.superFamily)]]
         .forEach(([prop, val]) => {
             iframeDocument.body.style.setProperty(prop, val)
         })
+        iframeDocument.body.focus()
     }, [toolsState])
 
+    useEffect(() => {
+        const iframeDocumentBody = iframe.current.contentDocument.body
+        const keyControls = (ev) => {
+            if (!ev.ctrlKey) return
+            setToolsState((prevToolsState) => {
+                const cloneTS = {...prevToolsState}
+                switch(ev.key) {
+                    case 'b':
+                        cloneTS.bold = !cloneTS.bold
+                        break
+                    case 'i':
+                        cloneTS.italic = !cloneTS.italic
+                        break
+                    default:
+                }
+                return cloneTS
+            })
+        }
+        iframeDocumentBody.addEventListener('keyup', keyControls)
+    })
+
+    useEffect(() => {
+        const iframeDocument = iframe.current.contentDocument
+        const iframeSel = iframe.current.contentWindow.getSelection()
+        const handleSelectionChange = (ev) => {
+            const ancestors = []
+            let canc = iframeSel.anchorNode
+            // console.log(canc.parentNode.nodeName);
+            if (!canc.parentNode) return;
+            while (!['BODY', 'DIV', 'HTML'].includes(canc.parentNode.nodeName)) {
+                ancestors.push(canc.parentNode.nodeName)
+                canc = canc.parentNode
+            }
+            setToolsState((prevToolsState) => {
+                const cloneTS = {...prevToolsState}
+                const tagsProp = [['B', 'bold'], ['I', 'italic']]
+                tagsProp.forEach(([tag, prop]) => {
+                    ancestors.includes(tag) ? cloneTS[prop] = true : cloneTS[prop] = false
+                })
+                return cloneTS
+            })
+        }
+        iframeDocument.addEventListener('selectionchange', handleSelectionChange)
+    }, [])
+
+    const format = (formatString) => {
+        const iframeDocument = iframe.current.contentDocument
+        // const iframeWindow = iframe.current.contentWindow
+
+        const execCommand = (fs) => {
+            iframeDocument.execCommand(fs)
+        }
+
+        if (formatString === 'bold') {
+            execCommand('bold')
+            setToolsState((prevToolsState) => {
+                return {...prevToolsState, bold: !prevToolsState.bold}
+            })
+        }
+    }
 
     return (
         <div className="editor">
@@ -50,14 +107,14 @@ function Editor() {
                         <button className="note-options"><svg width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M4.5 12a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0zm7.501 1.5a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm6 0a1.5 1.5 0 110-3 1.5 1.5 0 010 3z"></path></svg></button>
                     </div>
                 </div>
-                <ToolBar toolsState={toolsState} setToolsState={setToolsState} selColor={selColor} setSelColor={setSelColor}/>
+                <ToolBar toolsState={toolsState} setToolsState={setToolsState} selColor={selColor} setSelColor={setSelColor} format={format} />
             </header>
             <div className="editor-body">
                 <div className="note-title">
                     <textarea className="title-field" placeholder="Title"></textarea>
                 </div>
                 <div className="note-editing-window">
-                    <iframe title="Editing Window"></iframe>
+                    <iframe ref={iframe} title="Editing Window"></iframe>
                 </div>
             </div>
         </div>

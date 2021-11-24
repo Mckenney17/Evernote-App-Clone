@@ -16,7 +16,7 @@ If that happens test whether string === iframe content // if false, make redo ac
 else deactivate redo
 */
 
-function ToolBar({ toolsState, setToolsState, selColor, setSelColor }) {
+function ToolBar({ toolsState, setToolsState, selColor, setSelColor, format }) {
     const tools = {
         allNames: ['insert', ['undo', 'redo'], 'text-level', 'super-family', 'font-size', ['fore-color', 'bold', 'italic', 'underline', 'back-color'], ['unordered-list', 'ordered-list'], 'insert-link', ['left-align', 'center-align', 'right-align', 'indent', 'outdent'], ['strikethrough', 'subscript', 'superscript']],
         allIcons: [<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" fillRule="evenodd" d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM11 9v2H9a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V9a1 1 0 10-2 0z"></path></svg>,
@@ -82,7 +82,7 @@ function ToolBar({ toolsState, setToolsState, selColor, setSelColor }) {
                 {toolName.map((toolNameInner, j) => (
                     <React.Fragment key={`tni-${j}`}>
                         <button onClick={(ev) => {
-                            // fixing bugs
+                            format(toolNameInner)
                             if (['fore-color', 'back-color'].includes(toolNameInner) && !ev.nativeEvent.path[0].classList.contains('chevron')) return;
                             return setSelectionDropTool({ tool: toolNameInner })
                         }} title={capitalize(toolNameInner.split('-').join(' '))} className={`${toolNameInner}${checkables.includes(toolNameInner) && toolsState[camelCase(toolNameInner)] ? ' checked' : ''}`}>{tools.allIcons[i][j]}</button>
