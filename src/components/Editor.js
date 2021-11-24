@@ -33,21 +33,20 @@ function Editor() {
         iframeDocument.body.focus()
     }, [toolsState])
 
+    // control tool highlighting
     useEffect(() => {
         const iframeDocumentBody = iframe.current.contentDocument.body
         const keyControls = (ev) => {
             if (!ev.ctrlKey) return
             setToolsState((prevToolsState) => {
                 const cloneTS = {...prevToolsState}
-                switch(ev.key) {
-                    case 'b':
-                        cloneTS.bold = !cloneTS.bold
-                        break
-                    case 'i':
-                        cloneTS.italic = !cloneTS.italic
-                        break
-                    default:
-                }
+                const keysProp = [['b', 'bold'], ['i', 'italic'], ['u', 'underline']]
+                keysProp.forEach(([key, prop]) => {
+                    if (ev.key === key) {
+                        cloneTS[prop] = !cloneTS[prop]
+                        return
+                    }
+                })
                 return cloneTS
             })
         }
@@ -57,6 +56,7 @@ function Editor() {
         }
     }, [])
 
+    // selection change tool highlighting
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
         const iframeSel = iframe.current.contentWindow.getSelection()
@@ -71,7 +71,7 @@ function Editor() {
             }
             setToolsState((prevToolsState) => {
                 const cloneTS = {...prevToolsState}
-                const tagsProp = [['B', 'bold'], ['I', 'italic']]
+                const tagsProp = [['B', 'bold'], ['I', 'italic'], ['U', 'underline']]
                 tagsProp.forEach(([tag, prop]) => {
                     ancestors.includes(tag) ? cloneTS[prop] = true : cloneTS[prop] = false
                 })
@@ -84,6 +84,7 @@ function Editor() {
         }
     }, [])
 
+    // tool clicking highlighting
     const format = (formatString) => {
         const iframeDocument = iframe.current.contentDocument
         // const iframeWindow = iframe.current.contentWindow
@@ -92,16 +93,10 @@ function Editor() {
             iframeDocument.execCommand(fs)
         }
 
-        if (formatString === 'bold') {
-            execCommand('bold')
+        if (['bold', 'italic', 'underline'].includes(formatString)) {
+            execCommand(formatString)
             setToolsState((prevToolsState) => {
-                return {...prevToolsState, bold: !prevToolsState.bold}
-            })
-        }
-        if (formatString === 'italic') {
-            execCommand('italic')
-            setToolsState((prevToolsState) => {
-                return {...prevToolsState, italic: !prevToolsState.italic}
+                return {...prevToolsState, [formatString]: !prevToolsState[formatString]}
             })
         }
     }
