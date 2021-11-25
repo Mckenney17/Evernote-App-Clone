@@ -32,7 +32,7 @@ function Editor() {
         })
         iframeDocument.body.focus()
     }, [toolsState])
-
+    
     // control tool highlighting
     useEffect(() => {
         const iframeDocumentBody = iframe.current.contentDocument.body
@@ -63,8 +63,11 @@ function Editor() {
         const handleSelectionChange = (ev) => {
             const ancestors = []
             let canc = iframeSel.anchorNode
-            // console.log(canc.parentNode.nodeName);
             if (!canc.parentNode) return;
+            const someFontTagWithSize = canc.parentElement.closest('font[size]')
+            if (someFontTagWithSize) {
+                someFontTagWithSize.style.fontSize = `${toolsState.fontSize}px`
+            }
             while (!['BODY', 'DIV', 'HTML'].includes(canc.parentNode.nodeName)) {
                 ancestors.push(canc.parentNode.nodeName)
                 canc = canc.parentNode
@@ -73,16 +76,17 @@ function Editor() {
                 const cloneTS = {...prevToolsState}
                 const tagsProp = [['B', 'bold'], ['I', 'italic'], ['U', 'underline']]
                 tagsProp.forEach(([tag, prop]) => {
+                    if (canc.parentElement.innerText.trim() === '') return
                     ancestors.includes(tag) ? cloneTS[prop] = true : cloneTS[prop] = false
                 })
                 return cloneTS
             })
         }
-        iframeDocument.addEventListener('selectionchange', handleSelectionChange)
+        iframeDocument.addEventListener('input', handleSelectionChange)
         return () => {
-            iframeDocument.removeEventListener('selectionchange', handleSelectionChange)
+            iframeDocument.removeEventListener('input', handleSelectionChange)
         }
-    }, [])
+    }, [toolsState])
 
     // tool clicking highlighting
     const format = (formatString) => {
@@ -99,6 +103,8 @@ function Editor() {
                 return {...prevToolsState, [formatString]: !prevToolsState[formatString]}
             })
         }
+
+        
     }
 
     return (
