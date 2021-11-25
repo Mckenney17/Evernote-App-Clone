@@ -6,7 +6,7 @@ import ToolBar from './ToolBar'
 
 function Editor() {
     // const { activeNote } = useContext(AppContext)
-    const [selColor, setSelColor] = useState({ fore: '#000000', back: '#ffef9e' })
+    const [selColor, setSelColor] = useState({ fore: '#000000', selFore: '#000000', back: '#ffef9e', selBack: '#ffef9e' })
     const [toolsState, setToolsState] = useState({
         textLevel: 'Normal Text',
         superFamily: 'Sans serif',
@@ -60,7 +60,7 @@ function Editor() {
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
         const iframeSel = iframe.current.contentWindow.getSelection()
-        const handleInputEvent = (ev) => {
+        const handleSelectionChange = (ev) => {
             const ancestors = []
             let canc = iframeSel.anchorNode
             if (!canc.parentNode) return;
@@ -80,14 +80,21 @@ function Editor() {
                     if (canc.parentElement.innerText.trim() === '') return
                     ancestors.includes(tag) ? cloneTS[prop] = true : cloneTS[prop] = false
                 })
+                if (ancestors.includes('FONT')) {
+                    cloneTS.foreColor = true
+                    setSelColor((prevSelColor) => ({...prevSelColor, fore: iframeSel.anchorNode.parentElement.closest('font[color]').color}))
+                } else {
+                    cloneTS.foreColor = false
+                    setSelColor((prevSelColor) => ({...prevSelColor, fore: selColor.selFore}))
+                }
                 return cloneTS
             })
         }
-        iframeDocument.addEventListener('input', handleInputEvent)
+        iframeDocument.addEventListener('selectionchange', handleSelectionChange)
         return () => {
-            iframeDocument.removeEventListener('input', handleInputEvent)
+            iframeDocument.removeEventListener('selectionchange', handleSelectionChange)
         }
-    }, [toolsState])
+    }, [toolsState, selColor])
 
     // tool clicking highlighting
     const execCommand = (fs, sdu = false, vArg = null) => {
@@ -95,8 +102,6 @@ function Editor() {
         iframeDocument.execCommand(fs, sdu, vArg)
     }
     const format = (formatString) => {
-        // const iframeWindow = iframe.current.contentWindow
-
         if (['bold', 'italic', 'underline'].includes(formatString)) {
             execCommand(formatString)
             setToolsState((prevToolsState) => {
@@ -117,11 +122,17 @@ function Editor() {
     }
 
     useEffect(() => {
+        if (iframe.current.contentDocument.body.innerText.trim() === '') return
         if (toolsState.foreColor) execCommand('foreColor', false, selColor.fore)
         else execCommand('foreColor', false, '#000000')
+    }, [toolsState.foreColor, selColor.fore])
+
+    useEffect(() => {
+        if (iframe.current.contentDocument.body.innerText.trim() === '') return
         if (toolsState.backColor) execCommand('hiliteColor', false, selColor.back)
-        else execCommand('hiliteColor', false, '#ffffff00')
-    }, [toolsState.foreColor, toolsState.backColor, selColor])
+        else execCommand('hiliteColor', false, '#ffffff')
+    }, [toolsState.backColor, selColor.back])
+
 
     return (
         <div className="editor">

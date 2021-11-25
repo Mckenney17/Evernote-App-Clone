@@ -24,14 +24,14 @@ const calcTimeElapsedHumanized = (time) => { // time: Number
     return `${calcYears} year${calcYears > 1 ? 's' : ''} ago`    
 }
 
-const capitalize = (text) => `${text[0].toUpperCase()}${text.slice(1)}`
+const capitalize = (text: string) => `${text[0].toUpperCase()}${text.slice(1)}`
 
-const camelCase = (phrase) => phrase.split(/[\s-]/i).map((str, i) => i === 0 ? str.toLowerCase() : str.replace(str[0], str[0].toUpperCase())).join('')
+const camelCase = (phrase: string) => phrase.split(/[\s-]/i).map((str, i) => i === 0 ? str.toLowerCase() : str.replace(str[0], str[0].toUpperCase())).join('')
 
-const hyphenate = (phrase) => phrase.toLowerCase().replaceAll(' ', '-')
+const hyphenate = (phrase: string) => phrase.toLowerCase().replaceAll(' ', '-')
 
 const allDocument = {
-    addEventListener(type, handler) {
+    addEventListener(type: string, handler: function) {
         [document, document.querySelector('iframe').contentWindow].map((doc) => doc.addEventListener(type, handler))
     },
     
@@ -50,6 +50,11 @@ const getFontFamily = (superFamily) => {
     : null
 }
 
+const rgbToHex = (rgbStr: string) => {
+    const rgbArr = rgbStr.match(/\d+/g)
+    return rgbArr.map((v) => v.toString(16)).reduce((acc, v) => acc + v, '#')
+}
+
 export { 
     calcTimeElapsedHumanized,
     camelCase,
@@ -57,4 +62,5 @@ export {
     capitalize,
     allDocument,
     getFontFamily,
+    rgbToHex,
 }
