@@ -82,9 +82,13 @@ function ToolBar({ toolsState, setToolsState, selColor, setSelColor, format }) {
                 {toolName.map((toolNameInner, j) => (
                     <React.Fragment key={`tni-${j}`}>
                         <button onClick={(ev) => {
-                            format(toolNameInner)
-                            if (['fore-color', 'back-color'].includes(toolNameInner) && !ev.nativeEvent.path[0].classList.contains('chevron')) return;
-                            return setSelectionDropTool({ tool: toolNameInner })
+                            if (['fore-color', 'back-color'].includes(toolNameInner) && !ev.nativeEvent.path[0].classList.contains('chevron')) {
+                                format(toolNameInner)
+                            } else if(['fore-color', 'back-color'].includes(toolNameInner) && ev.nativeEvent.path[0].classList.contains('chevron')) {
+                                setSelectionDropTool({ tool: toolNameInner })
+                            } else {
+                                format(toolNameInner)
+                            }
                         }} title={capitalize(toolNameInner.split('-').join(' '))} className={`${toolNameInner}${checkables.includes(toolNameInner) && toolsState[camelCase(toolNameInner)] ? ' checked' : ''}`}>{tools.allIcons[i][j]}</button>
                     </React.Fragment>
                 ))}
@@ -102,9 +106,9 @@ function ToolBar({ toolsState, setToolsState, selColor, setSelColor, format }) {
             selectionDropTool === 'font-size' ?
                 <FontSizeCard setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
             selectionDropTool === 'fore-color' ?
-                <ForeColorsCard selColor={selColor} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
+                <ForeColorsCard selColor={selColor} setSelColor={setSelColor} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
             selectionDropTool === 'back-color' ?
-                <BackColorsCard selColor={selColor} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
+                <BackColorsCard selColor={selColor} setSelColor={setSelColor} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
             null }
         </div>
     )

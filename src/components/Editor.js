@@ -6,7 +6,7 @@ import ToolBar from './ToolBar'
 
 function Editor() {
     // const { activeNote } = useContext(AppContext)
-    const [selColor, setSelColor] = useState({ fore: '#000', back: '#ffef9e' })
+    const [selColor, setSelColor] = useState({ fore: '#000000', back: '#ffef9e' })
     const [toolsState, setToolsState] = useState({
         textLevel: 'Normal Text',
         superFamily: 'Sans serif',
@@ -60,10 +60,11 @@ function Editor() {
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
         const iframeSel = iframe.current.contentWindow.getSelection()
-        const handleSelectionChange = (ev) => {
+        const handleInputEvent = (ev) => {
             const ancestors = []
             let canc = iframeSel.anchorNode
             if (!canc.parentNode) return;
+            // override the execCommand fontSize functionality
             const someFontTagWithSize = canc.parentElement.closest('font[size]')
             if (someFontTagWithSize) {
                 someFontTagWithSize.style.fontSize = `${toolsState.fontSize}px`
@@ -82,20 +83,19 @@ function Editor() {
                 return cloneTS
             })
         }
-        iframeDocument.addEventListener('input', handleSelectionChange)
+        iframeDocument.addEventListener('input', handleInputEvent)
         return () => {
-            iframeDocument.removeEventListener('input', handleSelectionChange)
+            iframeDocument.removeEventListener('input', handleInputEvent)
         }
     }, [toolsState])
 
     // tool clicking highlighting
-    const format = (formatString) => {
+    const execCommand = (fs, sdu = false, vArg = null) => {
         const iframeDocument = iframe.current.contentDocument
+        iframeDocument.execCommand(fs, sdu, vArg)
+    }
+    const format = (formatString) => {
         // const iframeWindow = iframe.current.contentWindow
-
-        const execCommand = (fs) => {
-            iframeDocument.execCommand(fs)
-        }
 
         if (['bold', 'italic', 'underline'].includes(formatString)) {
             execCommand(formatString)
@@ -104,8 +104,24 @@ function Editor() {
             })
         }
 
-        
+        if (formatString === 'fore-color') {
+            setToolsState((prevToolsState) => {
+                return {...prevToolsState, foreColor: !prevToolsState.foreColor}
+            })
+        }
+        if (formatString === 'back-color') {
+            setToolsState((prevToolsState) => {
+                return {...prevToolsState, backColor: !prevToolsState.backColor}
+            })
+        }
     }
+
+    useEffect(() => {
+        if (toolsState.foreColor) execCommand('foreColor', false, selColor.fore)
+        else execCommand('foreColor', false, '#000000')
+        if (toolsState.backColor) execCommand('hiliteColor', false, selColor.back)
+        else execCommand('hiliteColor', false, '#ffffff00')
+    }, [toolsState.foreColor, toolsState.backColor, selColor])
 
     return (
         <div className="editor">
