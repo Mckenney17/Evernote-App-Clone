@@ -31,6 +31,10 @@ function Editor() {
             iframeDocument.body.style.setProperty(prop, val)
         })
         iframeDocument.body.focus()
+
+        iframeDocument.querySelectorAll('font.size')?.forEach((elem) => {
+            elem.style.fontSize = `${elem.className.match(/\d+/)}px`
+        })
     }, [toolsState])
     
     // control tool highlighting
@@ -65,10 +69,10 @@ function Editor() {
             let canc = iframeSel.anchorNode
             if (!canc.parentNode) return;
             // override the execCommand fontSize functionality
-            const someFontTagWithSize = canc.parentElement.closest('font[size]')
+            /* const someFontTagWithSize = canc.parentElement.closest('font[size]')
             if (someFontTagWithSize) {
                 someFontTagWithSize.style.fontSize = `${toolsState.fontSize}px`
-            }
+            } */
             while (!['BODY', 'DIV', 'HTML'].includes(canc.parentNode.nodeName)) {
                 ancestors.push(canc.parentNode.nodeName)
                 canc = canc.parentNode
@@ -76,16 +80,28 @@ function Editor() {
             setToolsState((prevToolsState) => {
                 const cloneTS = {...prevToolsState}
                 const tagsProp = [['B', 'bold'], ['I', 'italic'], ['U', 'underline']]
+                if (canc.parentElement.innerText.trim() === '') return cloneTS
                 tagsProp.forEach(([tag, prop]) => {
-                    if (canc.parentElement.innerText.trim() === '') return
                     ancestors.includes(tag) ? cloneTS[prop] = true : cloneTS[prop] = false
                 })
                 if (ancestors.includes('FONT')) {
-                    cloneTS.foreColor = true
-                    setSelColor((prevSelColor) => ({...prevSelColor, fore: iframeSel.anchorNode.parentElement.closest('font[color]').color}))
+                    const fontTagWithColor = iframeSel.anchorNode.parentElement.closest('font[color]')
+                    const fontTagWithSize = iframeSel.anchorNode.parentElement.closest('font[size]')
+                    if (fontTagWithColor) {
+                        cloneTS.foreColor = true
+                        setSelColor((prevSelColor) => ({...prevSelColor, fore: fontTagWithColor.color}))
+                    }
+                    if (fontTagWithSize) {
+                        if (fontTagWithSize.classList.contains('size')) {
+                            cloneTS.fontSize = parseInt(fontTagWithSize.className.match(/\d+/)[0])
+                        } else {
+                            fontTagWithSize.className = `size size-${toolsState.fontSize}`
+                        }
+                    }
                 } else {
                     cloneTS.foreColor = false
                     setSelColor((prevSelColor) => ({...prevSelColor, fore: selColor.selFore}))
+                    cloneTS.fontSize = 14
                 }
                 return cloneTS
             })
@@ -101,7 +117,7 @@ function Editor() {
         const iframeDocument = iframe.current.contentDocument
         iframeDocument.execCommand(fs, sdu, vArg)
     }
-    const format = (formatString) => {
+    const format = (formatString: string) => {
         if (['bold', 'italic', 'underline'].includes(formatString)) {
             execCommand(formatString)
             setToolsState((prevToolsState) => {
@@ -119,16 +135,23 @@ function Editor() {
                 return {...prevToolsState, backColor: !prevToolsState.backColor}
             })
         }
+
+        if (formatString.includes('font-size')) {
+            setToolsState((prevToolsState) => {
+                return {...prevToolsState, fontSize: parseInt(formatString.match(/\d+/)[0])}
+            })
+            execCommand('fontSize', false, 1)
+        }
     }
 
     useEffect(() => {
-        if (iframe.current.contentDocument.body.innerText.trim() === '') return
+        // if (iframe.current.contentDocument.body.innerText.trim() === '') return
         if (toolsState.foreColor) execCommand('foreColor', false, selColor.fore)
         else execCommand('foreColor', false, '#000000')
     }, [toolsState.foreColor, selColor.fore])
 
     useEffect(() => {
-        if (iframe.current.contentDocument.body.innerText.trim() === '') return
+        // if (iframe.current.contentDocument.body.innerText.trim() === '') return
         if (toolsState.backColor) execCommand('hiliteColor', false, selColor.back)
         else execCommand('hiliteColor', false, '#ffffff')
     }, [toolsState.backColor, selColor.back])

@@ -40,6 +40,9 @@
         &.fore-color.checked, &.back-color.checked {
             > span {
                 background: lighten($sbc, 35);
+                svg:last-child path {
+                    fill: #fff;
+                }
             }
 
             > svg path {

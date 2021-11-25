@@ -104,7 +104,7 @@ function ToolBar({ toolsState, setToolsState, selColor, setSelColor, format }) {
             selectionDropTool === 'super-family' ?
                 <FontFamiliesCard setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
             selectionDropTool === 'font-size' ?
-                <FontSizeCard setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
+                <FontSizeCard format={format} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
             selectionDropTool === 'fore-color' ?
                 <ForeColorsCard selColor={selColor} setSelColor={setSelColor} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
             selectionDropTool === 'back-color' ?
