@@ -91,12 +91,9 @@ function Editor() {
                         cloneTS.foreColor = true
                         setSelColor((prevSelColor) => ({...prevSelColor, fore: fontTagWithColor.color}))
                     }
-                    if (fontTagWithSize) {
-                        if (fontTagWithSize.classList.contains('size')) {
-                            cloneTS.fontSize = parseInt(fontTagWithSize.className.match(/\d+/)[0])
-                        } else {
-                            fontTagWithSize.className = `size size-${toolsState.fontSize}`
-                        }
+                    
+                    if (fontTagWithSize && fontTagWithSize.classList.contains('size')) {
+                        cloneTS.fontSize = parseInt(fontTagWithSize.className.match(/\d+/)[0])
                     }
                 } else {
                     cloneTS.foreColor = false
@@ -105,12 +102,28 @@ function Editor() {
                 }
                 return cloneTS
             })
+            
         }
         iframeDocument.addEventListener('selectionchange', handleSelectionChange)
         return () => {
             iframeDocument.removeEventListener('selectionchange', handleSelectionChange)
         }
     }, [toolsState, selColor])
+
+    useEffect(() => {
+        const iframeSel = iframe.current.contentWindow.getSelection()
+        const iframeDocument = iframe.current.contentDocument
+        const handleInput = () => {
+            const fontTagWithSize = iframeSel.anchorNode.parentElement.closest('font[size]')
+            if (fontTagWithSize && !fontTagWithSize.classList.contains(`size-${toolsState.fontSize}`)) {
+                fontTagWithSize.className = `size size-${toolsState.fontSize}`
+            }
+        }
+        iframeDocument.addEventListener('input', handleInput)
+        return () => {
+            iframeDocument.removeEventListener('input', handleInput)
+        }
+    }, [toolsState])
 
     // tool clicking highlighting
     const execCommand = (fs, sdu = false, vArg = null) => {
