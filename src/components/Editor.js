@@ -104,27 +104,27 @@ function Editor() {
                     cloneTS.fontSize = 14
                 }
 
-                if (ancestors.includes('SPAN')) {
-                    const spanTagWithStyle = iframeSel.anchorNode.parentElement.closest('span[style]')
-                    if (spanTagWithStyle.style.backgroundColor) {
-                        if (rgbToHex(spanTagWithStyle.style.backgroundColor) === '#ffffff') {
+                if (ancestors.includes('SPAN') || ancestors.includes('FONT')) {
+                    const tagWithStyle = iframeSel.anchorNode.parentElement.closest('*[style]')
+                    if (tagWithStyle.style.backgroundColor) {
+                        if (rgbToHex(tagWithStyle.style.backgroundColor) === '#ffffff') {
                             cloneTS.backColor = false
                             setSelColor((prevSelColor) => ({...prevSelColor, back: selColor.selBack}))
                         } else {
                             cloneTS.backColor = true
-                            setSelColor((prevSelColor) => ({...prevSelColor, back: rgbToHex(spanTagWithStyle.style.backgroundColor)}))
+                            setSelColor((prevSelColor) => ({...prevSelColor, back: rgbToHex(tagWithStyle.style.backgroundColor)}))
                         }
                     } else {
                         cloneTS.backColor = false
                         setSelColor((prevSelColor) => ({...prevSelColor, back: selColor.selBack}))
                     }
 
-                    if (spanTagWithStyle.style.fontSize) {
-                        cloneTS.fontSize = parseInt(spanTagWithStyle.style.fontSize)
+                    if (tagWithStyle.style.fontSize) {
+                        cloneTS.fontSize = parseInt(tagWithStyle.style.fontSize)
                     }
                 } else {
                     cloneTS.backColor = false
-                        setSelColor((prevSelColor) => ({...prevSelColor, back: selColor.selBack}))
+                    setSelColor((prevSelColor) => ({...prevSelColor, back: selColor.selBack}))
                 }
                 return cloneTS
             })
