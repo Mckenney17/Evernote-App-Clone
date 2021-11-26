@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { getFontFamily } from '../utils/utilFuncs'
+import { getFontFamily, rgbToHex } from '../utils/utilFuncs'
 // import AppContext from '../utils/AppContext'
 import './Editor.scss'
 import ToolBar from './ToolBar'
@@ -90,6 +90,9 @@ function Editor() {
                     if (fontTagWithColor) {
                         cloneTS.foreColor = true
                         setSelColor((prevSelColor) => ({...prevSelColor, fore: fontTagWithColor.color}))
+                    } else {
+                        cloneTS.foreColor = false
+                        setSelColor((prevSelColor) => ({...prevSelColor, fore: selColor.selFore}))
                     }
                     
                     if (fontTagWithSize && fontTagWithSize.classList.contains('size')) {
@@ -99,6 +102,29 @@ function Editor() {
                     cloneTS.foreColor = false
                     setSelColor((prevSelColor) => ({...prevSelColor, fore: selColor.selFore}))
                     cloneTS.fontSize = 14
+                }
+
+                if (ancestors.includes('SPAN')) {
+                    const spanTagWithStyle = iframeSel.anchorNode.parentElement.closest('span[style]')
+                    if (spanTagWithStyle.style.backgroundColor) {
+                        if (rgbToHex(spanTagWithStyle.style.backgroundColor) === '#ffffff') {
+                            cloneTS.backColor = false
+                            setSelColor((prevSelColor) => ({...prevSelColor, back: selColor.selBack}))
+                        } else {
+                            cloneTS.backColor = true
+                            setSelColor((prevSelColor) => ({...prevSelColor, back: rgbToHex(spanTagWithStyle.style.backgroundColor)}))
+                        }
+                    } else {
+                        cloneTS.backColor = false
+                        setSelColor((prevSelColor) => ({...prevSelColor, back: selColor.selBack}))
+                    }
+
+                    if (spanTagWithStyle.style.fontSize) {
+                        cloneTS.fontSize = parseInt(spanTagWithStyle.style.fontSize)
+                    }
+                } else {
+                    cloneTS.backColor = false
+                        setSelColor((prevSelColor) => ({...prevSelColor, back: selColor.selBack}))
                 }
                 return cloneTS
             })
@@ -113,7 +139,8 @@ function Editor() {
     useEffect(() => {
         const iframeSel = iframe.current.contentWindow.getSelection()
         const iframeDocument = iframe.current.contentDocument
-        const handleInput = () => {
+        const handleInput = (ev) => {
+            if (ev.data === null) return
             const fontTagWithSize = iframeSel.anchorNode.parentElement.closest('font[size]')
             if (fontTagWithSize && !fontTagWithSize.classList.contains(`size-${toolsState.fontSize}`)) {
                 fontTagWithSize.className = `size size-${toolsState.fontSize}`
@@ -158,16 +185,14 @@ function Editor() {
     }
 
     useEffect(() => {
-        // if (iframe.current.contentDocument.body.innerText.trim() === '') return
+        if (toolsState.backColor) execCommand('backColor', false, selColor.back)
+        else execCommand('backColor', false, '#ffffff')
+    }, [toolsState.backColor, selColor.back])
+
+    useEffect(() => {
         if (toolsState.foreColor) execCommand('foreColor', false, selColor.fore)
         else execCommand('foreColor', false, '#000000')
     }, [toolsState.foreColor, selColor.fore])
-
-    useEffect(() => {
-        // if (iframe.current.contentDocument.body.innerText.trim() === '') return
-        if (toolsState.backColor) execCommand('hiliteColor', false, selColor.back)
-        else execCommand('hiliteColor', false, '#ffffff')
-    }, [toolsState.backColor, selColor.back])
 
 
     return (

@@ -52,7 +52,7 @@ const getFontFamily = (superFamily) => {
 
 const rgbToHex = (rgbStr: string) => {
     const rgbArr = rgbStr.match(/\d+/g)
-    return rgbArr.map((v) => v.toString(16)).reduce((acc, v) => acc + v, '#')
+    return rgbArr.map((v) => Number(v).toString(16)).reduce((acc, v) => acc + v, '#')
 }
 
 export { 
