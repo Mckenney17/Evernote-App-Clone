@@ -32,9 +32,7 @@ function Editor() {
         })
         iframeDocument.body.focus()
 
-        iframeDocument.querySelectorAll('font.size')?.forEach((elem) => {
-            elem.style.fontSize = `${elem.className.match(/\d+/)}px`
-        })
+        
     }, [toolsState])
     
     // control tool highlighting
@@ -81,7 +79,7 @@ function Editor() {
                 const cloneTS = {...prevToolsState}
                 // const tagsProp = [['B', 'bold'], ['I', 'italic'], ['U', 'underline']]
                 if (currentAncestor.parentNode.innerText.trim() === '') return cloneTS
-                ancestors.forEach((ancestorNode, i, ancestorArr) => {
+                ancestors.forEach((ancestorNode, index, ancestorArr) => {
                     if (ancestorArr.some((ancNode) => ancNode.nodeName === 'B' || ancNode.style.fontWeight === 'bold')) cloneTS.bold = true
                     else cloneTS.bold = false
                     if (ancestorArr.some((ancNode) => ancNode.nodeName === 'I' || ancNode.style.fontStyle === 'italic')) cloneTS.italic = true
@@ -89,7 +87,6 @@ function Editor() {
                     if (ancestorArr.some((ancNode) => ancNode.nodeName === 'U' || ancNode.style.textDecorationLine === 'underline')) cloneTS.underline = true
                     else cloneTS.underline = false
                     if (ancestorArr.some((ancNode) => ancNode.color || ancNode.style.color)) {
-                        console.log(ancestorArr);
                         cloneTS.foreColor = true
                         const check1 = ancestorNode.color
                         const check2 = rgbToHex(ancestorNode.style.color)
@@ -100,7 +97,7 @@ function Editor() {
                         cloneTS.foreColor = false
                         setSelColor((prevSelColor) => ({...prevSelColor, fore: selColor.selFore}))
                     }
-                    if (ancestorArr.some((ancNode) => ancNode.style.backgroundColor && rgbToHex(ancNode.style.backgroundColor) !== '#ffffff')) {
+                    if (ancestorArr.some((ancNode) => ancNode.style.backgroundColor && ['#ffef9e', '#fec1d0', '#b7f7d1', '#adecf4', '#cbcaff', '#ffd1b0'].includes(rgbToHex(ancNode.style.backgroundColor)))) {
                         cloneTS.backColor = true
                         if (ancestorNode.style.backgroundColor) {
                             setSelColor((prevSelColor) => ({...prevSelColor, back: rgbToHex(ancestorNode.style.backgroundColor)}))
@@ -109,11 +106,11 @@ function Editor() {
                         cloneTS.backColor = false
                         setSelColor((prevSelColor) => ({...prevSelColor, back: selColor.selBack}))
                     }
-                    if (ancestorArr.some((ancNode) => ancNode.style.fontSize)) {
-                            const lastFontSizeElem = ancestorArr.filter((a) => a.style.fontSize)[0]
-                            if (lastFontSizeElem) {
-                                cloneTS.fontSize = parseInt(lastFontSizeElem.style.fontSize)
-                            }
+                    const closestFontSizeElem = iframeSel.anchorNode.parentNode.closest('*[style*="font-size"]')
+                    if (closestFontSizeElem) {
+                        cloneTS.fontSize = parseInt(closestFontSizeElem.style.fontSize)
+                    } else {
+                        cloneTS.fontSize = 14
                     }
                 })
                 return cloneTS
@@ -127,20 +124,21 @@ function Editor() {
     }, [toolsState, selColor])
 
     useEffect(() => {
-        const iframeSel = iframe.current.contentWindow.getSelection()
         const iframeDocument = iframe.current.contentDocument
-        const handleInput = (ev) => {
-            if (ev.data === null) return
-            const fontTagWithSize = iframeSel.anchorNode.parentNode.closest('font[size]')
-            if (fontTagWithSize && !fontTagWithSize.classList.contains(`size-${toolsState.fontSize}`)) {
-                fontTagWithSize.className = `size size-${toolsState.fontSize}`
-            }
+        const fontSizes = [8, 9, 10, 12, 14, 16, 18, 20, 24, 30, 36, 48, 64, 72, 96]
+        const doThis = () => {
+            fontSizes.forEach((fsv) => {
+                iframeDocument.querySelectorAll(`span[style*="background-color: rgb(${fsv}, 0, 0);"]`).forEach((elem) => {
+                    elem.style.backgroundColor = 'transparent'
+                    elem.style.fontSize = `${fsv}px`
+                })
+            })
         }
-        iframeDocument.addEventListener('input', handleInput)
+        iframeDocument.addEventListener('input', doThis)
         return () => {
-            iframeDocument.removeEventListener('input', handleInput)
+            iframeDocument.removeEventListener('input', doThis)
         }
-    }, [toolsState])
+    }, [])
 
     // tool clicking highlighting
     const execCommand = (fs, sdu = false, vArg = null) => {
@@ -171,7 +169,7 @@ function Editor() {
             setToolsState((prevToolsState) => {
                 return {...prevToolsState, fontSize: parseInt(formatString.match(/\d+/)[0])}
             })
-            execCommand('fontSize', false, 1)
+            execCommand('backColor', false, `rgb(${parseInt(formatString.match(/\d+/)[0])}, 0, 0)`)
         }
     }
 

@@ -30,6 +30,8 @@ const camelCase = (phrase: string) => phrase.split(/[\s-]/i).map((str, i) => i =
 
 const hyphenate = (phrase: string) => phrase.toLowerCase().replaceAll(' ', '-')
 
+const toPhrase = (text: string) => capitalize(text.toLowerCase().replaceAll('-', ' '))
+
 const allDocument = {
     addEventListener(type: string, handler: function) {
         [document, document.querySelector('iframe').contentWindow].map((doc) => doc.addEventListener(type, handler))
@@ -51,7 +53,7 @@ const getFontFamily = (superFamily) => {
 }
 
 const rgbToHex = (rgbStr: string) => {
-    if (!rgbStr) return
+    if (!rgbStr.includes('rgb')) return rgbStr
     const rgbArr = rgbStr.match(/\d+/g)
     return rgbArr.map((v) => Number(v).toString(16)).reduce((acc, v) => acc + v, '#')
 }
@@ -64,4 +66,5 @@ export {
     allDocument,
     getFontFamily,
     rgbToHex,
+    toPhrase,
 }
