@@ -104,7 +104,7 @@ function ToolBar({ toolsState, setToolsState, selColor, setSelColor, format }) {
             </React.Fragment>
             })}
             {selectionDropTool === 'text-level' ?
-                <TextLevelsCard setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
+                <TextLevelsCard format={format} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
             selectionDropTool === 'super-family' ?
                 <FontFamiliesCard format={format} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
             selectionDropTool === 'font-size' ?

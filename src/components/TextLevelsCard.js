@@ -3,7 +3,7 @@ import React, { useRef } from 'react'
 import useSelectionDrop from '../hooks/useSelectionDrop'
 import './TextLevelCard.scss'
 
-function TextLevelsCard({ setSelectionDropTool }) {
+function TextLevelsCard({ setSelectionDropTool, format }) {
     const cardRef = useRef(null)
     useSelectionDrop({ cardRef, exSelector: 'text-level', setSelectionDropTool })
     /* 
@@ -15,8 +15,8 @@ function TextLevelsCard({ setSelectionDropTool }) {
     return (
         <motion.div className="text-level-card" ref={cardRef} animate={{ y: 10, opacity: 1, type: 'tween' }}>
             <ul>
-            {[<h1>Large heading</h1>, <h2>Medium Heading</h2>, <h3>Small Heading</h3>, 'Normal Text'].map((v, i) => (
-                <li key={`tl-${i}`}><button>{v}</button></li>
+            {['Large heading', 'Medium heading', 'Small heading', 'Normal text'].map((v, i) => (
+                <li key={`tl-${i}`}><button onClick={() => format(v)}>{v}</button></li>
             ))}
             </ul>
         </motion.div>

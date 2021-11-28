@@ -12,16 +12,19 @@
     padding: 10px 0;
     font-size: 14px;
 
-    h1 {
-        font-size: 30px;
+    $list: (1: 30px, 2: 24px, 3: 18px, 4: 14px);
+    @each $nth, $size in $list {
+        li:nth-child(#{$nth}) {
+            button {
+                font-size: #{$size};
+            }
+        }
     }
 
-    h2 {
-        font-size: 24px;
-    }
-
-    h3 {
-        font-size: 18px;
+    li:not(:last-child) {
+        button {
+            font-weight: 600;
+        }
     }
 
     li button {

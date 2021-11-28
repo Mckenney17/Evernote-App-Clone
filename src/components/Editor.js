@@ -8,7 +8,7 @@ function Editor() {
     // const { activeNote } = useContext(AppContext)
     const [selColor, setSelColor] = useState({ fore: '#000000', selFore: '#000000', back: '#ffef9e', selBack: '#ffef9e' })
     const [toolsState, setToolsState] = useState({
-        textLevel: 'Normal Text',
+        textLevel: 'Normal text',
         superFamily: 'Sans serif',
         fontSize: 14,
         foreColor: false,
@@ -153,6 +153,8 @@ function Editor() {
         iframeDocument.execCommand(fs, sdu, vArg)
     }
     const format = (formatString: string) => {
+        const iframeSel = iframe.current.contentWindow
+
         if (['bold', 'italic', 'underline'].includes(formatString)) {
             execCommand(formatString)
             setToolsState((prevToolsState) => {
@@ -185,6 +187,14 @@ function Editor() {
                 return {...prevToolsState, superFamily: formatString.split('=').at(-1)}
             })
             execCommand('fontName', false, getFontFamily(formatString.split('=').at(-1)))
+        }
+
+        if (['Large heading', 'Medium heading', 'Small heading', 'Normal text'].includes(formatString)) {
+            setToolsState((prevToolsState) => {
+                return {...prevToolsState, texLevel: formatString}
+            })
+
+            
         }
     }
 
