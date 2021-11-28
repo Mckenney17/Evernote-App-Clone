@@ -139,6 +139,9 @@ function Editor() {
                     elem.style.fontSize = `${fsv}px`
                 })
             })
+            iframeDocument.querySelectorAll(`span[style*="background-color: rgb(255, 255, 255);"]`).forEach((elem) => {
+                elem.style.backgroundColor = 'transparent'
+            })
         }
         iframeDocument.addEventListener('input', doThis)
         return () => {
