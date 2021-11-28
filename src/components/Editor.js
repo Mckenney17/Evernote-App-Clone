@@ -95,7 +95,7 @@ function Editor() {
                         cloneTS.foreColor = false
                         setSelColor((prevSelColor) => ({...prevSelColor, fore: selColor.selFore}))
                     }
-                    if (ancestorArr.some((ancNode) => ancNode.style.backgroundColor && ['#ffef9e', '#fec1d0', '#b7f7d1', '#adecf4', '#cbcaff', '#ffd1b0'].includes(rgbToHex(ancNode.style.backgroundColor)))) {
+                    if (ancestorArr.some((ancNode) => ancNode.style.backgroundColor)) {
                         cloneTS.backColor = true
                         if (ancestorNode.style.backgroundColor) {
                             setSelColor((prevSelColor) => ({...prevSelColor, back: rgbToHex(ancestorNode.style.backgroundColor)}))
@@ -140,7 +140,7 @@ function Editor() {
                 })
             })
             iframeDocument.querySelectorAll(`span[style*="background-color: rgb(255, 255, 255);"]`).forEach((elem) => {
-                elem.style.backgroundColor = 'transparent'
+                elem.style.removeProperty('background-color')
             })
         }
         iframeDocument.addEventListener('input', doThis)
@@ -205,6 +205,10 @@ function Editor() {
                 formatString === 'Small heading' ? 'h3' : 'p'
             )  
         }
+
+        if(formatString === 'unordered-list') {
+            execCommand('insertUnorderedList')
+        }
     }
 
     useEffect(() => {
@@ -221,9 +225,9 @@ function Editor() {
         const iframeDocument = iframe.current.contentDocument
         iframeDocument.querySelectorAll('*')
         .forEach((elem) => {
-            elem.style.setProperty('margin', '0')
-            elem.style.setProperty('padding', '0')
-            elem.style.setProperty('box-sizing', 'border-box')
+            // elem.style.setProperty('margin', '0')
+            // elem.style.setProperty('padding', '0')
+            // elem.style.setProperty('box-sizing', 'border-box')
         })
     }, [toolsState])
     return (
