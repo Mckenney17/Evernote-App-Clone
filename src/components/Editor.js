@@ -26,7 +26,7 @@ function Editor() {
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
         iframeDocument.designMode = 'on';
-        [['overflow-wrap', 'break-word'], ['font-family', getFontFamily('Sans serif')]]
+        [['overflow-wrap', 'break-word'], ['font-family', getFontFamily('Sans serif')], ['font-size', '14px']]
         .forEach(([prop, val]) => {
             iframeDocument.body.style.setProperty(prop, val)
         })
@@ -153,7 +153,7 @@ function Editor() {
         iframeDocument.execCommand(fs, sdu, vArg)
     }
     const format = (formatString: string) => {
-        const iframeSel = iframe.current.contentWindow
+        const iframeSel = iframe.current.contentWindow.getSelection()
 
         if (['bold', 'italic', 'underline'].includes(formatString)) {
             execCommand(formatString)
@@ -174,27 +174,61 @@ function Editor() {
         }
 
         if (formatString.includes('font-size')) {
+            const fontSize = parseInt(formatString.match(/\d+/)[0])
             setToolsState((prevToolsState) => {
-                return {...prevToolsState, fontSize: parseInt(formatString.match(/\d+/)[0])}
+                return {...prevToolsState, fontSize}
             })
+            if (fontSize === toolsState.fontSize) return
             // document.execCommand doesn't implement fontSize well
             // i did a tweak with a span with fake bgColor, that i later replaced with trasparent
-            execCommand('backColor', false, `rgb(${parseInt(formatString.match(/\d+/)[0])}, 0, 0)`)
+            execCommand('backColor', false, `rgb(${fontSize}, 0, 0)`)
         }
 
         if (formatString.includes('font-family')) {
+            const superFamily = formatString.split('=').at(-1)
             setToolsState((prevToolsState) => {
-                return {...prevToolsState, superFamily: formatString.split('=').at(-1)}
+                return {...prevToolsState, superFamily}
             })
-            execCommand('fontName', false, getFontFamily(formatString.split('=').at(-1)))
+            if (superFamily === toolsState.superFamily) return
+            execCommand('fontName', false, getFontFamily(superFamily))
         }
 
-        if (['Large heading', 'Medium heading', 'Small heading', 'Normal text'].includes(formatString)) {
+        if (['Large heading', 'Medium heading', 'Small heading'].includes(formatString)) {
             setToolsState((prevToolsState) => {
-                return {...prevToolsState, texLevel: formatString}
+                return {...prevToolsState, textLevel: formatString}
             })
 
-            
+            if (formatString === toolsState.textLevel) return
+            const headingElem = document.createElement(
+                formatString === 'Large heading' ? 'h1' :
+                formatString === 'Medium heading' ? 'h2' : 'h3'
+            )
+            // if the block is already an heading element just replace the heading
+            // else surround block with the selected heading
+            if (!['H1', 'H2', 'H3'].includes(iframeSel.anchorNode.parentNode.nodeName)) {
+                iframeSel.modify('move', 'backward', 'line')
+                iframeSel.modify('extend', 'forward', 'line')
+                iframeSel.getRangeAt(0).surroundContents(headingElem)
+            } else {
+                const contents = iframeSel.anchorNode.parentNode.cloneNode(true).innerHTML;
+                const newHead = headingElem
+                newHead.innerHTML = contents
+                iframeSel.anchorNode.parentNode.replaceWith(newHead)
+            }
+            iframeSel.modify('move', 'forward', 'line')
+        }
+
+        if (formatString === 'Normal text') {
+            setToolsState((prevToolsState) => {
+                return {...prevToolsState, textLevel: formatString}
+            })
+
+            if (formatString === toolsState.textLevel) return
+            if (['H1', 'H2', 'H3'].includes(iframeSel.anchorNode.parentNode.nodeName)) {
+                const contents = iframeSel.anchorNode.parentNode.cloneNode(true).innerHTML;
+                iframeSel.anchorNode.parentNode.replaceWith(contents)
+            }
+            iframeSel.modify('move', 'forward', 'line')
         }
     }
 
@@ -208,7 +242,16 @@ function Editor() {
         else execCommand('foreColor', false, '#000000')
     }, [toolsState.foreColor, selColor.fore])
 
-
+    useEffect(() => {
+        const iframeDocument = iframe.current.contentDocument;
+        [['h1', '30px'], ['h2', '24px'], ['h3', '18px'], ['h4', '14px']]
+        .forEach(([headingTag, size]) => {
+            const headings = iframeDocument.querySelectorAll(headingTag)
+            headings.forEach((h) => {
+                h.style.setProperty('margin', '0')
+            })
+        })
+    }, [toolsState.textLevel])
     return (
         <div className="editor">
             <header>
