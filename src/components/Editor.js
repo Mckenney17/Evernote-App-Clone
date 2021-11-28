@@ -156,8 +156,6 @@ function Editor() {
         iframeDocument.execCommand(fs, sdu, vArg)
     }
     const format = (formatString: string) => {
-        const iframeSel = iframe.current.contentWindow.getSelection()
-
         if (['bold', 'italic', 'underline'].includes(formatString)) {
             execCommand(formatString)
             setToolsState((prevToolsState) => {
@@ -196,42 +194,16 @@ function Editor() {
             execCommand('fontName', false, getFontFamily(superFamily))
         }
 
-        if (['Large heading', 'Medium heading', 'Small heading'].includes(formatString)) {
+        if (['Large heading', 'Medium heading', 'Small heading', 'Normal text'].includes(formatString)) {
             setToolsState((prevToolsState) => {
                 return {...prevToolsState, textLevel: formatString}
             })
 
-            if (formatString === toolsState.textLevel) return
-            const headingElem = document.createElement(
+            execCommand('formatBlock', false, 
                 formatString === 'Large heading' ? 'h1' :
-                formatString === 'Medium heading' ? 'h2' : 'h3'
-            )
-            // if the block is already an heading element just replace the heading
-            // else surround block with the selected heading
-            if (!['H1', 'H2', 'H3'].includes(iframeSel.anchorNode.parentNode.nodeName)) {
-                iframeSel.modify('move', 'backward', 'line')
-                iframeSel.modify('extend', 'forward', 'line')
-                iframeSel.getRangeAt(0).surroundContents(headingElem)
-            } else {
-                const contents = iframeSel.anchorNode.parentNode.cloneNode(true).innerHTML;
-                const newHead = headingElem
-                newHead.innerHTML = contents
-                iframeSel.anchorNode.parentNode.replaceWith(newHead)
-            }
-            iframeSel.modify('move', 'forward', 'line')
-        }
-
-        if (formatString === 'Normal text') {
-            setToolsState((prevToolsState) => {
-                return {...prevToolsState, textLevel: formatString}
-            })
-
-            if (formatString === toolsState.textLevel) return
-            if (['H1', 'H2', 'H3'].includes(iframeSel.anchorNode.parentNode.nodeName)) {
-                const contents = iframeSel.anchorNode.parentNode.cloneNode(true).innerHTML;
-                iframeSel.anchorNode.parentNode.replaceWith(contents)
-            }
-            iframeSel.modify('move', 'forward', 'line')
+                formatString === 'Medium heading' ? 'h2' :
+                formatString === 'Small heading' ? 'h3' : 'p'
+            )  
         }
     }
 
@@ -246,15 +218,14 @@ function Editor() {
     }, [toolsState.foreColor, selColor.fore])
 
     useEffect(() => {
-        const iframeDocument = iframe.current.contentDocument;
-        [['h1', '30px'], ['h2', '24px'], ['h3', '18px'], ['h4', '14px']]
-        .forEach(([headingTag, size]) => {
-            const headings = iframeDocument.querySelectorAll(headingTag)
-            headings.forEach((h) => {
-                h.style.setProperty('margin', '0')
-            })
+        const iframeDocument = iframe.current.contentDocument
+        iframeDocument.querySelectorAll('*')
+        .forEach((elem) => {
+            elem.style.setProperty('margin', '0')
+            elem.style.setProperty('padding', '0')
+            elem.style.setProperty('box-sizing', 'border-box')
         })
-    }, [toolsState.textLevel])
+    }, [toolsState])
     return (
         <div className="editor">
             <header>
