@@ -42,7 +42,7 @@ const allDocument = {
     }
 }
 
-const getFontFamily = (superFamily) => {
+const getFontFamily = (superFamily: string) => {
     return superFamily === 'Sans serif' ? "'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
     : superFamily === 'Serif' ? "'Source Serif Pro', serif"
     : superFamily === 'Slab serif' ? "'Zilla Slab', slab-serif"
@@ -50,6 +50,10 @@ const getFontFamily = (superFamily) => {
     : superFamily === 'Script' ? "'Dancing Script', script"
     : superFamily === 'Handwritten' ? "Kalam, handwritten"
     : null
+}
+
+const extractSuperFamily = (fontFamily: string) => {
+    return toPhrase(fontFamily.split(' ').at(-1))
 }
 
 const rgbToHex = (rgbStr: string) => {
@@ -67,4 +71,5 @@ export {
     getFontFamily,
     rgbToHex,
     toPhrase,
+    extractSuperFamily,
 }

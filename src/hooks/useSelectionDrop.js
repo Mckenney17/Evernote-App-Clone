@@ -11,6 +11,7 @@ const useSelectionDrop = ({ cardRef, exSelector, setSelectionDropTool }) => {
                 return
             }
         }
+
         allDocument.addEventListener('click', disappear)
         
         return () => {

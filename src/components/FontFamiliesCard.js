@@ -4,7 +4,7 @@ import useSelectionDrop from '../hooks/useSelectionDrop'
 import { hyphenate } from '../utils/utilFuncs'
 import './FontFamiliesCard.scss'
 
-function FontFamiliesCard({ setSelectionDropTool, toolsState, setToolsState }) {
+function FontFamiliesCard({ setSelectionDropTool, toolsState, setToolsState, format }) {
     const cardRef = useRef(null)
     useSelectionDrop({ cardRef, exSelector: 'font-family', setSelectionDropTool })
 
@@ -13,7 +13,7 @@ function FontFamiliesCard({ setSelectionDropTool, toolsState, setToolsState }) {
             <ul>
             {['Sans serif', 'Serif', 'Slab serif', 'Monospace', 'Script', 'Handwritten'].map((superFamily) => (
                 <li key={superFamily} className={toolsState.superFamily === superFamily ? 'checked' : ''}>
-                    <button className={hyphenate(superFamily)}>{superFamily}</button>
+                    <button onClick={() => format(`font-family=${superFamily}`)} className={hyphenate(superFamily)}>{superFamily}</button>
                 </li>
             ))}
             </ul>

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { getFontFamily, rgbToHex } from '../utils/utilFuncs'
+import { getFontFamily, rgbToHex, extractSuperFamily } from '../utils/utilFuncs'
 // import AppContext from '../utils/AppContext'
 import './Editor.scss'
 import ToolBar from './ToolBar'
@@ -26,14 +26,12 @@ function Editor() {
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
         iframeDocument.designMode = 'on';
-        [['overflow-wrap', 'break-word'], ['font-family', getFontFamily(toolsState.superFamily)]]
+        [['overflow-wrap', 'break-word'], ['font-family', getFontFamily('Sans serif')]]
         .forEach(([prop, val]) => {
             iframeDocument.body.style.setProperty(prop, val)
         })
-        iframeDocument.body.focus()
-
-        
-    }, [toolsState])
+        iframeDocument.body.focus()        
+    }, [])
     
     // control tool highlighting
     useEffect(() => {
@@ -106,16 +104,24 @@ function Editor() {
                         cloneTS.backColor = false
                         setSelColor((prevSelColor) => ({...prevSelColor, back: selColor.selBack}))
                     }
+
                     const closestFontSizeElem = iframeSel.anchorNode.parentNode.closest('*[style*="font-size"]')
                     if (closestFontSizeElem) {
                         cloneTS.fontSize = parseInt(closestFontSizeElem.style.fontSize)
                     } else {
                         cloneTS.fontSize = 14
                     }
+
+                    if (ancestorArr.some((ancNode) => ancNode.face || ancNode.style.fontFamily)) {
+                        if (ancestorNode.face || ancestorNode.style.fontFamily) {
+                            cloneTS.superFamily = extractSuperFamily(ancestorNode.face || ancestorNode.style.fontFamily)
+                        }
+                    } else {
+                        cloneTS.superFamily = 'Sans serif'
+                    }
                 })
                 return cloneTS
             })
-            
         }
         iframeDocument.addEventListener('selectionchange', handleSelectionChange)
         return () => {
@@ -169,7 +175,16 @@ function Editor() {
             setToolsState((prevToolsState) => {
                 return {...prevToolsState, fontSize: parseInt(formatString.match(/\d+/)[0])}
             })
+            // document.execCommand doesn't implement fontSize well
+            // i did a tweak with a span with fake bgColor, that i later replaced with trasparent
             execCommand('backColor', false, `rgb(${parseInt(formatString.match(/\d+/)[0])}, 0, 0)`)
+        }
+
+        if (formatString.includes('font-family')) {
+            setToolsState((prevToolsState) => {
+                return {...prevToolsState, superFamily: formatString.split('=').at(-1)}
+            })
+            execCommand('fontName', false, getFontFamily(formatString.split('=').at(-1)))
         }
     }
 

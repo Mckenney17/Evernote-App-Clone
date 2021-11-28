@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import { camelCase, capitalize } from '../utils/utilFuncs'
 import './ToolBar.scss'
 import TextLevelsCard from './TextLevelsCard'
@@ -73,6 +73,10 @@ function ToolBar({ toolsState, setToolsState, selColor, setSelColor, format }) {
         return selectTools.includes(action.tool) ? { selectionDropTool: action.tool } : { selectionDropTool: null }
     }, { selectionDropTool: null })
 
+    useEffect(() => {
+        setSelectionDropTool({ tool: null })
+    }, [toolsState])
+
     return (
         <div className="tool-bar">
             {tools.allNames.map((toolName, i) => {
@@ -102,7 +106,7 @@ function ToolBar({ toolsState, setToolsState, selColor, setSelColor, format }) {
             {selectionDropTool === 'text-level' ?
                 <TextLevelsCard setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
             selectionDropTool === 'super-family' ?
-                <FontFamiliesCard setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
+                <FontFamiliesCard format={format} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
             selectionDropTool === 'font-size' ?
                 <FontSizeCard format={format} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
             selectionDropTool === 'fore-color' ?
