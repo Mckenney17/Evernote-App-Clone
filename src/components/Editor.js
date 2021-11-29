@@ -84,6 +84,7 @@ function Editor() {
                 ancestors.push(currentAncestor.parentNode)
                 currentAncestor = currentAncestor.parentNode
             }
+
             setToolsState((prevToolsState) => {
                 const cloneTS = {...prevToolsState}
                 const closestULElem = iframeSel.anchorNode.parentNode.closest('ul')
@@ -168,6 +169,7 @@ function Editor() {
                 }
                 return cloneTS
             })
+
         }
         iframeDocument.addEventListener('selectionchange', handleSelectionChange)
         return () => {
@@ -175,6 +177,7 @@ function Editor() {
         }
     }, [toolsState, selColor])
 
+    const deepChildrenCount = useRef(0)
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
         const fontSizes = [8, 9, 10, 12, 14, 16, 18, 20, 24, 30, 36, 48, 64, 72, 96]
@@ -188,6 +191,22 @@ function Editor() {
             iframeDocument.querySelectorAll(`span[style*="background-color: rgb(255, 255, 255);"]`).forEach((elem) => {
                 elem.style.removeProperty('background-color')
             })
+
+            const recursiveChildrenFetch = (parent) => {
+                deepChildrenCount.current = 0
+                const rcf = (parent) => {
+                    [...parent.childNodes].forEach((node) => {
+                        if (node.hasChildNodes?.()) {
+                            rcf(node)
+                        } else {
+                            deepChildrenCount.current += 1
+                        }
+                    })
+                }
+                rcf(parent)
+            }
+            recursiveChildrenFetch(iframeDocument.body)
+            setHistory((prevHistory) => ({...prevHistory, undo: deepChildrenCount.current}))
         }
         iframeDocument.addEventListener('input', doThis)
         return () => {
@@ -213,13 +232,13 @@ function Editor() {
 
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
-        const doThis = () => {
-            setHistory((prevHistory) => ({ undo: prevHistory.undo + 1, redo: 0 }))
+        const doThis = (ev) => {
+            setHistory((prevHistory) => ({ ...prevHistory, redo: 0 }))
         }
 
-        iframeDocument.addEventListener('change', doThis)
+        iframeDocument.addEventListener('keypress', doThis)
         return () => {
-            iframeDocument.removeEventListener('change', doThis)
+            iframeDocument.removeEventListener('keypress', doThis)
         }
     }, [history])
 
@@ -320,14 +339,13 @@ function Editor() {
 
         //undo, redo
         if (formatString.endsWith('do')) {
-            console.log(history);
             if (formatString === 'undo') {
                 setHistory((prevHistory) => {
-                    return prevHistory.undo ? { undo: prevHistory.undo - 1, redo: prevHistory.redo + 1} : prevHistory
+                    return prevHistory.undo ? { ...prevHistory, redo: prevHistory.redo + 1} : prevHistory
                 })
             } else {
                 setHistory((prevHistory) => {
-                    return prevHistory.redo ? { undo: prevHistory.undo + 1, redo: prevHistory.redo - 1} : prevHistory
+                    return prevHistory.redo ? { ...prevHistory, redo: prevHistory.redo - 1} : prevHistory
                 })
             }
             execCommand(formatString)
