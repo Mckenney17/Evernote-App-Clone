@@ -181,7 +181,7 @@ function Editor() {
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
         const fontSizes = [8, 9, 10, 12, 14, 16, 18, 20, 24, 30, 36, 48, 64, 72, 96]
-        const doThis = () => {
+        const doThis = (ev) => {
             fontSizes.forEach((fsv) => {
                 iframeDocument.querySelectorAll(`span[style*="background-color: rgb(${fsv}, 0, 0);"]`).forEach((elem) => {
                     elem.style.removeProperty('background-color')
@@ -194,7 +194,8 @@ function Editor() {
 
             // undo, redo logic
             // set the historyCount to the number of descendants who are not ancestors themselves
-            // still has a big
+            // still has a bug
+            if (ev.inputType === 'deleteContentBackward') return
             const recursiveChildrenFetch = (parent) => {
                 deepChildrenCount.current = 0
                 const rcf = (parent) => {
