@@ -7,6 +7,7 @@ import ToolBar from './ToolBar'
 function Editor() {
     // const { activeNote } = useContext(AppContext)]
     const [expanded, setExpanded] = useState(false)
+    const [history, setHistory] = useState({ undo: 0, redo: 0 })
     const [selColor, setSelColor] = useState({ fore: '#000000', selFore: '#000000', back: '#ffef9e', selBack: '#ffef9e' })
     const [toolsState, setToolsState] = useState({
         textLevel: 'Normal text',
@@ -22,7 +23,7 @@ function Editor() {
         subscript: false,
         orderedList: false,
         unorderedList: false,
-        undo: true,
+        undo: false,
         redo: false,
     })
     const iframe = useRef(document.querySelector('iframe'))
@@ -210,11 +211,23 @@ function Editor() {
         }
     }, [toolsState.textLevel])
 
+    useEffect(() => {
+        const iframeDocument = iframe.current.contentDocument
+        const doThis = () => {
+            setHistory((prevHistory) => ({ undo: prevHistory.undo + 1, redo: 0 }))
+        }
+
+        iframeDocument.addEventListener('change', doThis)
+        return () => {
+            iframeDocument.removeEventListener('change', doThis)
+        }
+    }, [history])
+
     // tool clicking highlighting
     const execCommand = (fs, sdu = false, vArg = null) => {
         const iframeDocument = iframe.current.contentDocument
         // iframeDocument.execCommand('styleWithCSS', false, true)
-        iframeDocument.execCommand(fs, sdu, vArg)
+        return iframeDocument.execCommand(fs, sdu, vArg)
     }
     const format = (formatString: string) => {
         if (['bold', 'italic', 'underline'].includes(formatString)) {
@@ -303,7 +316,21 @@ function Editor() {
                 return {...prevToolsState, [formatString]: !prevToolsState[formatString]}
             })
             execCommand(formatString)
+        }
 
+        //undo, redo
+        if (formatString.endsWith('do')) {
+            console.log(history);
+            if (formatString === 'undo') {
+                setHistory((prevHistory) => {
+                    return prevHistory.undo ? { undo: prevHistory.undo - 1, redo: prevHistory.redo + 1} : prevHistory
+                })
+            } else {
+                setHistory((prevHistory) => {
+                    return prevHistory.redo ? { undo: prevHistory.undo + 1, redo: prevHistory.redo - 1} : prevHistory
+                })
+            }
+            execCommand(formatString)
         }
     }
 
@@ -330,7 +357,7 @@ function Editor() {
                         <button className="note-options"><svg width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M4.5 12a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0zm7.501 1.5a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm6 0a1.5 1.5 0 110-3 1.5 1.5 0 010 3z"></path></svg></button>
                     </div>
                 </div>
-                <ToolBar toolsState={toolsState} setToolsState={setToolsState} selColor={selColor} setSelColor={setSelColor} format={format} />
+                <ToolBar toolsState={toolsState} setToolsState={setToolsState} selColor={selColor} setSelColor={setSelColor} format={format} history={history} />
             </header>
             <div className="editor-body">
                 <div className="note-title">
