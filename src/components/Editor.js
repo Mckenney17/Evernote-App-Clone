@@ -23,6 +23,7 @@ function Editor() {
         unorderedList: false,
     })
     const iframe = useRef(document.querySelector('iframe'))
+    
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
         iframeDocument.designMode = 'on';
@@ -30,7 +31,11 @@ function Editor() {
         .forEach(([prop, val]) => {
             iframeDocument.body.style.setProperty(prop, val)
         })
-        iframeDocument.body.focus()        
+        iframeDocument.body.focus()
+        
+        const link = document.createElement('link')
+        link.href ='editorIframe.css'
+        iframeDocument.head.appendChild(link)
     }, [])
     
     // control tool highlighting
