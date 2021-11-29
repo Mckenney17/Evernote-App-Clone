@@ -95,17 +95,7 @@ function Editor() {
                 } else {
                     cloneTS.orderedList = false
                 }
-
-                if (iframeSel.anchorNode.parentNode.closest('h1')) {
-                    cloneTS.textLevel = 'Large heading'
-                } else if (iframeSel.anchorNode.parentNode.closest('h2')) {
-                    cloneTS.textLevel = 'Medium heading'
-                } else if (iframeSel.anchorNode.parentNode.closest('h3')) {
-                    cloneTS.textLevel = 'Small heading'
-                } else {
-                    // fixing bug here
-                    cloneTS.textLevel = 'Normal text'
-                }
+                
                 
                 if (currentAncestor.parentNode.innerText.trim() === '') return cloneTS
                 const closestFontSizeElem = iframeSel.anchorNode.parentNode.closest('*[style*="font-size"]')
@@ -115,7 +105,16 @@ function Editor() {
                     cloneTS.fontSize = 14
                 }
                 
-
+                if (iframeSel.anchorNode.parentNode.closest('h1')) {
+                    cloneTS.textLevel = 'Large heading'
+                } else if (iframeSel.anchorNode.parentNode.closest('h2')) {
+                    cloneTS.textLevel = 'Medium heading'
+                } else if (iframeSel.anchorNode.parentNode.closest('h3')) {
+                    cloneTS.textLevel = 'Small heading'
+                } else {
+                    cloneTS.textLevel = 'Normal text'
+                }
+                
                 const closestSupElem = iframeSel.anchorNode.parentNode.closest('sup')
                 if (closestSupElem) {
                     cloneTS.superscript = true
@@ -193,6 +192,22 @@ function Editor() {
         }
     }, [])
 
+    useEffect(() => {
+        const iframeDocument = iframe.current.contentDocument
+        const doThis = () => {
+            if(iframeDocument.body.innerHTML.trim() === '') {
+                setToolsState((prevToolsState) => {
+                    return {...prevToolsState, textLevel: 'Normal text'}
+                })
+            }
+        }
+
+        iframeDocument.addEventListener('keyup', doThis)
+        return () => {
+            iframeDocument.removeEventListener('keyup', doThis)
+        }
+    }, [toolsState.textLevel])
+
     // tool clicking highlighting
     const execCommand = (fs, sdu = false, vArg = null) => {
         const iframeDocument = iframe.current.contentDocument
@@ -247,7 +262,7 @@ function Editor() {
                 formatString === 'Large heading' ? 'h1' :
                 formatString === 'Medium heading' ? 'h2' :
                 formatString === 'Small heading' ? 'h3' : 'p'
-            )  
+            )
         }
 
         if(formatString === 'unordered-list') {
@@ -300,15 +315,6 @@ function Editor() {
         else execCommand('foreColor', false, '#000000')
     }, [toolsState.foreColor, selColor.fore])
 
-    useEffect(() => {
-        const iframeDocument = iframe.current.contentDocument
-        iframeDocument.querySelectorAll('*')
-        .forEach((elem) => {
-            // elem.style.setProperty('margin', '0')
-            // elem.style.setProperty('padding', '0')
-            // elem.style.setProperty('box-sizing', 'border-box')
-        })
-    }, [toolsState])
     return (
         <div className={`editor ${expanded ? 'expanded' : 'collapsed'}`}>
             <header>
