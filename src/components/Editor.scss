@@ -2,6 +2,12 @@
 
 .editor {
     @include flex($fd: column);
+    background: #fff;
+    transition: all .15s linear;
+    
+    &.expanded {
+        @include pos(fixed, 0, 0, 0, 0)
+    }
     header {
         padding: 15px;
         border-bottom: 1px solid gray(g18);

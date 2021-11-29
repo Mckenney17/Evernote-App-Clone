@@ -93,3 +93,8 @@
     src: url('fonts/Kalam-Bold.woff2') format('woff2');
     font-weight: 600;
 }
+
+*:not(ul):not(ol) {
+    margin: 0;
+    padding: 0;
+}

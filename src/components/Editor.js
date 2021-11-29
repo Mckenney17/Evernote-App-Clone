@@ -5,7 +5,8 @@ import './Editor.scss'
 import ToolBar from './ToolBar'
 
 function Editor() {
-    // const { activeNote } = useContext(AppContext)
+    // const { activeNote } = useContext(AppContext)]
+    const [expanded, setExpanded] = useState(false)
     const [selColor, setSelColor] = useState({ fore: '#000000', selFore: '#000000', back: '#ffef9e', selBack: '#ffef9e' })
     const [toolsState, setToolsState] = useState({
         textLevel: 'Normal text',
@@ -95,6 +96,17 @@ function Editor() {
                     cloneTS.orderedList = false
                 }
 
+                if (iframeSel.anchorNode.parentNode.closest('h1')) {
+                    cloneTS.textLevel = 'Large heading'
+                } else if (iframeSel.anchorNode.parentNode.closest('h2')) {
+                    cloneTS.textLevel = 'Medium heading'
+                } else if (iframeSel.anchorNode.parentNode.closest('h3')) {
+                    cloneTS.textLevel = 'Small heading'
+                } else {
+                    // fixing bug here
+                    cloneTS.textLevel = 'Normal text'
+                }
+                
                 if (currentAncestor.parentNode.innerText.trim() === '') return cloneTS
                 const closestFontSizeElem = iframeSel.anchorNode.parentNode.closest('*[style*="font-size"]')
                 if (closestFontSizeElem) {
@@ -102,6 +114,7 @@ function Editor() {
                 } else {
                     cloneTS.fontSize = 14
                 }
+                
 
                 const closestSupElem = iframeSel.anchorNode.parentNode.closest('sup')
                 if (closestSupElem) {
@@ -297,11 +310,11 @@ function Editor() {
         })
     }, [toolsState])
     return (
-        <div className="editor">
+        <div className={`editor ${expanded ? 'expanded' : 'collapsed'}`}>
             <header>
                 <div className="top-bar">
                     <div className="left-side">
-                        <button className="expand-icon"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" fillRule="evenodd" d="M6.031 3a3 3 0 00-3 3v11a3 3 0 003 3h11a3 3 0 003-3V6a3 3 0 00-3-3h-11zm4.47 4.289H8.184l2.915 2.914a.625.625 0 01-.884.884L7.3 8.172v2.319a.625.625 0 11-1.25 0V6.674c0-.351.285-.635.635-.635h3.818a.625.625 0 010 1.25zM12.6 15.76h2.318l-2.915-2.915a.625.625 0 11.884-.884l2.915 2.915V12.56a.625.625 0 011.25 0v3.817c0 .35-.285.635-.635.635H12.6a.625.625 0 110-1.25z"></path></svg></button>
+                        <button className="expand-icon" title={expanded ? 'Collapse' : 'Expand'} onClick={() => setExpanded((prev) => !prev)}>{!expanded ? <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" fillRule="evenodd" d="M6.031 3a3 3 0 00-3 3v11a3 3 0 003 3h11a3 3 0 003-3V6a3 3 0 00-3-3h-11zm4.47 4.289H8.184l2.915 2.914a.625.625 0 01-.884.884L7.3 8.172v2.319a.625.625 0 11-1.25 0V6.674c0-.351.285-.635.635-.635h3.818a.625.625 0 010 1.25zM12.6 15.76h2.318l-2.915-2.915a.625.625 0 11.884-.884l2.915 2.915V12.56a.625.625 0 011.25 0v3.817c0 .35-.285.635-.635.635H12.6a.625.625 0 110-1.25z"></path></svg> : <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" fill-rule="evenodd" d="M6 3a3 3 0 00-3 3v11a3 3 0 003 3h11a3 3 0 003-3V6a3 3 0 00-3-3H6zm2.864 6.78H6.546a.625.625 0 100 1.25h3.817c.35 0 .635-.285.635-.636V6.577a.625.625 0 00-1.25 0v2.319L6.833 5.98a.625.625 0 00-.884.883L8.864 9.78zm5.299 3.468h2.318a.625.625 0 100-1.25h-3.817a.635.635 0 00-.635.635v3.817a.625.625 0 101.25 0V14.13l2.915 2.915a.625.625 0 10.884-.884l-2.915-2.914z"></path></svg>}</button>
                         <div className="divider">&nbsp;</div>
                         <div className="notebook-icon-text"><svg width="14" height="14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 5.5a.5.5 0 00-.5-.5h-3a.5.5 0 000 1h3a.5.5 0 00.5-.5z" fill="currentColor"></path><path fillRule="evenodd" clipRule="evenodd" d="M10 1H2v12h8a2 2 0 002-2V3a2 2 0 00-2-2zM3 12V2h1v10H3zm2 0V2h5a1 1 0 011 1v8a1 1 0 01-1 1H5z" fill="currentColor"></path></svg>Notebook(Coming Soon)</div>
                     </div>
