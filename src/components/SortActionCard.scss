@@ -22,7 +22,7 @@
         @include flex($ai: center);
         color: gray(g4);
         padding: 5px 15px;
-        font-weight: weight(black);
+        font-weight: weight(bold);
 
         &:hover {
             background: gray(g18);
