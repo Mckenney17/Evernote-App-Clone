@@ -35,6 +35,8 @@ function Editor() {
         
         const link = document.createElement('link')
         link.href ='editorIframe.css'
+        link.rel = 'stylesheet'
+        link.type = 'text/css'
         iframeDocument.head.appendChild(link)
     }, [])
     
