@@ -194,6 +194,7 @@ function Editor() {
 
             // undo, redo logic
             // set the historyCount to the number of descendants who are not ancestors themselves
+            // still has a big
             const recursiveChildrenFetch = (parent) => {
                 deepChildrenCount.current = 0
                 const rcf = (parent) => {
