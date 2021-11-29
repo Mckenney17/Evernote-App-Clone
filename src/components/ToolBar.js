@@ -80,7 +80,7 @@ function ToolBar({ toolsState, setToolsState, selColor, setSelColor, format }) {
     return (
         <div className="tool-bar">
             {tools.allNames.map((toolName, i) => {
-            const checkables = ['fore-color', 'bold', 'italic', 'underline', 'back-color', 'indent', 'outdent', 'strikethrough', 'superscript', 'subscript']
+            const checkables = ['fore-color', 'bold', 'italic', 'underline', 'back-color', 'unordered-list', 'ordered-list', 'strikethrough', 'superscript', 'subscript']
             return Array.isArray(toolName) ?
             <React.Fragment key={`tni-${i}`}>
                 {toolName.map((toolNameInner, j) => (

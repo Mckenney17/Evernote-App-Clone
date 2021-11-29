@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { getFontFamily, rgbToHex, extractSuperFamily } from '../utils/utilFuncs'
+import { getFontFamily, rgbToHex, extractSuperFamily, capitalize } from '../utils/utilFuncs'
 // import AppContext from '../utils/AppContext'
 import './Editor.scss'
 import ToolBar from './ToolBar'
@@ -16,11 +16,11 @@ function Editor() {
         italic: false,
         underline: false,
         backColor: false,
-        indent: false,
-        outdent: false,
         strikethrough: false,
         superscript: false,
         subscript: false,
+        orderedList: false,
+        unorderedList: false,
     })
     const iframe = useRef(document.querySelector('iframe'))
     useEffect(() => {
@@ -75,51 +75,75 @@ function Editor() {
             }
             setToolsState((prevToolsState) => {
                 const cloneTS = {...prevToolsState}
-                // const tagsProp = [['B', 'bold'], ['I', 'italic'], ['U', 'underline']]
+                const closestULElem = iframeSel.anchorNode.parentNode.closest('ul')
+                if (closestULElem) {
+                    cloneTS.unorderedList = true
+                } else {
+                    cloneTS.unorderedList = false
+                }
+                const closestOLElem = iframeSel.anchorNode.parentNode.closest('ol')
+                if (closestOLElem) {
+                    cloneTS.orderedList = true
+                } else {
+                    cloneTS.orderedList = false
+                }
+
                 if (currentAncestor.parentNode.innerText.trim() === '') return cloneTS
-                ancestors.forEach((ancestorNode, index, ancestorArr) => {
-                    if (ancestorArr.some((ancNode) => ancNode.nodeName === 'B' || ancNode.style.fontWeight === 'bold')) cloneTS.bold = true
-                    else cloneTS.bold = false
-                    if (ancestorArr.some((ancNode) => ancNode.nodeName === 'I' || ancNode.style.fontStyle === 'italic')) cloneTS.italic = true
-                    else cloneTS.italic = false
-                    if (ancestorArr.some((ancNode) => ancNode.nodeName === 'U' || ancNode.style.textDecorationLine === 'underline')) cloneTS.underline = true
-                    else cloneTS.underline = false
-                    if (ancestorArr.some((ancNode) => ancNode.color || ancNode.style.color)) {
-                        cloneTS.foreColor = true
-                        const check1 = ancestorNode.color
-                        const check2 = rgbToHex(ancestorNode.style.color)
-                        if (check1 || check2) {
-                            setSelColor((prevSelColor) => ({...prevSelColor, fore: check1 || check2}))
-                        }
-                    } else {
-                        cloneTS.foreColor = false
-                        setSelColor((prevSelColor) => ({...prevSelColor, fore: selColor.selFore}))
-                    }
-                    if (ancestorArr.some((ancNode) => ancNode.style.backgroundColor)) {
-                        cloneTS.backColor = true
-                        if (ancestorNode.style.backgroundColor) {
-                            setSelColor((prevSelColor) => ({...prevSelColor, back: rgbToHex(ancestorNode.style.backgroundColor)}))
-                        }
-                    } else {
-                        cloneTS.backColor = false
-                        setSelColor((prevSelColor) => ({...prevSelColor, back: selColor.selBack}))
-                    }
+                const closestFontSizeElem = iframeSel.anchorNode.parentNode.closest('*[style*="font-size"]')
+                if (closestFontSizeElem) {
+                    cloneTS.fontSize = parseInt(closestFontSizeElem.style.fontSize)
+                } else {
+                    cloneTS.fontSize = 14
+                }
 
-                    const closestFontSizeElem = iframeSel.anchorNode.parentNode.closest('*[style*="font-size"]')
-                    if (closestFontSizeElem) {
-                        cloneTS.fontSize = parseInt(closestFontSizeElem.style.fontSize)
-                    } else {
-                        cloneTS.fontSize = 14
-                    }
+                const closestSupElem = iframeSel.anchorNode.parentNode.closest('sup')
+                if (closestSupElem) {
+                    cloneTS.superscript = true
+                } else {
+                    cloneTS.superscript = false
+                }
+                const closestSubElem = iframeSel.anchorNode.parentNode.closest('sub')
+                if (closestSubElem) {
+                    cloneTS.subscript = true
+                } else {
+                    cloneTS.subscript = false
+                }
 
-                    if (ancestorArr.some((ancNode) => ancNode.face || ancNode.style.fontFamily)) {
-                        if (ancestorNode.face || ancestorNode.style.fontFamily) {
-                            cloneTS.superFamily = extractSuperFamily(ancestorNode.face || ancestorNode.style.fontFamily)
-                        }
-                    } else {
-                        cloneTS.superFamily = 'Sans serif'
-                    }
-                })
+                if (ancestors.some((ancNode) => ancNode.nodeName === 'B' || ancNode.style.fontWeight === 'bold')) cloneTS.bold = true
+                else cloneTS.bold = false
+                if (ancestors.some((ancNode) => ancNode.nodeName === 'I' || ancNode.style.fontStyle === 'italic')) cloneTS.italic = true
+                else cloneTS.italic = false
+                if (ancestors.some((ancNode) => ancNode.nodeName === 'U' || ancNode.style.textDecorationLine === 'underline')) cloneTS.underline = true
+                else cloneTS.underline = false
+                if (ancestors.some((ancNode) => ancNode.nodeName === 'STRIKE' || ancNode.style.textDecorationLine === 'line-through')) cloneTS.strikethrough = true
+                else cloneTS.strikethrough = false
+
+                const closestBgColElem = ancestors.filter((ancNode) => ancNode.style.backgroundColor).at(-1)
+                if (closestBgColElem) {
+                    cloneTS.backColor = true
+                    setSelColor((prevSelColor) => ({...prevSelColor, back: rgbToHex(closestBgColElem.style.backgroundColor)}))
+                } else {
+                    cloneTS.backColor = false
+                    setSelColor((prevSelColor) => ({...prevSelColor, back: selColor.selBack}))
+                }
+
+                const closestForeColElem = ancestors.filter((ancNode) => ancNode.color || ancNode.style.color).at(-1)
+                if (closestForeColElem) {
+                    cloneTS.foreColor = true
+                    const check1 = closestForeColElem.color
+                    const check2 = rgbToHex(closestForeColElem.style.color)
+                    setSelColor((prevSelColor) => ({...prevSelColor, fore: check1 || check2}))
+                } else {
+                    cloneTS.foreColor = false
+                    setSelColor((prevSelColor) => ({...prevSelColor, fore: selColor.selFore}))
+                }
+
+                const closestFontFamilyElem = ancestors.filter((ancNode) => ancNode.face || ancNode.style.fontFamily).at(-1)
+                if (closestFontFamilyElem) {
+                    cloneTS.superFamily = extractSuperFamily(closestFontFamilyElem.face || closestFontFamilyElem.style.fontFamily)
+                } else {
+                    cloneTS.superFamily = 'Sans serif'
+                }
                 return cloneTS
             })
         }
@@ -135,7 +159,7 @@ function Editor() {
         const doThis = () => {
             fontSizes.forEach((fsv) => {
                 iframeDocument.querySelectorAll(`span[style*="background-color: rgb(${fsv}, 0, 0);"]`).forEach((elem) => {
-                    elem.style.backgroundColor = 'transparent'
+                    elem.style.removeProperty('background-color')
                     elem.style.fontSize = `${fsv}px`
                 })
             })
@@ -207,7 +231,42 @@ function Editor() {
         }
 
         if(formatString === 'unordered-list') {
+            setToolsState((prevToolsState) => {
+                return {...prevToolsState, unorderedList: !prevToolsState.unorderedList}
+            })
             execCommand('insertUnorderedList')
+        }
+        if(formatString === 'ordered-list') {
+            setToolsState((prevToolsState) => {
+                return {...prevToolsState, orderedList: !prevToolsState.orderedList}
+            })
+            execCommand('insertOrderedList')
+        }
+        
+        // indent // outdent
+        if (formatString.endsWith('ent')) {
+            execCommand(formatString)
+        }
+        
+        // left, center, right align
+        if (formatString.endsWith('align')) {
+            execCommand(`justify${capitalize(formatString.split('-')[0])}`)
+        }
+        
+        if (formatString === 'strikethrough') {
+            setToolsState((prevToolsState) => {
+                return {...prevToolsState, strikethrough: !prevToolsState.strikethrough}
+            })
+            execCommand('strikeThrough')
+        }
+        
+        // subscript, superscript
+        if (formatString.endsWith('script')) {
+            setToolsState((prevToolsState) => {
+                return {...prevToolsState, [formatString]: !prevToolsState[formatString]}
+            })
+            execCommand(formatString)
+
         }
     }
 
