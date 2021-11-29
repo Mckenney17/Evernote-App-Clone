@@ -19,7 +19,7 @@
         .title {
             color: gray(g4);
             font-size: tscale(ts20);
-            font-weight: weight(semibold);
+            font-weight: weight(bold);
             margin-left: -2px;
             @include flex($ai: center);
 
@@ -78,7 +78,7 @@
             @include flex(center, center, column);
 
             .intro {
-                font-weight: weight(bold);
+                font-weight: weight(black);
                 margin: 15px 0;
             }
 
@@ -113,7 +113,7 @@
             @include flex($ai: center);
             text-transform: uppercase;
             color: gray(g8);
-            font-weight: weight(semibold);
+            font-weight: weight(bold);
             font-size: tscale(ts11);
             padding: 7px 20px;
             position: sticky;

@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import React, { useRef } from 'react'
 import useSelectionDrop from '../hooks/useSelectionDrop'
-import './TextLevelCard.scss'
+import './TextLevelsCard.scss'
 
 function TextLevelsCard({ setSelectionDropTool, format }) {
     const cardRef = useRef(null)

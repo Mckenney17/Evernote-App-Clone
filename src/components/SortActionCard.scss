@@ -11,7 +11,7 @@
 
     h5 {
         padding: 15px 15px 5px;
-        font-weight: weight(semibold);
+        font-weight: weight(bold);
         font-size: tscale(ts12);
         color: gray(g12);
     }
@@ -22,7 +22,7 @@
         @include flex($ai: center);
         color: gray(g4);
         padding: 5px 15px;
-        font-weight: weight(bold);
+        font-weight: weight(black);
 
         &:hover {
             background: gray(g18);
