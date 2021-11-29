@@ -192,6 +192,8 @@ function Editor() {
                 elem.style.removeProperty('background-color')
             })
 
+            // undo, redo logic
+            // set the historyCount to the number of descendants who are not ancestors themselves
             const recursiveChildrenFetch = (parent) => {
                 deepChildrenCount.current = 0
                 const rcf = (parent) => {
