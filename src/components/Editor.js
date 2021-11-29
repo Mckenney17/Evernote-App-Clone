@@ -22,6 +22,8 @@ function Editor() {
         subscript: false,
         orderedList: false,
         unorderedList: false,
+        undo: true,
+        redo: false,
     })
     const iframe = useRef(document.querySelector('iframe'))
     

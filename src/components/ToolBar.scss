@@ -98,4 +98,10 @@
             @include pos(absolute, $l: 0)
         }
     }
+
+    svg.inactive {
+        path {
+            fill: gray(g13);
+        }
+    }
 }

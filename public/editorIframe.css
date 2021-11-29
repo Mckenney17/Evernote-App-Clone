@@ -94,7 +94,37 @@
     font-weight: 600;
 }
 
+@font-face {
+    font-family: 'Dancing Script';
+    src: url('fonts/DancingScript-Regular.woff2') format('woff2');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Dancing Script';
+    src: url('fonts/DancingScript-Bold.woff2') format('woff2');
+    font-weight: 600;
+}
+
+
+
 *:not(ul):not(ol) {
     margin: 0;
     padding: 0;
+}
+
+h1, h2, h3 {
+    font-weight: 600;
+}
+
+h1 {
+    font-size: 30px;
+}
+
+h2 {
+    font-size: 24px;
+}
+
+h3 {
+    font-size: 18px;
 }
