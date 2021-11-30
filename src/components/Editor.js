@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { getFontFamily, rgbToHex, extractSuperFamily, capitalize } from '../utils/utilFuncs'
 // import AppContext from '../utils/AppContext'
 import './Editor.scss'
+import InsertLinkCard from './InsertLinkCard'
 import ToolBar from './ToolBar'
 
 function Editor() {
@@ -385,8 +386,9 @@ function Editor() {
                 <div className="note-title">
                     <textarea className="title-field" placeholder="Title"></textarea>
                 </div>
-                <div className="note-editing-window">
+                <div style={{ position: 'relative' }} className="note-editing-window">
                     <iframe ref={iframe} title="Editing Window"></iframe>
+                    <InsertLinkCard />
                 </div>
             </div>
         </div>

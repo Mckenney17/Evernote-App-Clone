@@ -67,8 +67,21 @@
     }
 
     .notelist-body {
-        overflow-y: auto;
+        overflow-y: hidden;
         flex: 1;
+
+        &:hover {
+            overflow-y: auto;
+        }
+
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border-radius: 50px;
+            background: gray(g12);
+        }
 
         &.empty {
             @include flex(center, center);
@@ -99,10 +112,15 @@
             }
         }
     }
-
+    .notelist-body-wrapper {
+        height: 100%;
+        @include flex($ai: center);
+    }
     .notelist-body.cards-container {
         @include flex(space-evenly, flex-start, $fw: wrap);
-        padding: 7.5px;
+        margin: 0 5px 0 7.5px;
+        scrollbar-gutter: stable;
+        padding-top: 6.5px;
     }
 
     .notelist-body.side-list-container, .notelist-body.top-list-container {

@@ -45,21 +45,41 @@
     .top-bar button {
         background: transparent;
         display: block;
-        color: gray(g12);
         max-height: 24px;
         border-radius: 3px;
         &:hover {
             background: gray(g18);
 
         }
+
+        &.expand-icon {
+            color: gray(g12);
+        }
+        &.note-options {
+            color: gray(g8);
+        }
     }
 
     .editor-body {
         @include flex($fd: column);
-        width: 100%;
+        width: 99.5%;
         flex: 1;
         padding: 30px;
-        overflow: auto;
+        overflow: hidden;
+        scrollbar-gutter: stable;
+
+        &:hover {
+            overflow-y: auto;
+        }
+
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border-radius: 50px;
+            background: gray(g12);
+        }
 
         .note-title textarea {
             width: 100%;
@@ -83,7 +103,6 @@
 
         iframe {
             width: 100%;
-            max-width: 100%;
             height: 100%;
             border: none;
             body {
