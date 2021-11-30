@@ -26,6 +26,7 @@ function Editor() {
         unorderedList: false,
         undo: false,
         redo: false,
+        insertLink: false,
     })
     const iframe = useRef(document.querySelector('iframe'))
     
@@ -388,7 +389,7 @@ function Editor() {
                 </div>
                 <div style={{ position: 'relative' }} className="note-editing-window">
                     <iframe ref={iframe} title="Editing Window"></iframe>
-                    <InsertLinkCard />
+                    {toolsState.insertLink ? <InsertLinkCard /> : '' }
                 </div>
             </div>
         </div>
