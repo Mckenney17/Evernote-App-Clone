@@ -46,6 +46,7 @@ function Notelist() {
 
     useEffect(() => {
         const adjustHeight = () => {
+            if (viewActions.view === 'Top list') return
             document.querySelector('.notelist-body').style.height = `${window.innerHeight - 95}px`
         }
 
@@ -53,7 +54,7 @@ function Notelist() {
         return () => {
             window.removeEventListener('resize', adjustHeight)
         }
-    }, [])
+    }, [viewActions.view])
 
     return (
         <div className={`notelist ${viewActions.view === 'Top list' ? 'top-list-view-active' : ''}`}>
@@ -87,7 +88,7 @@ function Notelist() {
                 </div>
             </header>
             <div className="notelist-body-wrapper">
-                <ul style={{ height: `${window.innerHeight - 95}px` }} className={`notelist-body ${viewActions.view.toLowerCase().replaceAll(' ', '-')}-container ${!notes.length ? 'empty' : ''}`}>
+                <ul style={{ height: `${viewActions.view !== 'Top list' ? `${window.innerHeight - 95}px` : '100%'}` }} className={`notelist-body ${viewActions.view.toLowerCase().replaceAll(' ', '-')}-container ${!notes.length ? 'empty' : ''}`}>
                     {!['Cards', 'Snippets'].includes(viewActions.view) && (
                         <div className="table-head">
                             <div className="title-col-th">Title<span className="resizer title-col-resizer"></span></div>

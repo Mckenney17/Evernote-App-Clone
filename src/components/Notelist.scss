@@ -69,7 +69,7 @@
     .notelist-body {
         overflow-y: hidden;
         flex: 1;
-
+        
         &:hover {
             overflow-y: auto;
         }
@@ -114,7 +114,6 @@
     }
     .notelist-body-wrapper {
         height: 100%;
-        @include flex($ai: center);
     }
     .notelist-body.cards-container {
         @include flex(space-evenly, flex-start, $fw: wrap);
@@ -174,6 +173,10 @@
         @include pos(absolute, 99%, 0, -1%, 0);
         cursor: n-resize;
         // display: none;
+    }
+
+    .notelist-body-wrapper {
+        overflow-y: auto;
     }
 
     .sort-action-card, .notelist-view-action-card {
