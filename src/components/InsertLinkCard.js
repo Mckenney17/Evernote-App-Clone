@@ -1,7 +1,7 @@
 import React from 'react'
 import './InsertLinkCard.scss'
 
-function InsertLinkCard() {
+function InsertLinkCard({ iframeSel, execCommand, format }) {
     return (
         <div className="insert-link-card">
             <div className="link-text">Text <input type="text" placeholder="example" /></div>

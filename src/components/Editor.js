@@ -356,6 +356,12 @@ function Editor() {
             }
             execCommand(formatString)
         }
+
+        if (formatString === 'insertLink') {
+            setToolsState((prevToolsState) => {
+                return {...prevToolsState, [formatString]: !prevToolsState[formatString]}
+            })
+        }
     }
 
     useEffect(() => {
@@ -389,7 +395,7 @@ function Editor() {
                 </div>
                 <div style={{ position: 'relative' }} className="note-editing-window">
                     <iframe ref={iframe} title="Editing Window"></iframe>
-                    {toolsState.insertLink ? <InsertLinkCard /> : '' }
+                    {toolsState.insertLink ? <InsertLinkCard execCommand={execCommand} fortmat={format} iframeSel={iframe.current.contentWindow.getSelection()} /> : '' }
                 </div>
             </div>
         </div>
