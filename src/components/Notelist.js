@@ -8,7 +8,7 @@ import SortActionCard from './SortActionCard'
 function Notelist() {
     const { activeTab, notes, setIsToplistView } = useContext(AppContext)
     const [sortActions, setSortActions] = useState({ sortBy: 'Date Updated', order: 'desc', snig: true })
-    const [viewActions, setViewActions] = useState({ view: 'Cards', showImages: true, showBodyText: true, dateUpdated: true, dateCreated: false })
+    const [viewActions, setViewActions] = useState({ view: 'Snippets', showImages: true, showBodyText: true, dateUpdated: true, dateCreated: false })
     const [activeAction, setActiveAction] = useState(null)
     const sortActionBtnRef = useRef(null)
     const viewActionBtnRef = useRef(null)

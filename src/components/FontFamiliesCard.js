@@ -6,7 +6,7 @@ import './FontFamiliesCard.scss'
 
 function FontFamiliesCard({ setSelectionDropTool, toolsState, setToolsState, format }) {
     const cardRef = useRef(null)
-    useSelectionDrop({ cardRef, exSelector: 'font-family', setSelectionDropTool })
+    useSelectionDrop({ cardRef, exSelector: 'super-family', setSelectionDropTool })
 
     return (
         <motion.div className="font-families-card" ref={cardRef} animate={{ y: 10, opacity: 1, type: 'tween' }}>
