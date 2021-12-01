@@ -128,3 +128,15 @@ h2 {
 h3 {
     font-size: 18px;
 }
+
+body {
+    overflow-wrap: break-word;
+    font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 16px;
+}
+
+a {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #b17dd7;
+}

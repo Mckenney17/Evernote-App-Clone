@@ -13,7 +13,7 @@ function Editor() {
     const [toolsState, setToolsState] = useState({
         textLevel: 'Normal text',
         superFamily: 'Sans serif',
-        fontSize: 14,
+        fontSize: 16,
         foreColor: false,
         bold: false,
         italic: false,
@@ -26,7 +26,6 @@ function Editor() {
         unorderedList: false,
         undo: false,
         redo: false,
-        insertLink: false,
     })
 
     const selectTools = ['text-level', 'super-family', 'font-size', 'fore-color', 'back-color', 'insert-link']
@@ -38,18 +37,14 @@ function Editor() {
         return selectTools.includes(action.tool) ? { selectionDropTool: action.tool } : { selectionDropTool: null }
     }, { selectionDropTool: null })
 
-    useEffect(() => {
+    /* useEffect(() => {
         setSelectionDropTool({ tool: null })
-    }, [toolsState])
+    }, [toolsState]) */
 
     const iframe = useRef(document.querySelector('iframe'))
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
         iframeDocument.designMode = 'on';
-        [['overflow-wrap', 'break-word'], ['font-family', getFontFamily('Sans serif')], ['font-size', '14px']]
-        .forEach(([prop, val]) => {
-            iframeDocument.body.style.setProperty(prop, val)
-        })
         iframeDocument.body.focus()
         
         const link = document.createElement('link')
@@ -121,7 +116,7 @@ function Editor() {
                 if (closestFontSizeElem) {
                     cloneTS.fontSize = parseInt(closestFontSizeElem.style.fontSize)
                 } else {
-                    cloneTS.fontSize = 14
+                    cloneTS.fontSize = 16
                 }
                 
                 if (iframeSel.anchorNode.parentNode.closest('h1')) {
@@ -268,6 +263,7 @@ function Editor() {
         return iframeDocument.execCommand(fs, sdu, vArg)
     }
     const format = (formatString: string) => {
+        setSelectionDropTool({ tool: null })
         if (['bold', 'italic', 'underline'].includes(formatString)) {
             execCommand(formatString)
             setToolsState((prevToolsState) => {
@@ -370,11 +366,11 @@ function Editor() {
             execCommand(formatString)
         }
 
-        if (formatString === 'insert-link') {
-            console.log('Hi');
-            setToolsState((prevToolsState) => {
-                return {...prevToolsState, insertLink: !prevToolsState.insertLink}
-            })
+        if (formatString.includes('insert-link')) {
+            const action = formatString.match(/%(.+)%/)[1]
+            if (action !== 'cancel') {
+                execCommand('insertHTML', false, action)
+            }
         }
     }
 
@@ -417,7 +413,7 @@ function Editor() {
                 </div>
                 <div className="note-editing-window">
                     <iframe ref={iframe} title="Editing Window"></iframe>
-                    {selectionDropTool === 'insert-link' ? <InsertLinkCard setSelectionDropTool={setSelectionDropTool} execCommand={execCommand} fortmat={format} iframeSel={iframe.current.contentWindow.getSelection()} iframeDocument={iframe.current.contentDocument} /> : null}
+                    {selectionDropTool === 'insert-link' ? <InsertLinkCard setSelectionDropTool={setSelectionDropTool} execCommand={execCommand} format={format} iframeSel={iframe.current.contentWindow.getSelection()} iframeDocument={iframe.current.contentDocument} /> : null}
                 </div>
             </div>
         </div>
