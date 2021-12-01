@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react'
+import React from 'react'
 import { camelCase, capitalize } from '../utils/utilFuncs'
 import './ToolBar.scss'
 import TextLevelsCard from './TextLevelsCard'
@@ -16,7 +16,10 @@ If that happens test whether string === iframe content // if false, make redo ac
 else deactivate redo
 */
 
-function ToolBar({ toolsState, setToolsState, selColor, setSelColor, format, history }) {
+
+
+function ToolBar({ toolsState, setToolsState, selColor, setSelColor, format, history, selectionDropTool, setSelectionDropTool }) {
+    
     const tools = {
         allNames: ['insert', ['undo', 'redo'], 'text-level', 'super-family', 'font-size', ['fore-color', 'bold', 'italic', 'underline', 'back-color'], ['unordered-list', 'ordered-list'], 'insert-link', ['left-align', 'center-align', 'right-align', 'indent', 'outdent'], ['strikethrough', 'superscript', 'subscript']],
         allIcons: [<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" fillRule="evenodd" d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM11 9v2H9a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V9a1 1 0 10-2 0z"></path></svg>,
@@ -59,18 +62,7 @@ function ToolBar({ toolsState, setToolsState, selColor, setSelColor, format, his
             ]],
     }
 
-    const selectTools = ['text-level', 'super-family', 'font-size', 'fore-color', 'back-color']
-    // [state, dispatch] of useReducer === [state, setState] of useState
-    // the first argument to reducer is the function to use to conditionally change the state
-    // (state, action) // state is the state obj, while, action is the new value you want to be read
-    // the second argument is the initial state like you'll pass to useState
-    const [{ selectionDropTool }, setSelectionDropTool] = useReducer((state, action) => {
-        return selectTools.includes(action.tool) ? { selectionDropTool: action.tool } : { selectionDropTool: null }
-    }, { selectionDropTool: null })
-
-    useEffect(() => {
-        setSelectionDropTool({ tool: null })
-    }, [toolsState])
+    
 
     return (
         <div className="tool-bar">
@@ -107,8 +99,8 @@ function ToolBar({ toolsState, setToolsState, selColor, setSelColor, format, his
             selectionDropTool === 'fore-color' ?
                 <ForeColorsCard selColor={selColor} setSelColor={setSelColor} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
             selectionDropTool === 'back-color' ?
-                <BackColorsCard selColor={selColor} setSelColor={setSelColor} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> :
-            null }
+                <BackColorsCard selColor={selColor} setSelColor={setSelColor} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} /> 
+            : null}
         </div>
     )
 }

@@ -2,7 +2,7 @@
 @import '../utils/style-defs';
 
 .back-colors-card {
-    @include pos(absolute, 40px, $l: 300px);
+    @include pos(absolute, $l: 300px);
     background: #fff;
     z-index: 3;
     border-radius: 4px;

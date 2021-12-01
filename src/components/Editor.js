@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useReducer, useRef, useState } from 'react'
 import { getFontFamily, rgbToHex, extractSuperFamily, capitalize } from '../utils/utilFuncs'
 // import AppContext from '../utils/AppContext'
 import './Editor.scss'
@@ -28,8 +28,21 @@ function Editor() {
         redo: false,
         insertLink: false,
     })
+
+    const selectTools = ['text-level', 'super-family', 'font-size', 'fore-color', 'back-color', 'insert-link']
+    // [state, dispatch] of useReducer === [state, setState] of useState
+    // the first argument to reducer is the function to use to conditionally change the state
+    // (state, action) // state is the state obj, while, action is the new value you want to be read
+    // the second argument is the initial state like you'll pass to useState
+    const [{ selectionDropTool }, setSelectionDropTool] = useReducer((state, action) => {
+        return selectTools.includes(action.tool) ? { selectionDropTool: action.tool } : { selectionDropTool: null }
+    }, { selectionDropTool: null })
+
+    useEffect(() => {
+        setSelectionDropTool({ tool: null })
+    }, [toolsState])
+
     const iframe = useRef(document.querySelector('iframe'))
-    
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
         iframeDocument.designMode = 'on';
@@ -212,7 +225,7 @@ function Editor() {
                 rcf(parent)
             }
             recursiveChildrenFetch(iframeDocument.body)
-            setHistory((prevHistory) => ({...prevHistory, undo: deepChildrenCount.current}))
+            setHistory((prevHistory) => ({...prevHistory, undo: iframeDocument.body.innerText.trim() ? deepChildrenCount.current : 0}))
         }
         iframeDocument.addEventListener('input', doThis)
         return () => {
@@ -357,9 +370,10 @@ function Editor() {
             execCommand(formatString)
         }
 
-        if (formatString === 'insertLink') {
+        if (formatString === 'insert-link') {
+            console.log('Hi');
             setToolsState((prevToolsState) => {
-                return {...prevToolsState, [formatString]: !prevToolsState[formatString]}
+                return {...prevToolsState, insertLink: !prevToolsState.insertLink}
             })
         }
     }
@@ -374,6 +388,14 @@ function Editor() {
         else execCommand('foreColor', false, '#000000')
     }, [toolsState.foreColor, selColor.fore])
 
+    useEffect(() => {
+        execCommand('formatBlock', false, 
+            toolsState.textLevel === 'Large heading' ? 'h1' :
+            toolsState.textLevel === 'Medium heading' ? 'h2' :
+            toolsState.textLevel === 'Small heading' ? 'h3' : 'p'
+        )
+    }, [toolsState])
+
     return (
         <div className={`editor ${expanded ? 'expanded' : 'collapsed'}`}>
             <header>
@@ -387,15 +409,15 @@ function Editor() {
                         <button className="note-options"><svg width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M4.5 12a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0zm7.501 1.5a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm6 0a1.5 1.5 0 110-3 1.5 1.5 0 010 3z"></path></svg></button>
                     </div>
                 </div>
-                <ToolBar toolsState={toolsState} setToolsState={setToolsState} selColor={selColor} setSelColor={setSelColor} format={format} history={history} />
+                <ToolBar selectionDropTool={selectionDropTool} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} selColor={selColor} setSelColor={setSelColor} format={format} history={history} />
             </header>
             <div className="editor-body">
                 <div className="note-title">
                     <textarea className="title-field" placeholder="Title"></textarea>
                 </div>
-                <div style={{ position: 'relative' }} className="note-editing-window">
+                <div className="note-editing-window">
                     <iframe ref={iframe} title="Editing Window"></iframe>
-                    {toolsState.insertLink ? <InsertLinkCard execCommand={execCommand} fortmat={format} iframeSel={iframe.current.contentWindow.getSelection()} /> : '' }
+                    {selectionDropTool === 'insert-link' ? <InsertLinkCard setSelectionDropTool={setSelectionDropTool} execCommand={execCommand} fortmat={format} iframeSel={iframe.current.contentWindow.getSelection()} iframeDocument={iframe.current.contentDocument} /> : null}
                 </div>
             </div>
         </div>

@@ -2,12 +2,12 @@
 @import '../utils/style-defs';
 
 .insert-link-card {
-    @include pos(absolute, 40px, $l: 200px);
+    @include pos(absolute);
     background: #fff;
     z-index: 3;
     border-radius: 4px;
     box-shadow: 0 0 7px rgba(#000, .3);
-    // opacity: 0;
+    opacity: 0;
     padding: 15px 15px 15px;
     @include flex($fd: column);
 
