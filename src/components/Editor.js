@@ -6,7 +6,7 @@ import InsertLinkCard from './InsertLinkCard'
 import ToolBar from './ToolBar'
 
 function Editor() {
-    const { activeNoteId, notes, updateNotes } : {activeNoteId: String, notes: Array<Object>, updateNotes: Function} = useContext(AppContext)
+    const { activeNoteId, notes, updateNotes } = useContext(AppContext)
     const [noteTitle, setNoteTitle] = useState('')
     
     
@@ -40,12 +40,8 @@ function Editor() {
         return selectTools.includes(action.tool) ? { selectionDropTool: action.tool } : { selectionDropTool: null }
     }, { selectionDropTool: null })
 
-    /* useEffect(() => {
-        setSelectionDropTool({ tool: null })
-    }, [toolsState]) */
-    /* useEffect(() => {
-    }, [activeNote, updateNotes]) */
     useEffect(() => {
+        if (!notes.length) return
         const note = notes.find((obj) => obj.id === activeNoteId)
         setNoteTitle(note.title)
     }, [activeNoteId, notes])
@@ -53,14 +49,37 @@ function Editor() {
     const handleTitleChange = (ev) => {
         setNoteTitle(ev.target.value)
         const note = notes.find((obj) => obj.id === activeNoteId)
-        const updatedNote = { ...note, title: ev.target.value || 'Untitled' }
+        const updatedNote = { ...note, title: ev.target.value || 'Untitled', updatedAt: Date.now() }
         updateNotes(updatedNote)
     }
-
     const iframe = useRef(document.querySelector('iframe'))
+
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
-        iframeDocument.designMode = 'on';
+        const updateListItem = () => {
+            const note = notes.find((obj) => obj.id === activeNoteId)
+            const updatedNote = { ...note, bodyText: iframeDocument.body.querySelector('p').innerHTML }
+        updateNotes(updatedNote)
+        }
+
+        iframeDocument.addEventListener('input', updateListItem)
+        return () => {
+            iframeDocument.removeEventListener('input', updateListItem)
+        }
+    }, [activeNoteId, notes, updateNotes])
+
+    const execCommand = (fs, sdu = false, vArg = null) => {
+        const iframeDocument = iframe.current.contentDocument
+        // iframeDocument.execCommand('styleWithCSS', false, true)
+        iframeDocument.execCommand(fs, sdu, vArg)
+    }
+    useEffect(() => {
+        const iframeDocument = iframe.current.contentDocument
+        if (notes.length) {
+            iframeDocument.designMode = 'on';
+        } else {
+            iframeDocument.designMode = 'off';
+        }
         // iframeDocument.body.focus()
         
         ;['SourceSansPro-Regular', 'SourceSansPro-Italic', 'SourceSansPro-BoldItalic', 'SourceSerifPro-Regular', 'SourceSerifPro-It', 'SourceSerifPro-BoldIt']
@@ -77,7 +96,7 @@ function Editor() {
             ev.target.rel = 'stylesheet'
         })
         iframeDocument.head.appendChild(link)
-    }, [])
+    }, [notes])
     
     // control tool highlighting
     useEffect(() => {
@@ -283,11 +302,6 @@ function Editor() {
     }, [history])
 
     // tool clicking highlighting
-    const execCommand = (fs, sdu = false, vArg = null) => {
-        const iframeDocument = iframe.current.contentDocument
-        // iframeDocument.execCommand('styleWithCSS', false, true)
-        return iframeDocument.execCommand(fs, sdu, vArg)
-    }
     const format = (formatString) => {
         setSelectionDropTool({ tool: null })
         if (['bold', 'italic', 'underline'].includes(formatString)) {
@@ -435,7 +449,7 @@ function Editor() {
             </header>
             <div className="editor-body">
                 <div className="note-title">
-                    <textarea onChange={handleTitleChange} autoFocus className="title-field" placeholder="Title" value={noteTitle === 'Untitled' ? '' : noteTitle}></textarea>
+                    <textarea disabled={notes.length ? false : true} onChange={handleTitleChange} autoFocus className="title-field" placeholder="Title" value={noteTitle === 'Untitled' ? '' : noteTitle}></textarea>
                 </div>
                 <div className="note-editing-window">
                     <iframe ref={iframe} title="Editing Window"></iframe>

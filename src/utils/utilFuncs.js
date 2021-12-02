@@ -1,4 +1,4 @@
-const calcTimeElapsedHumanized = (time) => { // time: Number
+const calcTimeElapsedHumanized = (time) => {
     const elapsed = (Date.now() - time) / 1000
 
     if (elapsed < 60) return 'a few seconds ago'
@@ -24,16 +24,16 @@ const calcTimeElapsedHumanized = (time) => { // time: Number
     return `${calcYears} year${calcYears > 1 ? 's' : ''} ago`    
 }
 
-const capitalize = (text: string) => `${text[0].toUpperCase()}${text.slice(1)}`
+const capitalize = (text) => `${text[0].toUpperCase()}${text.slice(1)}`
 
-const camelCase = (phrase: string) => phrase.split(/[\s-]/i).map((str, i) => i === 0 ? str.toLowerCase() : str.replace(str[0], str[0].toUpperCase())).join('')
+const camelCase = (phrase) => phrase.split(/[\s-]/i).map((str, i) => i === 0 ? str.toLowerCase() : str.replace(str[0], str[0].toUpperCase())).join('')
 
-const hyphenate = (phrase: string) => phrase.toLowerCase().replaceAll(' ', '-')
+const hyphenate = (phrase) => phrase.toLowerCase().replaceAll(' ', '-')
 
-const toPhrase = (text: string) => capitalize(text.toLowerCase().replaceAll('-', ' '))
+const toPhrase = (text) => capitalize(text.toLowerCase().replaceAll('-', ' '))
 
 const allDocument = {
-    addEventListener(type: string, handler: function) {
+    addEventListener(type, handler) {
         [document, document.querySelector('iframe').contentWindow].map((doc) => doc.addEventListener(type, handler))
     },
     
@@ -42,7 +42,7 @@ const allDocument = {
     }
 }
 
-const getFontFamily = (superFamily: string) => {
+const getFontFamily = (superFamily) => {
     return superFamily === 'Sans serif' ? "'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
     : superFamily === 'Serif' ? "'Source Serif Pro', serif"
     : superFamily === 'Slab serif' ? "'Zilla Slab', slab-serif"
@@ -52,11 +52,11 @@ const getFontFamily = (superFamily: string) => {
     : null
 }
 
-const extractSuperFamily = (fontFamily: string) => {
+const extractSuperFamily = (fontFamily) => {
     return toPhrase(fontFamily.split(' ').at(-1))
 }
 
-const rgbToHex = (rgbStr: string) => {
+const rgbToHex = (rgbStr) => {
     if (!rgbStr.includes('rgb')) return rgbStr
     const rgbArr = rgbStr.match(/\d+/g)
     return rgbArr.map((v) => Number(v).toString(16)).reduce((acc, v) => acc + v, '#')

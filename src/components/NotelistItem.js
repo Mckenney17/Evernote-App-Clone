@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+// import ReactHtmlParser from 'react-html-parser'
 import AppContext from '../utils/AppContext'
 import './NotelistItem.scss'
 import { hyphenate } from '../utils/utilFuncs'
@@ -11,7 +12,8 @@ function NotelistItem({ id, title, bodyText, updatedAt, createdAt, viewActions }
                 <React.Fragment>
                     <h4>{title}</h4>
                     <div className="content">
-                        <p>{bodyText}</p>
+                        <p></p>
+                        {/* {ReactHtmlParser(`<p>${bodyText}</p>`)} */}
                     </div>
                     <span className="date-updated">5 minutes ago</span>
                 </React.Fragment>

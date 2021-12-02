@@ -95,6 +95,9 @@
             &::placeholder {
                 color: gray(g13);
             }
+            &:disabled {
+                background: transparent;
+            }
         }
 
         .note-editing-window {
