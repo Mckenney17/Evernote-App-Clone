@@ -58,7 +58,7 @@ function Editor() {
         const iframeDocument = iframe.current.contentDocument
         const updateListItem = () => {
             const note = notes.find((obj) => obj.id === activeNoteId)
-            const updatedNote = { ...note, bodyText: iframeDocument.body.querySelector('p').innerHTML }
+            const updatedNote = { ...note, bodyText: iframeDocument.body.innerHTML }
         updateNotes(updatedNote)
         }
 
@@ -73,6 +73,16 @@ function Editor() {
         // iframeDocument.execCommand('styleWithCSS', false, true)
         iframeDocument.execCommand(fs, sdu, vArg)
     }
+
+    useEffect(() => {
+        const iframeDocument = iframe.current.contentDocument
+        if (!notes.length) return
+        const note = notes.find((obj) => obj.id === activeNoteId)
+        iframeDocument.body.innerHTML = note.bodyText
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeNoteId])
+
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
         if (notes.length) {
@@ -80,7 +90,6 @@ function Editor() {
         } else {
             iframeDocument.designMode = 'off';
         }
-        // iframeDocument.body.focus()
         
         ;['SourceSansPro-Regular', 'SourceSansPro-Italic', 'SourceSansPro-BoldItalic', 'SourceSerifPro-Regular', 'SourceSerifPro-It', 'SourceSerifPro-BoldIt']
         .forEach((font) => {
