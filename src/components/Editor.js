@@ -1,12 +1,15 @@
-import React, { useEffect, useReducer, useRef, useState } from 'react'
+import React, { useContext, useEffect, useReducer, useRef, useState } from 'react'
 import { getFontFamily, rgbToHex, extractSuperFamily, capitalize } from '../utils/utilFuncs'
-// import AppContext from '../utils/AppContext'
+import AppContext from '../utils/AppContext'
 import './Editor.scss'
 import InsertLinkCard from './InsertLinkCard'
 import ToolBar from './ToolBar'
 
 function Editor() {
-    // const { activeNote } = useContext(AppContext)]
+    const { activeNoteId, notes, updateNotes } : {activeNoteId: String, notes: Array<Object>, updateNotes: Function} = useContext(AppContext)
+    const [noteTitle, setNoteTitle] = useState('')
+    
+    
     const [expanded, setExpanded] = useState(false)
     const [history, setHistory] = useState({ undo: 0, redo: 0 })
     const [selColor, setSelColor] = useState({ fore: '#000000', selFore: '#000000', back: '#ffef9e', selBack: '#ffef9e' })
@@ -40,17 +43,39 @@ function Editor() {
     /* useEffect(() => {
         setSelectionDropTool({ tool: null })
     }, [toolsState]) */
+    /* useEffect(() => {
+    }, [activeNote, updateNotes]) */
+    useEffect(() => {
+        const note = notes.find((obj) => obj.id === activeNoteId)
+        setNoteTitle(note.title)
+    }, [activeNoteId, notes])
+
+    const handleTitleChange = (ev) => {
+        setNoteTitle(ev.target.value)
+        const note = notes.find((obj) => obj.id === activeNoteId)
+        const updatedNote = { ...note, title: ev.target.value || 'Untitled' }
+        updateNotes(updatedNote)
+    }
 
     const iframe = useRef(document.querySelector('iframe'))
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
         iframeDocument.designMode = 'on';
-        iframeDocument.body.focus()
+        // iframeDocument.body.focus()
         
+        ;['SourceSansPro-Regular', 'SourceSansPro-Italic', 'SourceSansPro-BoldItalic', 'SourceSerifPro-Regular', 'SourceSerifPro-It', 'SourceSerifPro-BoldIt']
+        .forEach((font) => {
+            iframeDocument.head.insertAdjacentHTML('beforeend', `<link rel="preload" as="font" type="font/woff2" href="fonts/${font}.woff2" crossorigin>`)
+        })
+
         const link = document.createElement('link')
         link.href ='editorIframe.css'
-        link.rel = 'stylesheet'
-        link.type = 'text/css'
+        link.rel = 'preload'
+        link.as = 'style'
+        link.addEventListener('load', (ev) => {
+            ev.target.onload = null
+            ev.target.rel = 'stylesheet'
+        })
         iframeDocument.head.appendChild(link)
     }, [])
     
@@ -111,7 +136,8 @@ function Editor() {
                 }
                 
                 
-                if (currentAncestor.parentNode.innerText.trim() === '') return cloneTS
+                // if (currentAncestor.parentNode.innerText.trim() === '') return cloneTS
+                if (iframeDocument.body.innerText.trim() === '') return cloneTS
                 const closestFontSizeElem = iframeSel.anchorNode.parentNode.closest('*[style*="font-size"]')
                 if (closestFontSizeElem) {
                     cloneTS.fontSize = parseInt(closestFontSizeElem.style.fontSize)
@@ -262,7 +288,7 @@ function Editor() {
         // iframeDocument.execCommand('styleWithCSS', false, true)
         return iframeDocument.execCommand(fs, sdu, vArg)
     }
-    const format = (formatString: string) => {
+    const format = (formatString) => {
         setSelectionDropTool({ tool: null })
         if (['bold', 'italic', 'underline'].includes(formatString)) {
             execCommand(formatString)
@@ -409,7 +435,7 @@ function Editor() {
             </header>
             <div className="editor-body">
                 <div className="note-title">
-                    <textarea className="title-field" placeholder="Title"></textarea>
+                    <textarea onChange={handleTitleChange} autoFocus className="title-field" placeholder="Title" value={noteTitle === 'Untitled' ? '' : noteTitle}></textarea>
                 </div>
                 <div className="note-editing-window">
                     <iframe ref={iframe} title="Editing Window"></iframe>
