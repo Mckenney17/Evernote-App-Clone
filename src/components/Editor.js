@@ -58,13 +58,13 @@ function Editor() {
         const iframeDocument = iframe.current.contentDocument
         const updateListItem = () => {
             const note = notes.find((obj) => obj.id === activeNoteId)
-            const updatedNote = { ...note, bodyText: iframeDocument.body.innerHTML }
+            const updatedNote = { ...note, bodyText: iframeDocument.body.innerHTML, updatedAt: Date.now() }
         updateNotes(updatedNote)
         }
 
-        iframeDocument.addEventListener('input', updateListItem)
+        iframeDocument.addEventListener('keyup', updateListItem)
         return () => {
-            iframeDocument.removeEventListener('input', updateListItem)
+            iframeDocument.removeEventListener('keyup', updateListItem)
         }
     }, [activeNoteId, notes, updateNotes])
 
