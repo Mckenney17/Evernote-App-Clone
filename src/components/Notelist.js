@@ -97,7 +97,7 @@ function Notelist() {
                         </div>
                     )}
                     {notes.length ?
-                        notes.sort((noteA, noteB) => noteB.updatedAt - noteA.updatedAt).map(({ id, title, bodyText, updatedAt, createdAt }) => <NotelistItem viewActions={viewActions} key={createdAt} createdAt={createdAt} id={id} title={title} bodyText={bodyText} updatedAt={updatedAt} /> ) : (
+                        notes.sort((noteA, noteB) => noteB.updatedAt - noteA.updatedAt).map(({ id, title, summaryText, updatedAt, createdAt }) => <NotelistItem viewActions={viewActions} key={createdAt} createdAt={createdAt} id={id} title={title} summaryText={summaryText} updatedAt={updatedAt} /> ) : (
                         // work on snig here
                         <li className="notelist-empty-state">
                             <span className="write-note-icon">

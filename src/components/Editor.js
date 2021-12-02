@@ -58,7 +58,7 @@ function Editor() {
         const iframeDocument = iframe.current.contentDocument
         const updateListItem = () => {
             const note = notes.find((obj) => obj.id === activeNoteId)
-            const updatedNote = { ...note, bodyText: iframeDocument.body.innerHTML, updatedAt: Date.now() }
+            const updatedNote = { ...note, bodyText: iframeDocument.body.innerHTML, summaryText: iframeDocument.body.querySelector('p').innerHTML, updatedAt: Date.now() }
         updateNotes(updatedNote)
         }
 

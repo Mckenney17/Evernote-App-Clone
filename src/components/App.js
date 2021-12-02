@@ -26,7 +26,7 @@ function App() {
     const createNewNote = () => {
         setNotes((previousNotes) => {
             const clonePN = [...previousNotes]
-            clonePN.push({ id: clonePN.length + 1, title: 'Untitled', bodyText: '', createdAt: Date.now(), updatedAt: Date.now() })
+            clonePN.push({ id: clonePN.length + 1, title: 'Untitled', bodyText: '', summaryText: '', createdAt: Date.now(), updatedAt: Date.now() })
             return clonePN
         })
         setActiveNoteId(notes.length + 1)
