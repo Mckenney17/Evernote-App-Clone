@@ -13,7 +13,6 @@ function NotelistItem({ id, title, summaryText, updatedAt, createdAt, viewAction
                     <h4>{title}</h4>
                     <div className="content">
                         <p>{ReactHtmlParser(summaryText)}</p>
-                    
                     </div>
                     <span className="date-updated">{calcTimeElapsedHumanized(updatedAt)}</span>
                 </React.Fragment>
