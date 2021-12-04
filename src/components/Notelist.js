@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState, useRef } from 'react'
 import AppContext from '../utils/AppContext'
+import { mapStringToUnicode } from '../utils/utilFuncs'
 import './Notelist.scss'
 import NotelistItem from './NotelistItem'
 import NotelistViewActionCard from './NotelistViewActionCard'
@@ -56,6 +57,19 @@ function Notelist() {
         }
     }, [viewActions.view])
 
+    const sortNoteList = (sortActions, notes) => {
+        const { sortBy, order } = sortActions
+        return notes.sort((noteA, noteB) => {
+            return [['Title', 'title'], ['Date Created', 'createdAt'], ['Date Updated', 'updatedAt']]
+            .reduce((acc, [name, prop]) => {
+                if (sortBy === name) {
+                    return acc + (order === 'desc' ? mapStringToUnicode(noteA[prop]) - mapStringToUnicode(noteB[prop]) : mapStringToUnicode(noteB[prop]) - mapStringToUnicode(noteA[prop]))
+                }
+                return acc
+            }, 0)
+        })
+    }
+
     return (
         <div className={`notelist ${viewActions.view === 'Top list' ? 'top-list-view-active' : ''}`}>
             <span className="notelist-resizer"></span>
@@ -97,7 +111,7 @@ function Notelist() {
                         </div>
                     )}
                     {notes.length ?
-                        notes.notelistSort(sortActions).map(({ id, title, summaryText, updatedAt, createdAt }) => <NotelistItem viewActions={viewActions} key={createdAt} createdAt={createdAt} id={id} title={title} summaryText={summaryText} updatedAt={updatedAt} /> ) : (
+                        sortNoteList(sortActions, notes).map(({ id, title, summaryText, updatedAt, createdAt }) => <NotelistItem viewActions={viewActions} key={createdAt} createdAt={createdAt} id={id} title={title} summaryText={summaryText} updatedAt={updatedAt} /> ) : (
                         // work on snig here
                         <li className="notelist-empty-state">
                             <span className="write-note-icon">

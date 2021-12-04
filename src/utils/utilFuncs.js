@@ -66,22 +66,6 @@ const mapStringToUnicode = (value) => {
     return [...value.toString()].map((v) => v.codePointAt()).join('')
 }
 
-// eslint-disable-next-line no-extend-native
-Object.defineProperty(Array.prototype, 'notelistSort', {
-    value(sortActions) {
-        const { sortBy, order } = sortActions
-        return this.sort((noteA, noteB) => {
-            return [['Title', 'title'], ['Date Created', 'createdAt'], ['Date Updated', 'updatedAt']]
-            .reduce((acc, [name, prop]) => {
-                if (sortBy === name) {
-                    return acc + (order === 'desc' ? mapStringToUnicode(noteA[prop]) - mapStringToUnicode(noteB[prop]) : mapStringToUnicode(noteB[prop]) - mapStringToUnicode(noteA[prop]))
-                }
-                return acc
-            }, 0)
-        })
-    }
-})
-
 export { 
     calcTimeElapsedHumanized,
     camelCase,
