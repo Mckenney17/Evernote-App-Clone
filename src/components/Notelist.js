@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import React, { useContext, useEffect, useState, useRef } from 'react'
 import AppContext from '../utils/AppContext'
 import { mapStringToUnicode } from '../utils/utilFuncs'
@@ -22,28 +23,14 @@ function Notelist() {
         }
     }, [viewActions.view, setIsToplistView])
 
-    useEffect(() => {
-        const resize = (ev) => {
-            if (viewActions.view !== 'Top list') {
-                document.querySelector('.notelist').style.width = `${ev.clientX - document.querySelector('.sidebar').getBoundingClientRect().width}px`
-            } else {
-                document.querySelector('.notelist').style.height = `${ev.clientY}px`   
-            }
+    const handleResizerDrag = (ev, info) => {
+        if (viewActions.view !== 'Top list') {
+            // document.querySelector('.notelist').style.width = ev.target.style.transform.match(/\w+px/)[0]
+            document.querySelector('.notelist').style.width = `${info.point.x - document.querySelector('.sidebar').getBoundingClientRect().width}px`
+        } else {
+            document.querySelector('.notelist').style.height = `${info.point.y}px` 
         }
-        const triggerResize = () => {
-            document.addEventListener('mousemove', resize, false)
-        }
-        const resizer = document.querySelector('.notelist-resizer')
-
-        if (!resizer) return
-        resizer.addEventListener('mousedown', triggerResize, false)
-        document.addEventListener('mouseup', () => {
-            document.removeEventListener('mousemove', resize, false)
-        }, false)
-        return () => {
-            resizer.removeEventListener('mousedown', triggerResize)
-        }
-    }, [viewActions.view])
+    }
 
     useEffect(() => {
         const adjustHeight = () => {
@@ -72,7 +59,7 @@ function Notelist() {
 
     return (
         <div className={`notelist ${viewActions.view === 'Top list' ? 'top-list-view-active' : ''}`}>
-            <span className="notelist-resizer"></span>
+            <motion.span className="notelist-resizer" drag={viewActions.view === 'Top list' ? 'y' : 'x'} onDrag={handleResizerDrag} dragMomentum={false}></motion.span>
             <header>
                 <div className="title">
                     <span className="title-icon">

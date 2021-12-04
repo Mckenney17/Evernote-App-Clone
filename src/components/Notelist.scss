@@ -8,8 +8,15 @@
     @include flex($fd: column);
 
     &-resizer {
-        @include pos(absolute, 0, -1%, 0, 99%);
+        @include pos(absolute, 0, 0, 0, 99%);
         cursor: e-resize;
+        background: #000;
+        // opacity: 0;
+        transition: opacity .15s linear;
+        opacity: 1;
+        z-index: 3;
+        &:hover {
+        }
     }
 
     header {
