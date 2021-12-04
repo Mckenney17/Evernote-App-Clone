@@ -62,6 +62,10 @@ const rgbToHex = (rgbStr) => {
     return rgbArr.map((v) => Number(v).toString(16)).reduce((acc, v) => acc + v, '#')
 }
 
+const mapStringToUnicode = (value) => {
+    
+}
+
 export { 
     calcTimeElapsedHumanized,
     camelCase,

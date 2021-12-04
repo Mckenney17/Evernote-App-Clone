@@ -7,13 +7,15 @@ function SortActionCard({ sortActions, setSortActions, viewActionBtn, setActiveA
     const cardRef = useRef(null)
     useNotelistActionsDrop({ cardRef, setActiveAction, otherActionBtn: viewActionBtn })
 
+    const changeOrder = () => setSortActions((prev) => ({ ...prev, order: prev.order === 'asc' ? 'desc' : 'asc' }))
+
     return (
         <motion.div ref={cardRef} className="sort-action-card" animate={{ y: 10, opacity: 1, type: 'tween' }}>
             <h5>SORT BY</h5>
             <ul>
                 {['Title', 'Date Updated', 'Date Created'].map((optionText) => (
                     <li key={optionText} className={sortActions.sortBy === optionText ? 'checked' : ''}>
-                        <button>
+                        <button onClick={() => sortActions.sortBy === optionText ? changeOrder() : setSortActions((prev) => ({...prev, sortBy: optionText}))}>
                             <span className="order-icon">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M17 19a.75.75 0 01-.75-.75V7.56l-2.72 2.72a.75.75 0 11-1.06-1.06l4-4a.75.75 0 011.06 0l4 4a.75.75 0 11-1.06 1.06l-2.72-2.72v10.69A.75.75 0 0117 19z" fill={sortActions.order === 'desc' ? '#e6e6e6' : 'currentColor'}></path><path fillRule="evenodd" clipRule="evenodd" d="M7 5a.75.75 0 00-.75.75v10.69l-2.72-2.72a.75.75 0 00-1.06 1.06l4 4a.75.75 0 001.06 0l4-4a.75.75 0 10-1.06-1.06l-2.72 2.72V5.75A.75.75 0 007 5z" fill={sortActions.order === 'desc' ? 'currentColor' : '#e6e6e6'}></path></svg>
                             </span>

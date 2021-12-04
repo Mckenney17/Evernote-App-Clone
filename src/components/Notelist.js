@@ -5,9 +5,25 @@ import NotelistItem from './NotelistItem'
 import NotelistViewActionCard from './NotelistViewActionCard'
 import SortActionCard from './SortActionCard'
 
+// eslint-disable-next-line no-extend-native
+Object.defineProperty(Array.prototype, 'notelistSort', {
+    value(sortActions) {
+        const { sortBy, order } = sortActions
+        return this.sort((noteA, noteB) => {
+            return [['Title', 'title'], ['Date Created', 'createdAt'], ['Date Updated', 'updatedAt']]
+            .reduce((acc, [name, prop]) => {
+                if (sortBy === name) {
+                    return acc + (order === 'desc' ? noteA[prop] - noteB[prop] : noteB[prop] - noteA[prop])
+                }
+                return acc
+            }, 0)
+        })
+    }
+})
+
 function Notelist() {
     const { activeTab, notes, setIsToplistView, createNewNote } = useContext(AppContext)
-    const [sortActions, setSortActions] = useState({ sortBy: 'Date Updated', order: 'desc', snig: true })
+    const [sortActions, setSortActions] = useState({ sortBy: 'Date Updated', order: 'asc', snig: true })
     const [viewActions, setViewActions] = useState({ view: 'Snippets', showImages: true, showBodyText: true, dateUpdated: true, dateCreated: false })
     const [activeAction, setActiveAction] = useState(null)
     const sortActionBtnRef = useRef(null)
@@ -56,6 +72,20 @@ function Notelist() {
         }
     }, [viewActions.view])
 
+
+    /* useEffect(() => {
+        if (!notes.length) return
+        const { sortBy, order } = sortActions
+        setNotes((prevNotes) => {
+            const clonePN = {...prevNotes}
+            return clonePN.sort((noteA, noteB) => {
+                if (sortBy === 'Title') {
+                    return order === 'desc' ? 
+                }
+            })
+        })
+    }, [sortActions, setNotes, notes]) */
+
     return (
         <div className={`notelist ${viewActions.view === 'Top list' ? 'top-list-view-active' : ''}`}>
             <span className="notelist-resizer"></span>
@@ -97,7 +127,7 @@ function Notelist() {
                         </div>
                     )}
                     {notes.length ?
-                        notes.sort((noteA, noteB) => noteB.updatedAt - noteA.updatedAt).map(({ id, title, summaryText, updatedAt, createdAt }) => <NotelistItem viewActions={viewActions} key={createdAt} createdAt={createdAt} id={id} title={title} summaryText={summaryText} updatedAt={updatedAt} /> ) : (
+                        notes.notelistSort(sortActions).map(({ id, title, summaryText, updatedAt, createdAt }) => <NotelistItem viewActions={viewActions} key={createdAt} createdAt={createdAt} id={id} title={title} summaryText={summaryText} updatedAt={updatedAt} /> ) : (
                         // work on snig here
                         <li className="notelist-empty-state">
                             <span className="write-note-icon">
