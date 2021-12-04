@@ -7,7 +7,7 @@ import { calcTimeElapsedHumanized, hyphenate } from '../utils/utilFuncs'
 function NotelistItem({ id, title, summaryText, updatedAt, createdAt, viewActions }) {
     const { activeNoteId, setActiveNoteId } = useContext(AppContext)
     return (
-        <div onClick={() => setActiveNoteId(id)} className={`notelist-item ${activeNoteId === id ? 'active' : ''}`} id={hyphenate(viewActions.view)}>
+        <li onClick={() => setActiveNoteId(id)} className={`notelist-item ${activeNoteId === id ? 'active' : ''}`} id={hyphenate(viewActions.view)}>
             {['Cards', 'Snippets'].includes(viewActions.view) ? (
                 <React.Fragment>
                     <h4>{title}</h4>
@@ -23,7 +23,7 @@ function NotelistItem({ id, title, summaryText, updatedAt, createdAt, viewAction
                     {viewActions.dateCreated && <div className="date-created-cell">November 7</div>}
                 </React.Fragment>
             )}
-        </div>
+        </li>
     )
 }
 
