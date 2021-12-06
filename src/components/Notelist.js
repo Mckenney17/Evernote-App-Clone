@@ -106,9 +106,10 @@ function Notelist() {
                         sortNoteList(sortActions, notes).map((noteObj, index, noteObjArr) => {
                             const { id, title, summaryText, updatedAt, createdAt } = noteObj
                             const prop = sortByToProp(sortActions.sortBy)
-                            if (sortActions.snig && (index === 0 || (sortActions.sortBy !== 'Title' ? noteObj[prop] : noteObj[prop][0].toUpperCase()) !== (sortActions.sortBy !== 'Title' ? noteObjArr[index - 1][prop] : noteObjArr[index - 1][prop][0].toUpperCase()))) {
-                                return <React.Fragment>
-                                    <li className="meta">{noteObj?.[prop]?.toUpperCase() || noteObj[prop]}</li>
+                            if (sortActions.snig && (index === 0 || (noteObj[prop]?.[0]?.toUpperCase() || noteObj[prop]) !== (noteObjArr[index - 1][prop]?.[0]?.toUpperCase() || noteObjArr[index - 1][prop]))) {
+                                return <React.Fragment key={createdAt}>
+                                    <li className="meta">{noteObj[prop]?.[0]?.toUpperCase() || noteObj[prop]}</li>
+                                    <NotelistItem viewActions={viewActions} key={createdAt} createdAt={createdAt} id={id} title={title} summaryText={summaryText} updatedAt={updatedAt} />
                                 </React.Fragment>
                             }
                             return <NotelistItem viewActions={viewActions} key={createdAt} createdAt={createdAt} id={id} title={title} summaryText={summaryText} updatedAt={updatedAt} />
