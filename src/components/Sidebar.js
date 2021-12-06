@@ -23,7 +23,7 @@ function Sidebar() {
     }
 
     return (
-        <div style={{ width: '205px' }} className="sidebar">
+        <div className="sidebar">
             <motion.span className="sidebar-resizer" drag='x' onDrag={handleResizerDrag} dragMomentum={false} onDragEnd={handleDragEnd}></motion.span>
             <div className="top-section-search-newnote">
                 <Search />

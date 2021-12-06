@@ -63,7 +63,7 @@ function Notelist() {
     }
 
     return (
-        <div style={{ width: '435px' }} className={`notelist ${viewActions.view === 'Top list' ? 'top-list-view-active' : ''}`}>
+        <divclassName={`notelist ${viewActions.view === 'Top list' ? 'top-list-view-active' : ''}`}>
             <motion.span className="notelist-resizer" drag={viewActions.view === 'Top list' ? 'y' : 'x'} onDrag={handleResizerDrag} dragMomentum={false} onDragEnd={handleDragEnd}></motion.span>
             <header>
                 <div className="title">
@@ -115,7 +115,7 @@ function Notelist() {
                     )}
                 </ul>
             </div>
-        </div>
+        </divclassName=>
     )
 }
 
