@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import React, { useContext, useEffect, useState, useRef } from 'react'
 import AppContext from '../utils/AppContext'
-import { mapStringToUnicode } from '../utils/utilFuncs'
+import { mapStringToUnicode, sortByToProp } from '../utils/utilFuncs'
 import './Notelist.scss'
 import NotelistItem from './NotelistItem'
 import NotelistViewActionCard from './NotelistViewActionCard'
@@ -63,7 +63,7 @@ function Notelist() {
     }
 
     return (
-        <divclassName={`notelist ${viewActions.view === 'Top list' ? 'top-list-view-active' : ''}`}>
+        <div className={`notelist ${viewActions.view === 'Top list' ? 'top-list-view-active' : ''}`}>
             <motion.span className="notelist-resizer" drag={viewActions.view === 'Top list' ? 'y' : 'x'} onDrag={handleResizerDrag} dragMomentum={false} onDragEnd={handleDragEnd}></motion.span>
             <header>
                 <div className="title">
@@ -103,7 +103,16 @@ function Notelist() {
                         </div>
                     )}
                     {notes.length ?
-                        sortNoteList(sortActions, notes).map(({ id, title, summaryText, updatedAt, createdAt }) => <NotelistItem viewActions={viewActions} key={createdAt} createdAt={createdAt} id={id} title={title} summaryText={summaryText} updatedAt={updatedAt} /> ) : (
+                        sortNoteList(sortActions, notes).map((noteObj, index, noteObjArr) => {
+                            const { id, title, summaryText, updatedAt, createdAt } = noteObj
+                            const prop = sortByToProp(sortActions.sortBy)
+                            if (sortActions.snig && (index === 0 || (sortActions.sortBy !== 'Title' ? noteObj[prop] : noteObj[prop][0].toUpperCase()) !== (sortActions.sortBy !== 'Title' ? noteObjArr[index - 1][prop] : noteObjArr[index - 1][prop][0].toUpperCase()))) {
+                                return <React.Fragment>
+                                    <li className="meta">{noteObj?.[prop]?.toUpperCase() || noteObj[prop]}</li>
+                                </React.Fragment>
+                            }
+                            return <NotelistItem viewActions={viewActions} key={createdAt} createdAt={createdAt} id={id} title={title} summaryText={summaryText} updatedAt={updatedAt} />
+                        } ) : (
                         // work on snig here
                         <li className="notelist-empty-state">
                             <span className="write-note-icon">
@@ -115,7 +124,7 @@ function Notelist() {
                     )}
                 </ul>
             </div>
-        </divclassName=>
+        </div>
     )
 }
 

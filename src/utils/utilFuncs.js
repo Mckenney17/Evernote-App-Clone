@@ -66,6 +66,12 @@ const mapStringToUnicode = (value) => {
     return [...value.toString()].map((v) => v.codePointAt()).join('')
 }
 
+const sortByToProp = (sortByStr) => {
+    if (sortByStr === 'Title') return 'title'
+    if (sortByStr === 'Date updated') return 'updatedAt'
+    return 'createdAt'
+}
+
 export { 
     calcTimeElapsedHumanized,
     camelCase,
@@ -77,4 +83,5 @@ export {
     toPhrase,
     extractSuperFamily,
     mapStringToUnicode,
+    sortByToProp,
 }
