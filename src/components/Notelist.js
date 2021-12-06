@@ -25,11 +25,16 @@ function Notelist() {
 
     const handleResizerDrag = (ev, info) => {
         if (viewActions.view !== 'Top list') {
-            // document.querySelector('.notelist').style.width = ev.target.style.transform.match(/\w+px/)[0]
             document.querySelector('.notelist').style.width = `${info.point.x - document.querySelector('.sidebar').getBoundingClientRect().width}px`
         } else {
             document.querySelector('.notelist').style.height = `${info.point.y}px` 
         }
+    }
+
+    const handleDragEnd = () => {
+        setTimeout(() => {
+            document.querySelector('.notelist-resizer').style.transform = 'none'
+        }, 50)
     }
 
     useEffect(() => {
@@ -58,8 +63,8 @@ function Notelist() {
     }
 
     return (
-        <div className={`notelist ${viewActions.view === 'Top list' ? 'top-list-view-active' : ''}`}>
-            <motion.span className="notelist-resizer" drag={viewActions.view === 'Top list' ? 'y' : 'x'} onDrag={handleResizerDrag} dragMomentum={false}></motion.span>
+        <div style={{ width: '435px' }} className={`notelist ${viewActions.view === 'Top list' ? 'top-list-view-active' : ''}`}>
+            <motion.span className="notelist-resizer" drag={viewActions.view === 'Top list' ? 'y' : 'x'} onDrag={handleResizerDrag} dragMomentum={false} onDragEnd={handleDragEnd}></motion.span>
             <header>
                 <div className="title">
                     <span className="title-icon">

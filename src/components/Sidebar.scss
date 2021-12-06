@@ -5,8 +5,11 @@
     position: relative;
     
     &-resizer {
-        @include pos(absolute, 0, -1%, 0, 99%);
+        @include pos(absolute, 0, 0, 0, 99%);
         cursor: e-resize;
+        z-index: 3;
+        background: #000;
+        opacity: 0;
     }
 
     .top-section-search-newnote {

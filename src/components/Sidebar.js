@@ -1,4 +1,5 @@
-import React, { useContext, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import React, { useContext } from 'react'
 import AppContext from '../utils/AppContext'
 import Search from './Search'
 import './Sidebar.scss'
@@ -6,18 +7,15 @@ import './Sidebar.scss'
 function Sidebar() {
     const { setActiveTab, activeTab, createNewNote } = useContext(AppContext)
 
-    useEffect(() => {
-        const resize = (ev) => {
-            document.querySelector('.sidebar').style.width = `${ev.clientX}px`
-        }
-        const resizer = document.querySelector('.sidebar-resizer');
-        resizer.addEventListener('mousedown', (ev) => {
-            document.addEventListener('mousemove', resize, false)
-        }, false)
-        document.addEventListener('mouseup', () => {
-            document.removeEventListener('mousemove', resize, false)
-        }, false)
-    }, [])
+    const handleResizerDrag = (ev, info) => {
+        document.querySelector('.sidebar').style.width = `${info.point.x}px`
+    }
+
+    const handleDragEnd = () => {
+        setTimeout(() => {
+            document.querySelector('.sidebar-resizer').style.transform = 'none'
+        }, 50)
+    }
 
     const handleNavigation = (ev, tabName) => {
         ev.preventDefault()
@@ -25,8 +23,8 @@ function Sidebar() {
     }
 
     return (
-        <div className="sidebar">
-            <span className="sidebar-resizer"></span>
+        <div style={{ width: '205px' }} className="sidebar">
+            <motion.span className="sidebar-resizer" drag='x' onDrag={handleResizerDrag} dragMomentum={false} onDragEnd={handleDragEnd}></motion.span>
             <div className="top-section-search-newnote">
                 <Search />
                 <div className="newnote">
