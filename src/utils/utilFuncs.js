@@ -68,8 +68,12 @@ const mapStringToUnicode = (value) => {
 
 const sortByToProp = (sortByStr) => {
     if (sortByStr === 'Title') return 'title'
-    if (sortByStr === 'Date updated') return 'updatedAt'
+    if (sortByStr === 'Date Updated') return 'updatedAt'
     return 'createdAt'
+}
+
+const dateToLocaleString = (timestamp) => {
+    return new Date(timestamp).toLocaleDateString('en-US', { day: 'numeric', year: 'numeric', month: 'long' })
 }
 
 export { 
@@ -84,4 +88,5 @@ export {
     extractSuperFamily,
     mapStringToUnicode,
     sortByToProp,
+    dateToLocaleString,
 }

@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import React, { useContext, useEffect, useState, useRef } from 'react'
 import AppContext from '../utils/AppContext'
-import { mapStringToUnicode, sortByToProp } from '../utils/utilFuncs'
+import { dateToLocaleString, sortByToProp } from '../utils/utilFuncs'
 import './Notelist.scss'
 import NotelistItem from './NotelistItem'
 import NotelistViewActionCard from './NotelistViewActionCard'
@@ -14,6 +14,8 @@ function Notelist() {
     const [activeAction, setActiveAction] = useState(null)
     const sortActionBtnRef = useRef(null)
     const viewActionBtnRef = useRef(null)
+
+    const {sortBy, order, snig} = sortActions;
 
     useEffect(() => {
         if (viewActions.view === 'Top list') {
@@ -49,13 +51,12 @@ function Notelist() {
         }
     }, [viewActions.view])
 
-    const sortNoteList = (sortActions, notes) => {
-        const { sortBy, order } = sortActions
+    const sortNoteList = () => {
         return notes.sort((noteA, noteB) => {
             return [['Title', 'title'], ['Date Created', 'createdAt'], ['Date Updated', 'updatedAt']]
             .reduce((acc, [name, prop]) => {
                 if (sortBy === name) {
-                    return acc + (order === 'desc' ? mapStringToUnicode(noteA[prop]) - mapStringToUnicode(noteB[prop]) : mapStringToUnicode(noteB[prop]) - mapStringToUnicode(noteA[prop]))
+                    return acc + (order === 'desc' ? (noteA[prop] < noteB[prop] ? -1 : noteA[prop] > noteB[prop] ? 1 : 0) : (noteA[prop] < noteB[prop] ? 1 : noteA[prop] > noteB[prop] ? -1 : 0))
                 }
                 return acc
             }, 0)
@@ -103,13 +104,15 @@ function Notelist() {
                         </div>
                     )}
                     {notes.length ?
-                        sortNoteList(sortActions, notes).map((noteObj, index, noteObjArr) => {
+                        sortNoteList().map((noteObj, index, noteObjArr) => {
                             const { id, title, summaryText, updatedAt, createdAt } = noteObj
-                            const prop = sortByToProp(sortActions.sortBy)
-                            if (sortActions.snig && (index === 0 || (noteObj[prop]?.[0]?.toUpperCase() || noteObj[prop]) !== (noteObjArr[index - 1][prop]?.[0]?.toUpperCase() || noteObjArr[index - 1][prop]))) {
+                            const prop = sortByToProp(sortBy)
+                            const currentGroup = ['title'].includes(prop) ? noteObj[prop][0].toUpperCase() : dateToLocaleString(noteObj[prop])
+                            const previousGroup = ['title'].includes(prop) ? noteObjArr[index-1]?.[prop][0].toUpperCase() : dateToLocaleString(noteObjArr[index-1]?.[prop])
+                            if (snig && (index === 0 || currentGroup !== previousGroup)) {
                                 return <React.Fragment key={createdAt}>
-                                    <li className="meta">{noteObj[prop]?.[0]?.toUpperCase() || noteObj[prop]}</li>
-                                    <NotelistItem viewActions={viewActions} key={createdAt} createdAt={createdAt} id={id} title={title} summaryText={summaryText} updatedAt={updatedAt} />
+                                    <li className="meta">{currentGroup}</li>
+                                    <NotelistItem viewActions={viewActions} key={createdAt} createdAt={createdAt} id={id} title={title} summaryText={summaryText} updatedAt={updatedAt} />        
                                 </React.Fragment>
                             }
                             return <NotelistItem viewActions={viewActions} key={createdAt} createdAt={createdAt} id={id} title={title} summaryText={summaryText} updatedAt={updatedAt} />
