@@ -59,7 +59,7 @@
     }
 }
 
-.notelist-item#side-list, .notelist-item#top-list {
+.notelist-item[data-id="side-list"], .notelist-item[data-id="top-list"] {
     @include flex($ai: center, $fd: row);
     width: 100%;
     height: auto;
@@ -82,7 +82,14 @@
 
 
     div {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         width: 100px;
+
+        &:not(:first-child) {
+            margin-left: 4px;
+        }
 
         &:last-child {
             flex: 1;

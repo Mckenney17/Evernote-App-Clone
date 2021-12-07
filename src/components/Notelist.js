@@ -9,24 +9,25 @@ import SortActionCard from './SortActionCard'
 
 function Notelist() {
     const { activeTab, notes, setIsToplistView, createNewNote } = useContext(AppContext)
-    const [sortActions, setSortActions] = useState({ sortBy: 'Date Updated', order: 'asc', snig: true })
-    const [viewActions, setViewActions] = useState({ view: 'Snippets', showImages: true, showBodyText: true, dateUpdated: true, dateCreated: false })
+    const [sortActions, setSortActions] = useState({ sortBy: 'Date Updated', order: 'asc', snig: false })
+    const [viewActions, setViewActions] = useState({ view: 'Snippets', showImages: true, showBodyText: true, dateUpdated: false, dateCreated: true })
     const [activeAction, setActiveAction] = useState(null)
     const sortActionBtnRef = useRef(null)
     const viewActionBtnRef = useRef(null)
 
     const {sortBy, order, snig} = sortActions;
+    const {view} = viewActions;
 
     useEffect(() => {
-        if (viewActions.view === 'Top list') {
+        if (view === 'Top list') {
             setIsToplistView(true)
         } else {
             setIsToplistView(false)
         }
-    }, [viewActions.view, setIsToplistView])
+    }, [view, setIsToplistView])
 
     const handleResizerDrag = (ev, info) => {
-        if (viewActions.view !== 'Top list') {
+        if (view !== 'Top list') {
             document.querySelector('.notelist').style.width = `${info.point.x - document.querySelector('.sidebar').getBoundingClientRect().width}px`
         } else {
             document.querySelector('.notelist').style.height = `${info.point.y}px` 
@@ -41,7 +42,7 @@ function Notelist() {
 
     useEffect(() => {
         const adjustHeight = () => {
-            if (viewActions.view === 'Top list') return
+            if (view === 'Top list') return
             document.querySelector('.notelist-body').style.height = `${window.innerHeight - 95}px`
         }
 
@@ -49,7 +50,7 @@ function Notelist() {
         return () => {
             window.removeEventListener('resize', adjustHeight)
         }
-    }, [viewActions.view])
+    }, [view])
 
     const sortNoteList = () => {
         return notes.sort((noteA, noteB) => {
@@ -64,8 +65,8 @@ function Notelist() {
     }
 
     return (
-        <div className={`notelist ${viewActions.view === 'Top list' ? 'top-list-view-active' : ''}`}>
-            <motion.span className="notelist-resizer" drag={viewActions.view === 'Top list' ? 'y' : 'x'} onDrag={handleResizerDrag} dragMomentum={false} onDragEnd={handleDragEnd}></motion.span>
+        <div className={`notelist ${view === 'Top list' ? 'top-list-view-active' : ''}`}>
+            <motion.span className="notelist-resizer" drag={view === 'Top list' ? 'y' : 'x'} onDrag={handleResizerDrag} dragMomentum={false} onDragEnd={handleDragEnd}></motion.span>
             <header>
                 <div className="title">
                     <span className="title-icon">
@@ -82,10 +83,10 @@ function Notelist() {
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.183 4.625a.625.625 0 00-1.25 0V17.87L5.067 16a.625.625 0 00-.884 0 .62.62 0 000 .88l2.933 2.94c.244.244.64.244.884 0l2.933-2.94a.62.62 0 000-.88.625.625 0 00-.884 0l-1.866 1.87V4.625zM11.625 5a.625.625 0 100 1.25h8.75a.625.625 0 100-1.25h-8.75zM11 9.375c0-.345.28-.625.625-.625h6.25a.625.625 0 110 1.25h-6.25A.625.625 0 0111 9.375zM11.625 12.5a.625.625 0 100 1.25h3.75a.625.625 0 100-1.25h-3.75z" fill="currentColor"></path></svg>
                         </button>
                         <button ref={viewActionBtnRef} onClick={() => setActiveAction('view')} className={`change-notelist-view ${activeAction === 'view' ? 'active' : ''}`}>
-                            {viewActions.view === 'Snippets'
-                            ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M12.375 8.925V5.25H6a.75.75 0 00-.75.75v2.925h7.125zm0 1.25H5.25v3.65h7.125v-3.65zm0 4.9H5.25V18c0 .414.336.75.75.75h6.375v-3.675zM6 20a2 2 0 01-2-2V6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6zm7.625-14.75H18a.75.75 0 01.75.75v12a.75.75 0 01-.75.75h-4.375V5.25z" fill="currentColor"></path></svg> : viewActions.view === 'Cards'
-                            ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M12.375 8.92V5.25H9.437v3.67h2.938zm0 1.25H9.437v3.655h2.938V10.17zm0 4.905H9.437v3.675h2.938v-3.675zM6 20a2 2 0 01-2-2V6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6zm7.625-14.75H18a.75.75 0 01.75.75v12a.75.75 0 01-.75.75h-4.375V5.25zM5.25 8.92V6A.75.75 0 016 5.25h2.188v3.67H5.25zm0 1.25v3.655h2.938V10.17H5.25zm2.938 4.905H5.25V18c0 .414.336.75.75.75h2.188v-3.675z" fill="currentColor"></path></svg> : viewActions.view === 'Side list'
-                            ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M12.375 6.95v-1.7H6a.75.75 0 00-.75.75v.95h7.125zm0 1.25H5.25v1.705h7.125V8.2zm0 2.955H5.25v1.7h7.125v-1.7zm0 2.95H5.25v1.7h7.125v-1.7zm0 2.95H5.25V18c0 .414.336.75.75.75h6.375v-1.695zM6 20a2 2 0 01-2-2V6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6zm7.625-14.75H18a.75.75 0 01.75.75v12a.75.75 0 01-.75.75h-4.375V5.25z" fill="currentColor"></path></svg> : viewActions.view === 'Top list'
+                            {view === 'Snippets'
+                            ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M12.375 8.925V5.25H6a.75.75 0 00-.75.75v2.925h7.125zm0 1.25H5.25v3.65h7.125v-3.65zm0 4.9H5.25V18c0 .414.336.75.75.75h6.375v-3.675zM6 20a2 2 0 01-2-2V6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6zm7.625-14.75H18a.75.75 0 01.75.75v12a.75.75 0 01-.75.75h-4.375V5.25z" fill="currentColor"></path></svg> : view === 'Cards'
+                            ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M12.375 8.92V5.25H9.437v3.67h2.938zm0 1.25H9.437v3.655h2.938V10.17zm0 4.905H9.437v3.675h2.938v-3.675zM6 20a2 2 0 01-2-2V6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6zm7.625-14.75H18a.75.75 0 01.75.75v12a.75.75 0 01-.75.75h-4.375V5.25zM5.25 8.92V6A.75.75 0 016 5.25h2.188v3.67H5.25zm0 1.25v3.655h2.938V10.17H5.25zm2.938 4.905H5.25V18c0 .414.336.75.75.75h2.188v-3.675z" fill="currentColor"></path></svg> : view === 'Side list'
+                            ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M12.375 6.95v-1.7H6a.75.75 0 00-.75.75v.95h7.125zm0 1.25H5.25v1.705h7.125V8.2zm0 2.955H5.25v1.7h7.125v-1.7zm0 2.95H5.25v1.7h7.125v-1.7zm0 2.95H5.25V18c0 .414.336.75.75.75h6.375v-1.695zM6 20a2 2 0 01-2-2V6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6zm7.625-14.75H18a.75.75 0 01.75.75v12a.75.75 0 01-.75.75h-4.375V5.25z" fill="currentColor"></path></svg> : view === 'Top list'
                             ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M4 18a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12zM5.25 6A.75.75 0 016 5.25h12a.75.75 0 01.75.75v.95H5.25V6zm0 2.2v1.705h13.5V8.2H5.25zm0 2.955h13.5V18a.75.75 0 01-.75.75H6a.75.75 0 01-.75-.75v-6.845z" fill="currentColor"></path></svg> : null}
                         </button>
                     </div>
@@ -95,12 +96,12 @@ function Notelist() {
                 </div>
             </header>
             <div className="notelist-body-wrapper">
-                <ul style={{ height: `${viewActions.view !== 'Top list' ? `${window.innerHeight - 95}px` : '100%'}` }} className={`notelist-body ${viewActions.view.toLowerCase().replaceAll(' ', '-')}-container ${!notes.length ? 'empty' : ''}`}>
-                    {!['Cards', 'Snippets'].includes(viewActions.view) && (
+                <ul style={{ height: `${view !== 'Top list' ? `${window.innerHeight - 95}px` : '100%'}` }} className={`notelist-body ${view.toLowerCase().replaceAll(' ', '-')}-container ${!notes.length ? 'empty' : ''}`}>
+                    {!['Cards', 'Snippets'].includes(view) && (
                         <div className="table-head">
-                            <div className="title-col-th">Title<span className="resizer title-col-resizer"></span></div>
-                            {viewActions.dateUpdated && <div className="date-updated-col-th">updated<span className="resizer date-updated-col-resizer"></span></div>}
-                            {viewActions.dateCreated && <div className="date-created-col-th">created<span className="resizer date-created-col-resizer"></span></div>}
+                            <div style={{ width: '100px' }} className="title-col-th">Title<span className="resizer title-col-resizer"></span></div>
+                            {viewActions.dateUpdated && <div style={{ width: '100px' }} className="date-updated-col-th">updated<span className="resizer date-updated-col-resizer"></span></div>}
+                            {viewActions.dateCreated && <div style={{ width: '100px' }} className="date-created-col-th">created<span className="resizer date-created-col-resizer"></span></div>}
                         </div>
                     )}
                     {notes.length ?

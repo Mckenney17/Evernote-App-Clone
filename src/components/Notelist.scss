@@ -74,6 +74,7 @@
         flex: 1;
         
         &:hover {
+            // margin-right: 3px;
             overflow-y: auto;
         }
 
@@ -153,10 +154,11 @@
                 // margin-right: 2px;
                 cursor: col-resize;
             }
-
+            &:not(:first-child) {
+                margin-left: 4px;
+            }
             &:last-child {
                 flex: 1;
-                margin-left: 4px;
 
                 .resizer {
                     display: none;

@@ -72,6 +72,11 @@ const sortByToProp = (sortByStr) => {
     return 'createdAt'
 }
 
+const colNameToProp = (colName) => {
+    if (colName === 'Date Updated') return 'dateUpdated'
+    return 'dateCreated'
+}
+
 const dateToLocaleString = (timestamp) => {
     return new Date(timestamp).toLocaleDateString('en-US', { day: 'numeric', year: 'numeric', month: 'long' })
 }
@@ -89,4 +94,5 @@ export {
     mapStringToUnicode,
     sortByToProp,
     dateToLocaleString,
+    colNameToProp,
 }

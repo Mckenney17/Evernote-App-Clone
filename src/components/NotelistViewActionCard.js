@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 import { motion } from 'framer-motion'
 import './NotelistViewActionCard.scss'
 import useNotelistActionsDrop from '../hooks/useNotelistActionsDrop'
+import { colNameToProp } from '../utils/utilFuncs'
 
 function NotelistViewActionCard({ viewActions, setViewActions, sortActionBtn, setActiveAction }) {
     const cardRef = useRef(null)
@@ -52,10 +53,10 @@ function NotelistViewActionCard({ viewActions, setViewActions, sortActionBtn, se
             <React.Fragment>
             <h5 className="sub-options-h">COLUMNS</h5>
             <ul>
-                {[['Date updated', viewActions.dateUpdated],
-                ['Date created', viewActions.dateCreated]].map(([optionText, optionValidate]) => (
+                {[['Date Updated', viewActions.dateUpdated],
+                ['Date Created', viewActions.dateCreated]].map(([optionText, optionValidate]) => (
                 <li key={optionText} className={optionValidate ? 'checked' : ''}>
-                    <button>
+                    <button onClick={() => setViewActions((prev) => ({ ...prev, [colNameToProp(optionText)]: !prev[colNameToProp(optionText)] }))}>
                         <span className="check-mark-icon">
                             <svg width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M17.572 6.35a1.013 1.013 0 011.531 1.325l-8.212 9.488a1.013 1.013 0 01-1.532 0L5.497 12.7a1.012 1.012 0 111.531-1.325l3.097 3.578 7.447-8.603z" fill="currentColor"></path></svg>
                         </span>
