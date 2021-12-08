@@ -8,7 +8,7 @@ import NotelistViewActionCard from './NotelistViewActionCard'
 import SortActionCard from './SortActionCard'
 
 function Notelist() {
-    const { activeTab, notes, setIsToplistView, createNewNote } = useContext(AppContext)
+    const { activeNotelist, notebooks, trash, setIsToplistView, createNewNote } = useContext(AppContext)
     const [sortActions, setSortActions] = useState({ sortBy: 'Date Updated', order: 'asc', snig: false })
     const [viewActions, setViewActions] = useState({ view: 'Snippets', showImages: true, showBodyText: true, dateUpdated: false, dateCreated: true })
     const [activeAction, setActiveAction] = useState(null)
@@ -52,8 +52,8 @@ function Notelist() {
         }
     }, [view])
 
-    const sortNoteList = () => {
-        return notes.sort((noteA, noteB) => {
+    const sortNotelist = (filteredNotes) => {
+        return filteredNotes.sort((noteA, noteB) => {
             return [['Title', 'title'], ['Date Created', 'createdAt'], ['Date Updated', 'updatedAt']]
             .reduce((acc, [name, prop]) => {
                 if (sortBy === name) {
@@ -64,20 +64,31 @@ function Notelist() {
         })
     }
 
+    const getNotes = () => {
+        if (activeNotelist === 'Notes') {
+            console.log([...Object.values(notebooks)].flat())
+            return sortNotelist([...Object.values(notebooks)].flat())
+        } else if (activeNotelist === 'Trash') {
+            return sortNotelist(trash)
+        }
+        return sortNotelist(notebooks[activeNotelist])
+    }
+
+
     return (
         <div className={`notelist ${view === 'Top list' ? 'top-list-view-active' : ''}`}>
             <motion.span className="notelist-resizer" drag={view === 'Top list' ? 'y' : 'x'} onDrag={handleResizerDrag} dragMomentum={false} onDragEnd={handleDragEnd}></motion.span>
             <header>
                 <div className="title">
                     <span className="title-icon">
-                        {activeTab === 'Notes'
+                        {activeNotelist === 'Notes'
                         ? <svg width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M7.665 4.5h8.75c.92 0 1.667.746 1.667 1.667v8.748h-3.334a.625.625 0 00-.625.624v3.958H7.665c-.92 0-1.667-.747-1.667-1.667V6.167c0-.92.747-1.667 1.667-1.667zm7.037 4.584a.625.625 0 100-1.25H9.298a.625.625 0 100 1.25h5.404zm.625 2.918c0 .345-.28.625-.625.625H9.298a.625.625 0 010-1.25h5.404c.345 0 .625.28.625.625zm-4.363 4.158a.625.625 0 100-1.25H9.298a.625.625 0 100 1.25h1.666z" fill="currentColor"></path><path d="M15.373 16.164h2.157l-2.107 2.693-.05.06v-2.753z" fill="currentColor"></path></svg>
                         : <svg width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.298 17.93l.494-8.846H7.208l.514 8.85c.05.88.78 1.57 1.664 1.57h5.248c.885 0 1.615-.692 1.664-1.575z" fill="currentColor"></path><path fillRule="evenodd" clipRule="evenodd" d="M11.167 4.087a2.292 2.292 0 00-2.292 2.291v.205H5.75a.625.625 0 100 1.25h12.5a.625.625 0 100-1.25h-3.125v-.205a2.292 2.292 0 00-2.292-2.291h-1.666zm2.708 2.496v-.205c0-.575-.466-1.041-1.042-1.041h-1.666c-.576 0-1.042.466-1.042 1.041v.205h3.75z" fill="currentColor"></path></svg>}
                     </span>
-                    <span>{activeTab}</span>
+                    <span>{activeNotelist}</span>
                 </div>
                 <div className="subheader">
-                    <span className="notelist-count">{notes.length} note{notes.length === 1 ? '' : 's'}</span>
+                    <span className="notelist-count">{getNotes().length} note{getNotes().length === 1 ? '' : 's'}</span>
                     <div className="notelist-actions" role="toolbar">
                         <button ref={sortActionBtnRef} onClick={() => setActiveAction('sort')} className={`sort-notelist ${activeAction === 'sort' ? 'active' : ''}`}>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.183 4.625a.625.625 0 00-1.25 0V17.87L5.067 16a.625.625 0 00-.884 0 .62.62 0 000 .88l2.933 2.94c.244.244.64.244.884 0l2.933-2.94a.62.62 0 000-.88.625.625 0 00-.884 0l-1.866 1.87V4.625zM11.625 5a.625.625 0 100 1.25h8.75a.625.625 0 100-1.25h-8.75zM11 9.375c0-.345.28-.625.625-.625h6.25a.625.625 0 110 1.25h-6.25A.625.625 0 0111 9.375zM11.625 12.5a.625.625 0 100 1.25h3.75a.625.625 0 100-1.25h-3.75z" fill="currentColor"></path></svg>
@@ -90,13 +101,13 @@ function Notelist() {
                             ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M4 18a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12zM5.25 6A.75.75 0 016 5.25h12a.75.75 0 01.75.75v.95H5.25V6zm0 2.2v1.705h13.5V8.2H5.25zm0 2.955h13.5V18a.75.75 0 01-.75.75H6a.75.75 0 01-.75-.75v-6.845z" fill="currentColor"></path></svg> : null}
                         </button>
                     </div>
-                    {notes.length && activeAction === 'sort'
-                    ? <SortActionCard sortActions={sortActions} setSortActions={setSortActions} setActiveAction={setActiveAction} viewActionBtn={viewActionBtnRef.current} /> : activeAction === 'view' && notes.length
+                    {getNotes().length && activeAction === 'sort'
+                    ? <SortActionCard sortActions={sortActions} setSortActions={setSortActions} setActiveAction={setActiveAction} viewActionBtn={viewActionBtnRef.current} /> : activeAction === 'view' && getNotes().length
                     ? <NotelistViewActionCard viewActions={viewActions} setViewActions={setViewActions} setActiveAction={setActiveAction} sortActionBtn={sortActionBtnRef.current} /> : null}
                 </div>
             </header>
             <div className="notelist-body-wrapper">
-                <ul style={{ height: `${view !== 'Top list' ? `${window.innerHeight - 95}px` : '100%'}` }} className={`notelist-body ${view.toLowerCase().replaceAll(' ', '-')}-container ${!notes.length ? 'empty' : ''}`}>
+                <ul style={{ height: `${view !== 'Top list' ? `${window.innerHeight - 95}px` : '100%'}` }} className={`notelist-body ${view.toLowerCase().replaceAll(' ', '-')}-container ${!getNotes().length ? 'empty' : ''}`}>
                     {!['Cards', 'Snippets'].includes(view) && (
                         <div className="table-head">
                             <div style={{ width: '100px' }} className="title-col-th">Title<span className="resizer title-col-resizer"></span></div>
@@ -104,8 +115,8 @@ function Notelist() {
                             {viewActions.dateCreated && <div style={{ width: '100px' }} className="date-created-col-th">created<span className="resizer date-created-col-resizer"></span></div>}
                         </div>
                     )}
-                    {notes.length ?
-                        sortNoteList().map((noteObj, index, noteObjArr) => {
+                    {getNotes().length ?
+                        getNotes().map((noteObj, index, noteObjArr) => {
                             const { id, title, summaryText, updatedAt, createdAt } = noteObj
                             const prop = sortByToProp(sortBy)
                             const currentGroup = ['title'].includes(prop) ? noteObj[prop][0].toUpperCase() : dateToLocaleString(noteObj[prop])

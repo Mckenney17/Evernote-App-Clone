@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer, useRef, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useReducer, useRef, useState } from 'react'
 import { getFontFamily, rgbToHex, extractSuperFamily, capitalize } from '../utils/utilFuncs'
 import AppContext from '../utils/AppContext'
 import './Editor.scss'
@@ -6,7 +6,7 @@ import InsertLinkCard from './InsertLinkCard'
 import ToolBar from './ToolBar'
 
 function Editor() {
-    const { activeNoteId, notes, updateNotes } = useContext(AppContext)
+    const { activeNoteId, notebooks, activeNotebook, updateNotes } = useContext(AppContext)
     const [noteTitle, setNoteTitle] = useState('')
     
     
@@ -40,15 +40,19 @@ function Editor() {
         return selectTools.includes(action.tool) ? { selectionDropTool: action.tool } : { selectionDropTool: null }
     }, { selectionDropTool: null })
 
+    const getNotes = useCallback(() => {
+        return notebooks[activeNotebook] || [];
+    }, [notebooks, activeNotebook])
+
     useEffect(() => {
-        if (!notes.length) return
-        const note = notes.find((obj) => obj.id === activeNoteId)
+        if (!getNotes().length) return
+        const note = getNotes().find((obj) => obj.id === activeNoteId)
         setNoteTitle(note.title)
-    }, [activeNoteId, notes])
+    }, [activeNoteId, getNotes])
 
     const handleTitleChange = (ev) => {
         setNoteTitle(ev.target.value)
-        const note = notes.find((obj) => obj.id === activeNoteId)
+        const note = getNotes().find((obj) => obj.id === activeNoteId)
         const updatedNote = { ...note, title: ev.target.value || 'Untitled', updatedAt: Date.now() }
         updateNotes(updatedNote)
     }
@@ -57,7 +61,7 @@ function Editor() {
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
         const updateListItem = () => {
-            const note = notes.find((obj) => obj.id === activeNoteId)
+            const note = getNotes().find((obj) => obj.id === activeNoteId)
             const updatedNote = { ...note, bodyText: iframeDocument.body.innerHTML, summaryText: iframeDocument.body.querySelector('p').innerHTML, updatedAt: Date.now() }
         updateNotes(updatedNote)
         }
@@ -66,7 +70,7 @@ function Editor() {
         return () => {
             iframeDocument.removeEventListener('keyup', updateListItem)
         }
-    }, [activeNoteId, notes, updateNotes])
+    }, [activeNoteId, getNotes, updateNotes])
 
     const execCommand = (fs, sdu = false, vArg = null) => {
         const iframeDocument = iframe.current.contentDocument
@@ -76,8 +80,8 @@ function Editor() {
 
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
-        if (!notes.length) return
-        const note = notes.find((obj) => obj.id === activeNoteId)
+        if (!getNotes().length) return
+        const note = getNotes().find((obj) => obj.id === activeNoteId)
         iframeDocument.body.innerHTML = note.bodyText
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -85,7 +89,7 @@ function Editor() {
 
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
-        if (notes.length) {
+        if (getNotes().length) {
             iframeDocument.designMode = 'on';
         } else {
             iframeDocument.designMode = 'off';
@@ -105,7 +109,7 @@ function Editor() {
             ev.target.rel = 'stylesheet'
         })
         iframeDocument.head.appendChild(link)
-    }, [notes])
+    }, [getNotes])
     
     // control tool highlighting
     useEffect(() => {
@@ -458,7 +462,7 @@ function Editor() {
             </header>
             <div className="editor-body">
                 <div className="note-title">
-                    <textarea disabled={notes.length ? false : true} onChange={handleTitleChange} autoFocus className="title-field" placeholder="Title" value={noteTitle === 'Untitled' ? '' : noteTitle}></textarea>
+                    <textarea disabled={getNotes().length ? false : true} onChange={handleTitleChange} autoFocus className="title-field" placeholder="Title" value={noteTitle === 'Untitled' ? '' : noteTitle}></textarea>
                 </div>
                 <div className="note-editing-window">
                     <iframe ref={iframe} title="Editing Window"></iframe>

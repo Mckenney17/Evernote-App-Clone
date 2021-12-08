@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import AppContext from '../utils/AppContext'
 import './App.scss'
 import Editor from './Editor'
@@ -10,34 +10,66 @@ import Sidebar from './Sidebar'
 // editor
 
 function App() {
-    const [activeTab, setActiveTab] = useState('Notes');
+    const lastAssignedId = useRef(parseInt(localStorage.getItem('kennote-lastAssignedId')) || 0)
+    const [activeNotelist, setActiveNotelist] = useState('Notes');
+    const [activeNotebook, setActiveNotebook] =  useState('First Notebook')
+    const [trash, setTrash] = useState(JSON.parse(localStorage.getItem('kennote-trash')) || [])
     const [isToplistView, setIsToplistView] = useState(false)
-    const [notes, setNotes] = useState(JSON.parse(localStorage.getItem('all-notes')) || []);
-    const [activeNoteId, setActiveNoteId] = useState(notes.find((obj) => obj.updatedAt === Math.max(...notes.map((obj) => obj.updatedAt)))?.id)
+    const [notebooks, setNotebooks] = useState(JSON.parse(localStorage.getItem('kennote-notebooks')) || {});
+    const [activeNoteId, setActiveNoteId] = useState((notebooks[activeNotebook] || []).find((obj) => obj.updatedAt === Math.max(...notebooks[activeNotebook].map((obj) => obj.updatedAt)))?.id)
     const updateNotes = (updatedNote) => {
-        setNotes((previousNotes) => {
-            const clonePN = [...previousNotes]
-            const indexOfNote = clonePN.findIndex((obj) => obj.id === activeNoteId)
-            clonePN[indexOfNote] = updatedNote
-            return clonePN
+        setNotebooks((previousNotebooks) => {
+            const clonePNB = {...previousNotebooks}
+            const indexOfNote = clonePNB[activeNotebook].findIndex((obj) => obj.id === activeNoteId)
+            clonePNB[activeNotebook][indexOfNote] = updatedNote
+            return clonePNB
         })
-        localStorage.setItem('all-notes', JSON.stringify(notes))
     }
+
     const createNewNote = () => {
-        setNotes((previousNotes) => {
-            const clonePN = [...previousNotes]
-            clonePN.push({ id: clonePN.length + 1, title: 'Untitled', bodyText: '', summaryText: '', createdAt: Date.now(), updatedAt: Date.now() })
-            return clonePN
+        lastAssignedId.current++
+        localStorage.setItem('kennote-lastAssignedId', lastAssignedId.current)
+        setNotebooks((previousNotebooks) => {
+            const clonePNB = {...previousNotebooks}
+            if (clonePNB[activeNotebook]) {
+                clonePNB[activeNotebook].push({id: lastAssignedId.current, title: 'Untitled', bodyText: '', summaryText: '', createdAt: Date.now(), updatedAt: Date.now() })
+                return clonePNB
+            }
+            return {...clonePNB, [activeNotebook]: [{id: lastAssignedId.current, title: 'Untitled', bodyText: '', summaryText: '', createdAt: Date.now(), updatedAt: Date.now() }]}
         })
-        setActiveNoteId(notes.length + 1)
+        setActiveNoteId(lastAssignedId.current)
     }
+
+    const addToTrash = (noteId) => {
+        setNotebooks((previousNotebooks) => {
+            const clonePNB = {...previousNotebooks}
+            const indexOfNote = clonePNB[activeNotebook].findIndex((obj) => obj.id === noteId)
+            const deletedNote = clonePNB[activeNotebook].splice(indexOfNote, 1)[0]
+            setTrash((prevTrash) => [...prevTrash, {...deletedNote, belongsTo: activeNotebook}])
+            return clonePNB
+        })
+    } 
     
     useEffect(() => {
-        localStorage.setItem('all-notes', JSON.stringify(notes))
-    }, [notes])
+        localStorage.setItem('kennote-notebooks', JSON.stringify(notebooks))
+    }, [notebooks])
 
     return (
-        <AppContext.Provider value={{ activeTab, setActiveTab, notes, updateNotes, createNewNote, activeNoteId, setActiveNoteId, setIsToplistView }}>
+        < AppContext.Provider value = {
+            {
+                activeNotelist,
+                setActiveNotelist,
+                notebooks,
+                activeNotebook,
+                trash,
+                addToTrash,
+                updateNotes,
+                createNewNote,
+                activeNoteId,
+                setActiveNoteId,
+                setIsToplistView
+            }
+        } >
             <div className="app-wrapper">
                 <Sidebar />
                 <div className={`notelist-with-editor ${isToplistView ? 'top-list-view-active' : ''}`}>
