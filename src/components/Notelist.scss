@@ -94,6 +94,10 @@
         .notelist-empty-state {
             @include flex(center, center, column);
 
+            > span {
+                color: gray(g15);
+            }
+
             .intro {
                 font-weight: weight(bold);
                 margin: 15px 0;

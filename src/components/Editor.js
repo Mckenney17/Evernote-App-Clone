@@ -142,11 +142,6 @@ function Editor() {
             const ancestors = []
             let currentAncestor = iframeSel.anchorNode
             if (!currentAncestor.parentNode) return;
-            // override the execCommand fontSize functionality
-            /* const someFontTagWithSize = currentAncestor.parentElement.closest('font[size]')
-            if (someFontTagWithSize) {
-                someFontTagWithSize.style.fontSize = `${toolsState.fontSize}px`
-            } */
             while (!['BODY', 'DIV', 'HTML'].includes(currentAncestor.parentNode.nodeName)) {
                 ancestors.push(currentAncestor.parentNode)
                 currentAncestor = currentAncestor.parentNode
@@ -168,7 +163,6 @@ function Editor() {
                 }
                 
                 
-                // if (currentAncestor.parentNode.innerText.trim() === '') return cloneTS
                 if (iframeDocument.body.innerText.trim() === '') return cloneTS
                 const closestFontSizeElem = iframeSel.anchorNode.parentNode.closest('*[style*="font-size"]')
                 if (closestFontSizeElem) {

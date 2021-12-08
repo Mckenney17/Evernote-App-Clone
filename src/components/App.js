@@ -12,7 +12,7 @@ import Sidebar from './Sidebar'
 function App() {
     const lastAssignedId = useRef(parseInt(localStorage.getItem('kennote-lastAssignedId')) || 0)
     const [activeNotelist, setActiveNotelist] = useState('Notes');
-    const [activeNotebook, setActiveNotebook] =  useState('First Notebook')
+    const [activeNotebook] =  useState('First Notebook')
     const [trash, setTrash] = useState(JSON.parse(localStorage.getItem('kennote-trash')) || [])
     const [isToplistView, setIsToplistView] = useState(false)
     const [notebooks, setNotebooks] = useState(JSON.parse(localStorage.getItem('kennote-notebooks')) || {});
@@ -38,6 +38,9 @@ function App() {
             return {...clonePNB, [activeNotebook]: [{id: lastAssignedId.current, title: 'Untitled', bodyText: '', summaryText: '', createdAt: Date.now(), updatedAt: Date.now() }]}
         })
         setActiveNoteId(lastAssignedId.current)
+        if (activeNotelist === 'Trash') {
+            setActiveNotelist('Notes')
+        }
     }
 
     const addToTrash = (noteId) => {
