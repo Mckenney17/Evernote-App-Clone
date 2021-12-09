@@ -1,13 +1,16 @@
-import React, { useCallback, useContext, useReducer, useState } from 'react'
+import React, { useCallback, useContext, useReducer, useRef, useState } from 'react'
 import AppContext from '../utils/AppContext'
 import './Editor.scss'
 import ToolBar from './ToolBar'
 import EditingWindow from './EditingWindow'
 import { dateToLocaleString } from '../utils/utilFuncs'
+import NoteOptionsCard from './NoteOptionsCard'
 
 function Editor() {
     const { activeNoteId, notebooks, activeNotebook, editingActive } = useContext(AppContext)
     const [expanded, setExpanded] = useState(false)
+    const [noteOptionsCardActive, setNoteOptionsCardActive] = useState(false)
+    const noteOptionsBtn = useRef(null)
 
     const [toolbarActive, setToolbarActive] = useState(true)
     const [history, setHistory] = useState({ undo: 0, redo: 0 })
@@ -55,7 +58,10 @@ function Editor() {
                             <div className="notebook-icon-text"><svg width="14" height="14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 5.5a.5.5 0 00-.5-.5h-3a.5.5 0 000 1h3a.5.5 0 00.5-.5z" fill="currentColor"></path><path fillRule="evenodd" clipRule="evenodd" d="M10 1H2v12h8a2 2 0 002-2V3a2 2 0 00-2-2zM3 12V2h1v10H3zm2 0V2h5a1 1 0 011 1v8a1 1 0 01-1 1H5z" fill="currentColor"></path></svg>Notebook(Coming Soon)</div>
                         </div>
                         <div className="right-side">
-                            <button className="note-options"><svg width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M4.5 12a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0zm7.501 1.5a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm6 0a1.5 1.5 0 110-3 1.5 1.5 0 010 3z"></path></svg></button>
+                            <button onClick={() => setNoteOptionsCardActive(true)} ref={noteOptionsBtn} className="note-options"><svg width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M4.5 12a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0zm7.501 1.5a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm6 0a1.5 1.5 0 110-3 1.5 1.5 0 010 3z"></path></svg></button>
+                            {noteOptionsCardActive ?
+                            <NoteOptionsCard setNoteOptionsCardActive={setNoteOptionsCardActive} noteOptionsBtn={noteOptionsBtn.current} />
+                            : null}
                         </div>
                     </div>
                     {editingActive ? <ToolBar toolbarActive={toolbarActive} selectionDropTool={selectionDropTool} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} selColor={selColor} setSelColor={setSelColor} history={history} />

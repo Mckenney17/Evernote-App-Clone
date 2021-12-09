@@ -1,0 +1,25 @@
+@import '../utils/style-defs';
+
+.note-options-card {
+    @include pos(absolute, 30px, 15px);
+    background: #fff;
+    z-index: 2;
+    border-radius: 4px;
+    box-shadow: 0 0 7px rgba(#000, .3);
+    padding: 10px 0;
+    opacity: 0;
+    
+    li button {
+        @include flex($ai: center);
+        font-size: tscale(ts14);
+        padding: 10px 15px;
+        width: 100%;
+        color: gray(g3);
+        line-height: 14px;
+        font-weight: weight(semibold);
+
+        &:hover {
+            background: gray(g18);
+        }
+    }
+}

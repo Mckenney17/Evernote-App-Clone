@@ -4,6 +4,7 @@
     @include flex($fd: column);
     background: #fff;
     transition: all .15s linear;
+    position: relative;
     
     &.expanded {
         @include pos(fixed, 0, 0, 0, 0);
@@ -48,7 +49,8 @@
         }
     }
 
-    .top-bar button {
+
+    .top-bar .left-side button {
         background: transparent;
         display: block;
         max-height: 24px;
