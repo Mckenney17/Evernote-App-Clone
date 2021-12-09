@@ -27,12 +27,10 @@
         font-size: tscale(ts13);
         margin-top: 5px;
     }
-    /* Fixing some bugs here */
     .content > p {
         width: 100%;
         height: 35px;
-        // white-space: nowrap;
-        white-space: pre-wrap;
+        white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }

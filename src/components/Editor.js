@@ -245,6 +245,12 @@ function Editor() {
                 return cloneTS
             })
 
+            execCommand('formatBlock', false, 
+            toolsState.textLevel === 'Large heading' ? 'h1' :
+            toolsState.textLevel === 'Medium heading' ? 'h2' :
+            toolsState.textLevel === 'Small heading' ? 'h3' : 'p'
+        )
+
         }
         iframeDocument.addEventListener('selectionchange', handleSelectionChange)
         return () => {
@@ -450,7 +456,7 @@ function Editor() {
             toolsState.textLevel === 'Medium heading' ? 'h2' :
             toolsState.textLevel === 'Small heading' ? 'h3' : 'p'
         )
-    }, [toolsState])
+    }, [toolsState.textLevel])
 
     return (
         <div className={`editor ${expanded ? 'expanded' : 'collapsed'}`}>
@@ -468,7 +474,7 @@ function Editor() {
                         </div>
                     </div>
                     {editingActive ? <ToolBar toolbarActive={toolbarActive} selectionDropTool={selectionDropTool} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} selColor={selColor} setSelColor={setSelColor} format={format} history={history} />
-                    : <span>Last edited on {dateToLocaleString(notebooks[activeNotebook].find((obj) => obj.id === activeNoteId).updatedAt)}</span>}
+                    : <span className='last-edited-info'>Last edited on {dateToLocaleString(notebooks[activeNotebook].find((obj) => obj.id === activeNoteId).updatedAt)}</span>}
                 </header>
                 <div className="editor-body">
                     <div className="note-title">

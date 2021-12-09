@@ -22,6 +22,11 @@
         @include flex(space-between, center);
     }
 
+    .last-edited-info {
+        color: gray(g12);
+        font-size: tscale(ts13);
+    }
+
     .left-side {
         width: 200px;
     }
