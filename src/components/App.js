@@ -45,15 +45,43 @@ function App() {
         }
     }
 
-    const moveToTrash = (noteId) => {
+    const moveToTrash = (noteId, notebook) => {
         setNotebooks((previousNotebooks) => {
             const clonePNB = {...previousNotebooks}
-            const indexOfNote = clonePNB[activeNotebook].findIndex((obj) => obj.id === noteId)
-            const deletedNote = clonePNB[activeNotebook].splice(indexOfNote, 1)[0]
-            setTrash((prevTrash) => [...prevTrash, {...deletedNote, belongsTo: activeNotebook, trashedAt: Date.now()}])
+            const indexOfNote = clonePNB[notebook].findIndex((obj) => obj.id === noteId)
+            const deletedNote = clonePNB[notebook].splice(indexOfNote, 1)[0]
+            setTrash((prevTrash) => [...prevTrash, {...deletedNote, belongsTo: notebook, trashedAt: Date.now()}])
             return clonePNB
         })
         setActiveNoteId((notebooks[activeNotebook] || []).find((obj) => obj.updatedAt === Math.max(...notebooks[activeNotebook].map((obj) => obj.updatedAt)))?.id)
+    }
+
+    const restore = (noteId) => {
+        setTrash((prevTrash) => {
+            const cloneTrash = [...prevTrash]
+            const indexOfNote = cloneTrash.findIndex((obj) => obj.id === noteId)
+            const restoredNote = cloneTrash.splice(indexOfNote, 1)[0]
+            const {belongsTo: noteBook, trashedAt, ...finalNote} = restoredNote
+            setNotebooks((previousNotebooks) => ({...previousNotebooks, [noteBook]: [...previousNotebooks[noteBook], finalNote]}))
+            return cloneTrash
+        })
+        if (trash.length) {
+            setActiveNoteId(trash.find((obj) => obj.trashedAt === Math.max(...trash.map((obj) => obj.trashedAt)))?.id)
+        }
+    }
+
+    const permDelete = (noteId) => {
+        setTrash((prevTrash) => {
+            const cloneTrash = [...prevTrash]
+            const indexOfNote = cloneTrash.findIndex((obj) => obj.id === noteId)
+            cloneTrash.splice(indexOfNote, 1)
+            if (cloneTrash.length) {
+                setActiveNoteId(trash.find((obj) => obj.trashedAt === Math.max(...trash.map((obj) => obj.trashedAt)))?.id)
+            } else {
+                setActiveNoteId((notebooks[activeNotebook] || []).find((obj) => obj.updatedAt === Math.max(...notebooks[activeNotebook].map((obj) => obj.updatedAt)))?.id)
+            }
+            return cloneTrash
+        })
     }
     
     useEffect(() => {
@@ -87,6 +115,8 @@ function App() {
             setIsToplistView,
             editingActive,
             setEditingActive,
+            restore,
+            permDelete,
         }}>
             <div className="app-wrapper">
                 <Sidebar />

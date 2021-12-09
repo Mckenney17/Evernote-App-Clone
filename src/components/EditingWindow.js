@@ -79,7 +79,6 @@ function EditingWindow({
         if (!getNotes().length) return
         const note = getNotes().find((obj) => obj.id === activeNoteId)
         iframeDocument.body.innerHTML = note.bodyText
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeNoteId])
 

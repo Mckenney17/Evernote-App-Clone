@@ -21,5 +21,9 @@
         &:hover {
             background: gray(g18);
         }
+
+        &[data-option="Delete"] {
+            color: red;
+        }
     }
 }
