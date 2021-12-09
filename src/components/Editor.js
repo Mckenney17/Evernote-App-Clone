@@ -7,9 +7,10 @@ import { dateToLocaleString } from '../utils/utilFuncs'
 import NoteOptionsCard from './NoteOptionsCard'
 
 function Editor() {
-    const { activeNoteId, notebooks, activeNotebook, editingActive } = useContext(AppContext)
+    const { notebooks, activeNotebook, editingActive, activeNotelist, trash } = useContext(AppContext)
     const [expanded, setExpanded] = useState(false)
     const [noteOptionsCardActive, setNoteOptionsCardActive] = useState(false)
+    const [noteLastEdited, setNoteLastEdited] = useState(null)
     const noteOptionsBtn = useRef(null)
 
     const [toolbarActive, setToolbarActive] = useState(true)
@@ -43,8 +44,8 @@ function Editor() {
     }, { selectionDropTool: null })
     
     const getNotes = useCallback(() => {
-        return notebooks[activeNotebook] || [];
-    }, [notebooks, activeNotebook])
+        return activeNotelist !== 'Trash' || !trash.length ? notebooks[activeNotebook] || [] : trash;
+    }, [activeNotelist, notebooks, activeNotebook, trash])
 
     return (
         <div className={`editor ${expanded ? 'expanded' : 'collapsed'}`}>
@@ -65,9 +66,9 @@ function Editor() {
                         </div>
                     </div>
                     {editingActive ? <ToolBar toolbarActive={toolbarActive} selectionDropTool={selectionDropTool} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} selColor={selColor} setSelColor={setSelColor} history={history} />
-                    : <span className='last-edited-info'>Last edited on {dateToLocaleString(notebooks[activeNotebook].find((obj) => obj.id === activeNoteId).updatedAt)}</span>}
+                    : <span className='last-edited-info'>Last edited on {dateToLocaleString(noteLastEdited)}</span>}
                 </header>
-                <EditingWindow getNotes={getNotes} setToolbarActive={setToolbarActive} selectionDropTool={selectionDropTool} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} selColor={selColor} setSelColor={setSelColor} history={history} setHistory={setHistory} />
+                <EditingWindow setNoteLastEdited={setNoteLastEdited} getNotes={getNotes} setToolbarActive={setToolbarActive} selectionDropTool={selectionDropTool} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} selColor={selColor} setSelColor={setSelColor} history={history} setHistory={setHistory} />
             </React.Fragment> : null}
         </div>
     )

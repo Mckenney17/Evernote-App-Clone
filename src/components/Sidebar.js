@@ -5,7 +5,7 @@ import Search from './Search'
 import './Sidebar.scss'
 
 function Sidebar() {
-    const { setActiveNotelist, activeNotelist, createNewNote } = useContext(AppContext)
+    const { setActiveNotelist, activeNotelist, createNewNote, setActiveNoteId, notebooks, activeNotebook, trash } = useContext(AppContext)
 
     const handleResizerDrag = (ev, info) => {
         document.querySelector('.sidebar').style.width = `${info.point.x}px`
@@ -20,6 +20,11 @@ function Sidebar() {
     const handleNavigation = (ev, notelistLabel) => {
         ev.preventDefault()
         setActiveNotelist(notelistLabel)
+        if (notelistLabel !=='Trash') {
+            setActiveNoteId((notebooks[activeNotebook] || []).find((obj) => obj.updatedAt === Math.max(...notebooks[activeNotebook].map((obj) => obj.updatedAt)))?.id);
+        } else if (trash.length) {
+            setActiveNoteId(trash.find((obj) => obj.trashedAt === Math.max(...trash.map((obj) => obj.trashedAt)))?.id)
+        }
     }
 
     return (

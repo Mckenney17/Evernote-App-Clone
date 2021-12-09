@@ -45,19 +45,21 @@ function App() {
         }
     }
 
-    const addToTrash = (noteId) => {
+    const moveToTrash = (noteId) => {
         setNotebooks((previousNotebooks) => {
             const clonePNB = {...previousNotebooks}
             const indexOfNote = clonePNB[activeNotebook].findIndex((obj) => obj.id === noteId)
             const deletedNote = clonePNB[activeNotebook].splice(indexOfNote, 1)[0]
-            setTrash((prevTrash) => [...prevTrash, {...deletedNote, belongsTo: activeNotebook}])
+            setTrash((prevTrash) => [...prevTrash, {...deletedNote, belongsTo: activeNotebook, trashedAt: Date.now()}])
             return clonePNB
         })
-    } 
+        setActiveNoteId((notebooks[activeNotebook] || []).find((obj) => obj.updatedAt === Math.max(...notebooks[activeNotebook].map((obj) => obj.updatedAt)))?.id)
+    }
     
     useEffect(() => {
         localStorage.setItem('kennote-notebooks', JSON.stringify(notebooks))
-    }, [notebooks])
+        localStorage.setItem('kennote-trash', JSON.stringify(trash))
+    }, [notebooks, trash])
 
     useEffect(() => {
         const deactivateEditing = (ev) => {
@@ -71,23 +73,21 @@ function App() {
     }, [])
 
     return (
-        < AppContext.Provider value = {
-            {
-                activeNotelist,
-                setActiveNotelist,
-                notebooks,
-                activeNotebook,
-                trash,
-                addToTrash,
-                updateNotes,
-                createNewNote,
-                activeNoteId,
-                setActiveNoteId,
-                setIsToplistView,
-                editingActive,
-                setEditingActive,
-            }
-        } >
+        <AppContext.Provider value = {{
+            activeNotelist,
+            setActiveNotelist,
+            notebooks,
+            activeNotebook,
+            trash,
+            moveToTrash,
+            updateNotes,
+            createNewNote,
+            activeNoteId,
+            setActiveNoteId,
+            setIsToplistView,
+            editingActive,
+            setEditingActive,
+        }}>
             <div className="app-wrapper">
                 <Sidebar />
                 <div className={`notelist-with-editor ${isToplistView ? 'top-list-view-active' : ''}`}>

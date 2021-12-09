@@ -15,9 +15,16 @@ function EditingWindow({
     history,
     setSelectionDropTool,
     selectionDropTool,
+    setNoteLastEdited,
 }) {
     const { activeNoteId, updateNotes, setEditingActive } = useContext(AppContext)
     const [noteTitle, setNoteTitle] = useState('')
+
+    useEffect(() => {
+        if (!getNotes().length) return
+        const note = getNotes().find((obj) => obj.id === activeNoteId)
+        setNoteLastEdited(note.updatedAt)
+    })
 
     useEffect(() => {
         if (!getNotes().length) return
@@ -31,7 +38,7 @@ function EditingWindow({
         const updatedNote = { ...note, title: ev.target.value || 'Untitled', updatedAt: Date.now() }
         updateNotes(updatedNote)
     }
-    
+    const titleBox = useRef(document.querySelector('.editor-body textarea'))
     const iframe = useRef(document.querySelector('iframe'))
     const execCommand = (fs, sdu = false, vArg = null) => {
         const iframeDocument = iframe.current.contentDocument
@@ -78,10 +85,13 @@ function EditingWindow({
 
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
-        if (getNotes().length) {
-            iframeDocument.designMode = 'on';
+        const note = getNotes().find((obj) => obj.id === activeNoteId)
+        if (note.hasOwnProperty('trashedAt')) {
+            iframeDocument.designMode = 'off'
+            titleBox.current.setAttribute('disabled', '')
         } else {
-            iframeDocument.designMode = 'off';
+            iframeDocument.designMode = 'on'
+            titleBox.current.removeAttribute('disabled')
         }
         
         ;['SourceSansPro-Regular', 'SourceSansPro-Italic', 'SourceSansPro-BoldItalic', 'SourceSerifPro-Regular', 'SourceSerifPro-It', 'SourceSerifPro-BoldIt']
@@ -98,7 +108,7 @@ function EditingWindow({
             ev.target.rel = 'stylesheet'
         })
         iframeDocument.head.appendChild(link)
-    }, [getNotes, iframe])
+    }, [activeNoteId, getNotes, iframe, titleBox])
     
     // control tool highlighting
     useEffect(() => {
@@ -326,7 +336,7 @@ function EditingWindow({
     return (
         <div className="editor-body">
             <div className="note-title">
-                <textarea onFocus={() => {setEditingActive(true); setToolbarActive(false)}} onChange={handleTitleChange} autoFocus className="title-field" placeholder="Title" value={noteTitle === 'Untitled' ? '' : noteTitle}></textarea>
+                <textarea ref={titleBox} onFocus={() => {setEditingActive(true); setToolbarActive(false)}} onChange={handleTitleChange} className="title-field" placeholder="Title" value={noteTitle === 'Untitled' ? '' : noteTitle}></textarea>
             </div>
             <div className="note-editing-window">
                 <iframe ref={iframe} title="Editing Window"></iframe>
