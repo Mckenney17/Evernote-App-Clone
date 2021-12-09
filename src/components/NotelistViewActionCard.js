@@ -4,7 +4,7 @@ import './NotelistViewActionCard.scss'
 import useNotelistActionsDrop from '../hooks/useNotelistActionsDrop'
 import { colNameToProp } from '../utils/utilFuncs'
 
-function NotelistViewActionCard({ viewActions, setViewActions, sortActionBtn, setActiveAction }) {
+function NotelistViewActionCard({ viewActions, setViewActions, sortActionBtn, setActiveAction, getNotes }) {
     const cardRef = useRef(null)
     useNotelistActionsDrop({ cardRef, setActiveAction, otherActionBtn: sortActionBtn })
 
@@ -19,6 +19,7 @@ function NotelistViewActionCard({ viewActions, setViewActions, sortActionBtn, se
             .map(([optionText, icon]) => (
                 <li key={optionText} className={viewActions.view === optionText ? 'checked' : ''}>
                     <button onClick={() => setViewActions((prevState) => {
+                        if (!getNotes().length) return prevState
                         return {...prevState, view: optionText}
                         })}>
                         <span className="check-mark-icon">

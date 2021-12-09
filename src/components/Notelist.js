@@ -102,7 +102,7 @@ function Notelist() {
                     </div>
                     {activeAction === 'sort'
                     ? <SortActionCard sortActions={sortActions} setSortActions={setSortActions} setActiveAction={setActiveAction} viewActionBtn={viewActionBtnRef.current} /> : activeAction === 'view'
-                    ? <NotelistViewActionCard viewActions={viewActions} setViewActions={setViewActions} setActiveAction={setActiveAction} sortActionBtn={sortActionBtnRef.current} /> : null}
+                    ? <NotelistViewActionCard viewActions={viewActions} setViewActions={setViewActions} setActiveAction={setActiveAction} sortActionBtn={sortActionBtnRef.current} getNotes={getNotes} /> : null}
                 </div>
             </header>
             <div className="notelist-body-wrapper">
