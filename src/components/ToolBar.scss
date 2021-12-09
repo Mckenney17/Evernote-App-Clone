@@ -5,6 +5,13 @@
     color: gray(g6);
     position: relative;
 
+    &.inactive::before {
+        content: '';
+        @include pos(absolute, 0, 0, 0, 0);
+        background: rgba(#fff, .7);
+        z-index: 5;
+    }
+
     .divider:last-of-type {
         display: none;
     }

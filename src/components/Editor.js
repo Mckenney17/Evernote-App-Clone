@@ -1,16 +1,17 @@
 import React, { useCallback, useContext, useEffect, useReducer, useRef, useState } from 'react'
-import { getFontFamily, rgbToHex, extractSuperFamily, capitalize } from '../utils/utilFuncs'
+import { getFontFamily, rgbToHex, extractSuperFamily, capitalize, dateToLocaleString } from '../utils/utilFuncs'
 import AppContext from '../utils/AppContext'
 import './Editor.scss'
 import InsertLinkCard from './InsertLinkCard'
 import ToolBar from './ToolBar'
-
+// If there are no notes, editing is set to true but toolbarActive is set to false
 function Editor() {
-    const { activeNoteId, notebooks, activeNotebook, updateNotes } = useContext(AppContext)
+    const { activeNoteId, notebooks, activeNotebook, updateNotes, editingActive, setEditingActive } = useContext(AppContext)
     const [noteTitle, setNoteTitle] = useState('')
     
     
     const [expanded, setExpanded] = useState(false)
+    const [toolbarActive, setToolbarActive] = useState(true)
     const [history, setHistory] = useState({ undo: 0, redo: 0 })
     const [selColor, setSelColor] = useState({ fore: '#000000', selFore: '#000000', back: '#ffef9e', selBack: '#ffef9e' })
     const [toolsState, setToolsState] = useState({
@@ -59,10 +60,22 @@ function Editor() {
     const iframe = useRef(document.querySelector('iframe'))
 
     useEffect(() => {
+        const iframeDocumentBody = iframe.current.contentDocument.body
+        const activateToolbar = () => {
+            setToolbarActive(true)
+            setEditingActive(true)
+        }
+        iframeDocumentBody.addEventListener('focus', activateToolbar)
+        return () => {
+            iframeDocumentBody.removeEventListener('focus', activateToolbar)
+        }
+    }, [setEditingActive])
+
+    useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
         const updateListItem = () => {
             const note = getNotes().find((obj) => obj.id === activeNoteId)
-            const updatedNote = { ...note, bodyText: iframeDocument.body.innerHTML, summaryText: iframeDocument.body.querySelector('p').innerHTML, updatedAt: Date.now() }
+            const updatedNote = { ...note, bodyText: iframeDocument.body.innerHTML, summaryText: iframeDocument.body.querySelector('p')?.innerHTML || '', updatedAt: Date.now() }
         updateNotes(updatedNote)
         }
 
@@ -441,28 +454,32 @@ function Editor() {
 
     return (
         <div className={`editor ${expanded ? 'expanded' : 'collapsed'}`}>
-            <header>
-                <div className="top-bar">
-                    <div className="left-side">
-                        <button className="expand-icon" title={expanded ? 'Collapse' : 'Expand'} onClick={() => setExpanded((prev) => !prev)}>{!expanded ? <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" fillRule="evenodd" d="M6.031 3a3 3 0 00-3 3v11a3 3 0 003 3h11a3 3 0 003-3V6a3 3 0 00-3-3h-11zm4.47 4.289H8.184l2.915 2.914a.625.625 0 01-.884.884L7.3 8.172v2.319a.625.625 0 11-1.25 0V6.674c0-.351.285-.635.635-.635h3.818a.625.625 0 010 1.25zM12.6 15.76h2.318l-2.915-2.915a.625.625 0 11.884-.884l2.915 2.915V12.56a.625.625 0 011.25 0v3.817c0 .35-.285.635-.635.635H12.6a.625.625 0 110-1.25z"></path></svg> : <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" fill-rule="evenodd" d="M6 3a3 3 0 00-3 3v11a3 3 0 003 3h11a3 3 0 003-3V6a3 3 0 00-3-3H6zm2.864 6.78H6.546a.625.625 0 100 1.25h3.817c.35 0 .635-.285.635-.636V6.577a.625.625 0 00-1.25 0v2.319L6.833 5.98a.625.625 0 00-.884.883L8.864 9.78zm5.299 3.468h2.318a.625.625 0 100-1.25h-3.817a.635.635 0 00-.635.635v3.817a.625.625 0 101.25 0V14.13l2.915 2.915a.625.625 0 10.884-.884l-2.915-2.914z"></path></svg>}</button>
-                        <div className="divider">&nbsp;</div>
-                        <div className="notebook-icon-text"><svg width="14" height="14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 5.5a.5.5 0 00-.5-.5h-3a.5.5 0 000 1h3a.5.5 0 00.5-.5z" fill="currentColor"></path><path fillRule="evenodd" clipRule="evenodd" d="M10 1H2v12h8a2 2 0 002-2V3a2 2 0 00-2-2zM3 12V2h1v10H3zm2 0V2h5a1 1 0 011 1v8a1 1 0 01-1 1H5z" fill="currentColor"></path></svg>Notebook(Coming Soon)</div>
+            {getNotes().length ?
+            <React.Fragment>
+                <header>
+                    <div className="top-bar">
+                        <div className="left-side">
+                            <button className="expand-icon" title={expanded ? 'Collapse' : 'Expand'} onClick={() => setExpanded((prev) => !prev)}>{!expanded ? <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" fillRule="evenodd" d="M6.031 3a3 3 0 00-3 3v11a3 3 0 003 3h11a3 3 0 003-3V6a3 3 0 00-3-3h-11zm4.47 4.289H8.184l2.915 2.914a.625.625 0 01-.884.884L7.3 8.172v2.319a.625.625 0 11-1.25 0V6.674c0-.351.285-.635.635-.635h3.818a.625.625 0 010 1.25zM12.6 15.76h2.318l-2.915-2.915a.625.625 0 11.884-.884l2.915 2.915V12.56a.625.625 0 011.25 0v3.817c0 .35-.285.635-.635.635H12.6a.625.625 0 110-1.25z"></path></svg> : <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" fill-rule="evenodd" d="M6 3a3 3 0 00-3 3v11a3 3 0 003 3h11a3 3 0 003-3V6a3 3 0 00-3-3H6zm2.864 6.78H6.546a.625.625 0 100 1.25h3.817c.35 0 .635-.285.635-.636V6.577a.625.625 0 00-1.25 0v2.319L6.833 5.98a.625.625 0 00-.884.883L8.864 9.78zm5.299 3.468h2.318a.625.625 0 100-1.25h-3.817a.635.635 0 00-.635.635v3.817a.625.625 0 101.25 0V14.13l2.915 2.915a.625.625 0 10.884-.884l-2.915-2.914z"></path></svg>}</button>
+                            <div className="divider">&nbsp;</div>
+                            <div className="notebook-icon-text"><svg width="14" height="14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 5.5a.5.5 0 00-.5-.5h-3a.5.5 0 000 1h3a.5.5 0 00.5-.5z" fill="currentColor"></path><path fillRule="evenodd" clipRule="evenodd" d="M10 1H2v12h8a2 2 0 002-2V3a2 2 0 00-2-2zM3 12V2h1v10H3zm2 0V2h5a1 1 0 011 1v8a1 1 0 01-1 1H5z" fill="currentColor"></path></svg>Notebook(Coming Soon)</div>
+                        </div>
+                        <div className="right-side">
+                            <button className="note-options"><svg width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M4.5 12a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0zm7.501 1.5a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm6 0a1.5 1.5 0 110-3 1.5 1.5 0 010 3z"></path></svg></button>
+                        </div>
                     </div>
-                    <div className="right-side">
-                        <button className="note-options"><svg width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M4.5 12a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0zm7.501 1.5a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm6 0a1.5 1.5 0 110-3 1.5 1.5 0 010 3z"></path></svg></button>
+                    {editingActive ? <ToolBar toolbarActive={toolbarActive} selectionDropTool={selectionDropTool} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} selColor={selColor} setSelColor={setSelColor} format={format} history={history} />
+                    : <span>Last edited on {dateToLocaleString(notebooks[activeNotebook].find((obj) => obj.id === activeNoteId).updatedAt)}</span>}
+                </header>
+                <div className="editor-body">
+                    <div className="note-title">
+                        <textarea onFocus={() => {setEditingActive(true); setToolbarActive(false)}} onChange={handleTitleChange} autoFocus className="title-field" placeholder="Title" value={noteTitle === 'Untitled' ? '' : noteTitle}></textarea>
+                    </div>
+                    <div className="note-editing-window">
+                        <iframe ref={iframe} title="Editing Window"></iframe>
+                        {selectionDropTool === 'insert-link' ? <InsertLinkCard setSelectionDropTool={setSelectionDropTool} execCommand={execCommand} format={format} iframeSel={iframe.current.contentWindow.getSelection()} iframeDocument={iframe.current.contentDocument} /> : null}
                     </div>
                 </div>
-                <ToolBar selectionDropTool={selectionDropTool} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} selColor={selColor} setSelColor={setSelColor} format={format} history={history} />
-            </header>
-            <div className="editor-body">
-                <div className="note-title">
-                    <textarea disabled={getNotes().length ? false : true} onChange={handleTitleChange} autoFocus className="title-field" placeholder="Title" value={noteTitle === 'Untitled' ? '' : noteTitle}></textarea>
-                </div>
-                <div className="note-editing-window">
-                    <iframe ref={iframe} title="Editing Window"></iframe>
-                    {selectionDropTool === 'insert-link' ? <InsertLinkCard setSelectionDropTool={setSelectionDropTool} execCommand={execCommand} format={format} iframeSel={iframe.current.contentWindow.getSelection()} iframeDocument={iframe.current.contentDocument} /> : null}
-                </div>
-            </div>
+            </React.Fragment> : null}
         </div>
     )
 }

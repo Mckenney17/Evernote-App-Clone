@@ -15,11 +15,17 @@ any changes made [without a keyup] or [with a keyup(Z with ctrlKey set to true)]
 If that happens test whether string === iframe content // if false, make redo active
 else deactivate redo
 */
-
-
-
-function ToolBar({ toolsState, setToolsState, selColor, setSelColor, format, history, selectionDropTool, setSelectionDropTool }) {
-    
+function ToolBar({
+    toolsState,
+    setToolsState,
+    selColor,
+    setSelColor,
+    format,
+    history,
+    selectionDropTool,
+    setSelectionDropTool,
+    toolbarActive,
+}) {
     const tools = {
         allNames: ['insert', ['undo', 'redo'], 'text-level', 'super-family', 'font-size', ['fore-color', 'bold', 'italic', 'underline', 'back-color'], ['unordered-list', 'ordered-list'], 'insert-link', ['left-align', 'center-align', 'right-align', 'indent', 'outdent'], ['strikethrough', 'superscript', 'subscript']],
         allIcons: [<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" fillRule="evenodd" d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM11 9v2H9a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V9a1 1 0 10-2 0z"></path></svg>,
@@ -65,7 +71,7 @@ function ToolBar({ toolsState, setToolsState, selColor, setSelColor, format, his
     
 
     return (
-        <div className="tool-bar">
+        <div className={`tool-bar ${toolbarActive ? '' : 'inactive'}`}>
             {tools.allNames.map((toolName, i) => {
             const checkables = ['fore-color', 'bold', 'italic', 'underline', 'back-color', 'unordered-list', 'ordered-list', 'strikethrough', 'superscript', 'subscript']
             return Array.isArray(toolName) ?

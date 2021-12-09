@@ -6,7 +6,8 @@
     transition: all .15s linear;
     
     &.expanded {
-        @include pos(fixed, 0, 0, 0, 0)
+        @include pos(fixed, 0, 0, 0, 0);
+        z-index: 5;
     }
     header {
         padding: 15px;

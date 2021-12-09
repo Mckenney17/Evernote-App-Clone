@@ -66,7 +66,6 @@ function Notelist() {
 
     const getNotes = () => {
         if (activeNotelist === 'Notes') {
-            console.log([...Object.values(notebooks)].flat())
             return sortNotelist([...Object.values(notebooks)].flat())
         } else if (activeNotelist === 'Trash') {
             return sortNotelist(trash)

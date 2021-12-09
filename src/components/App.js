@@ -10,6 +10,8 @@ import Sidebar from './Sidebar'
 // editor
 
 function App() {
+    const [editingActive, setEditingActive] = useState(true)
+
     const lastAssignedId = useRef(parseInt(localStorage.getItem('kennote-lastAssignedId')) || 0)
     const [activeNotelist, setActiveNotelist] = useState('Notes');
     const [activeNotebook] =  useState('First Notebook')
@@ -57,6 +59,17 @@ function App() {
         localStorage.setItem('kennote-notebooks', JSON.stringify(notebooks))
     }, [notebooks])
 
+    useEffect(() => {
+        const deactivateEditing = (ev) => {
+            const editorArea = document.querySelector('.editor');
+            if (!ev.path.includes(editorArea)) setEditingActive(false)
+        }
+        document.addEventListener('click', deactivateEditing)
+        return () => {
+            document.removeEventListener('click', deactivateEditing)
+        }
+    }, [])
+
     return (
         < AppContext.Provider value = {
             {
@@ -70,7 +83,9 @@ function App() {
                 createNewNote,
                 activeNoteId,
                 setActiveNoteId,
-                setIsToplistView
+                setIsToplistView,
+                editingActive,
+                setEditingActive,
             }
         } >
             <div className="app-wrapper">
