@@ -83,6 +83,11 @@ function App() {
             return cloneTrash
         })
     }
+
+    const emptyTrash = () => {
+        setTrash([])
+        setActiveNoteId((notebooks[activeNotebook] || []).find((obj) => obj.updatedAt === Math.max(...notebooks[activeNotebook].map((obj) => obj.updatedAt)))?.id)
+    }
     
     useEffect(() => {
         localStorage.setItem('kennote-notebooks', JSON.stringify(notebooks))
@@ -117,6 +122,7 @@ function App() {
             setEditingActive,
             restore,
             permDelete,
+            emptyTrash,
         }}>
             <div className="app-wrapper">
                 <Sidebar />
