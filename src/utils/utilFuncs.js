@@ -34,11 +34,11 @@ const toPhrase = (text) => capitalize(text.toLowerCase().replaceAll('-', ' '))
 
 const allDocument = {
     addEventListener(type, handler) {
-        [document, document.querySelector('iframe').contentWindow].map((doc) => doc.addEventListener(type, handler))
+        [document, document.querySelector('iframe')?.contentWindow].map((doc) => doc?.addEventListener(type, handler))
     },
     
     removeEventListener(type, handler) {
-        [document, document.querySelector('iframe').contentWindow].map((doc) => doc.removeEventListener(type, handler))
+        [document, document.querySelector('iframe')?.contentWindow].map((doc) => doc?.removeEventListener(type, handler))
     }
 }
 
