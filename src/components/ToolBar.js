@@ -6,6 +6,7 @@ import FontSizeCard from './FontSizeCard'
 import FontFamiliesCard from './FontFamiliesCard'
 import ForeColorsCard from './ForeColorsCard'
 import BackColorsCard from './BackColorsCard'
+import useFormatting from '../hooks/useFormatting'
 
 /* 
 Undo & Redo logic
@@ -20,8 +21,8 @@ function ToolBar({
     setToolsState,
     selColor,
     setSelColor,
-    format,
     history,
+    setHistory,
     selectionDropTool,
     setSelectionDropTool,
     toolbarActive,
@@ -67,8 +68,13 @@ function ToolBar({
                 <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M12.382 15.863a.6.6 0 01-.845-.082L9.2 12.944 6.863 15.78a.6.6 0 11-.926-.763L8.423 12 5.937 8.98a.6.6 0 11.926-.763L9.2 11.056l2.337-2.837a.6.6 0 01.926.762L9.977 12l2.486 3.018a.6.6 0 01-.081.845zM14.4 14.459a.6.6 0 101.2.002.972.972 0 01.098-.345c.133-.246.4-.316.665-.316.268 0 .537.072.673.32.109.198.127.403.003.598-.184.288-.457.485-.73.682l-.168.122c-.733.548-1.16 1.049-1.408 1.44-.213.333-.497.86-.193 1.224a.6.6 0 00.46.214h3a.6.6 0 000-1.2h-1.942c.291-.323.629-.585.982-.835.387-.273.755-.6 1.01-1.002.175-.274.294-.593.288-.922a2.043 2.043 0 00-.25-.9 1.752 1.752 0 00-.622-.655c-.299-.184-.666-.286-1.103-.286-.437 0-.804.102-1.103.286a1.735 1.735 0 00-.617.66c-.15.277-.236.596-.243.913z"></path></svg>,
             ]],
     }
-
-    
+    const execCommand = (fs, sdu = false, vArg = null) => {
+        const iframe = document.querySelector('iframe')
+        const iframeDocument = iframe.contentDocument
+        // iframeDocument.execCommand('styleWithCSS', false, true)
+        iframeDocument.execCommand(fs, sdu, vArg)
+    }
+    const format = useFormatting({ execCommand, setSelectionDropTool, setToolsState, toolsState, setHistory })
 
     return (
         <div className={`tool-bar ${toolbarActive ? '' : 'inactive'}`}>
