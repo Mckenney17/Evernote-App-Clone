@@ -28,36 +28,6 @@ function App() {
         })
     }
 
-    
-
-    const restore = (noteId) => {
-        setTrash((prevTrash) => {
-            const cloneTrash = [...prevTrash]
-            const indexOfNote = cloneTrash.findIndex((obj) => obj.id === noteId)
-            const restoredNote = cloneTrash.splice(indexOfNote, 1)[0]
-            const {belongsTo: noteBook, trashedAt, ...finalNote} = restoredNote
-            setNotebooks((previousNotebooks) => ({...previousNotebooks, [noteBook]: [...previousNotebooks[noteBook], finalNote]}))
-            return cloneTrash
-        })
-        if (trash.length) {
-            setActiveNoteId(trash.find((obj) => obj.trashedAt === Math.max(...trash.map((obj) => obj.trashedAt)))?.id)
-        }
-    }
-
-    const permDelete = (noteId) => {
-        setTrash((prevTrash) => {
-            const cloneTrash = [...prevTrash]
-            const indexOfNote = cloneTrash.findIndex((obj) => obj.id === noteId)
-            cloneTrash.splice(indexOfNote, 1)
-            if (cloneTrash.length) {
-                setActiveNoteId(trash.find((obj) => obj.trashedAt === Math.max(...trash.map((obj) => obj.trashedAt)))?.id)
-            } else {
-                setActiveNoteId((notebooks[activeNotebook] || []).find((obj) => obj.updatedAt === Math.max(...notebooks[activeNotebook].map((obj) => obj.updatedAt)))?.id)
-            }
-            return cloneTrash
-        })
-    }
-
     const emptyTrash = () => {
         setTrash([])
         setActiveNoteId((notebooks[activeNotebook] || []).find((obj) => obj.updatedAt === Math.max(...notebooks[activeNotebook].map((obj) => obj.updatedAt)))?.id)
@@ -94,8 +64,6 @@ function App() {
             setIsToplistView,
             editingActive,
             setEditingActive,
-            restore,
-            permDelete,
             emptyTrash,
             setTrash,
         }}>
