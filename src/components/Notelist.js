@@ -9,14 +9,19 @@ import SortActionCard from './SortActionCard'
 
 function Notelist() {
     const { activeNotelist, notebooks, trash, setIsToplistView, createNewNote, setActiveNoteId, setTrash, activeNotebook } = useContext(AppContext)
-    const [sortActions, setSortActions] = useState({ sortBy: 'Date Updated', order: 'asc', snig: false })
-    const [viewActions, setViewActions] = useState({ view: 'Snippets', showImages: true, showBodyText: true, dateUpdated: false, dateCreated: true })
+    const [sortActions, setSortActions] = useState(JSON.parse(localStorage.getItem('kennote-sortActions')) || { sortBy: 'Date Updated', order: 'asc', snig: false })
+    const [viewActions, setViewActions] = useState(JSON.parse(localStorage.getItem('kennote-viewActions')) || { view: 'Snippets', showImages: true, showBodyText: true, dateUpdated: false, dateCreated: true })
     const [activeAction, setActiveAction] = useState(null)
     const sortActionBtnRef = useRef(null)
     const viewActionBtnRef = useRef(null)
 
     const {sortBy, order, snig} = sortActions;
     const {view} = viewActions;
+
+    useEffect(() => {
+        localStorage.setItem('kennote-viewActions', JSON.stringify(viewActions))
+        localStorage.setItem('kennote-sortActions', JSON.stringify(sortActions))
+    }, [viewActions, sortActions])
 
     const isView = useCallback((v) => {
         return v === view || false
@@ -70,7 +75,7 @@ function Notelist() {
             return [['Title', 'title'], ['Date Created', 'createdAt'], ['Date Updated', 'updatedAt']]
             .reduce((acc, [name, prop]) => {
                 if (sortBy === name) {
-                    return acc + (order === 'desc' ? (noteA[prop] < noteB[prop] ? -1 : noteA[prop] > noteB[prop] ? 1 : 0) : (noteA[prop] < noteB[prop] ? 1 : noteA[prop] > noteB[prop] ? -1 : 0))
+                    return acc + (order === 'desc' ? (noteA[prop] < noteB[prop] ? 1 : noteA[prop] > noteB[prop] ? -1 : 0) : (noteA[prop] < noteB[prop] ? -1 : noteA[prop] > noteB[prop] ? 1 : 0))
                 }
                 return acc
             }, 0)

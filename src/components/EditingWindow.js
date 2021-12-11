@@ -25,7 +25,7 @@ function EditingWindow({
         if (!getNotes().length) return
         const note = getNotes().find((obj) => obj.id === activeNoteId)
         setNoteLastEdited(note.updatedAt)
-    })
+    }, [activeNoteId, getNotes, setNoteLastEdited])
 
     useEffect(() => {
         if (!getNotes().length) return
