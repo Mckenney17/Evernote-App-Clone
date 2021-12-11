@@ -27,7 +27,12 @@ function NoteOptionsCard({ setNoteOptionsCardActive, noteOptionsBtn }) {
             const clonePNB = {...previousNotebooks}
             const indexOfNote = clonePNB[notebook].findIndex((obj) => obj.id === noteId)
             const deletedNote = clonePNB[notebook].splice(indexOfNote, 1)[0]
-            setTrash((prevTrash) => [...prevTrash, {...deletedNote, belongsTo: notebook, trashedAt: Date.now()}])
+            setTrash((prevTrash) => {
+                const updatedTrash = [...prevTrash, {...deletedNote, belongsTo: notebook, trashedAt: Date.now()}]
+                localStorage.setItem('kennote-trash', JSON.stringify(updatedTrash))
+                return updatedTrash
+            })
+            localStorage.setItem('kennote-notebooks', JSON.stringify(clonePNB))
             return clonePNB
         })
         setActiveNoteId((notebooks[activeNotebook] || []).find((obj) => obj.updatedAt === Math.max(...notebooks[activeNotebook].map((obj) => obj.updatedAt)))?.id)
@@ -39,7 +44,12 @@ function NoteOptionsCard({ setNoteOptionsCardActive, noteOptionsBtn }) {
             const indexOfNote = cloneTrash.findIndex((obj) => obj.id === noteId)
             const restoredNote = cloneTrash.splice(indexOfNote, 1)[0]
             const {belongsTo: ownerNotebook, trashedAt, ...note} = restoredNote
-            setNotebooks((previousNotebooks) => ({...previousNotebooks, [ownerNotebook]: [...previousNotebooks[ownerNotebook], note]}))
+            setNotebooks((previousNotebooks) => {
+                const updatedNotebooks = {...previousNotebooks, [ownerNotebook]: [...previousNotebooks[ownerNotebook], note]}
+                localStorage.setItem('kennote-notebooks', JSON.stringify(updatedNotebooks))
+                return updatedNotebooks
+            })
+            localStorage.setItem('kennote-trash', JSON.stringify(cloneTrash))
             return cloneTrash
         })
         if (trash.length) {
@@ -57,6 +67,7 @@ function NoteOptionsCard({ setNoteOptionsCardActive, noteOptionsBtn }) {
             } else {
                 setActiveNoteId((notebooks[activeNotebook] || []).find((obj) => obj.updatedAt === Math.max(...notebooks[activeNotebook].map((obj) => obj.updatedAt)))?.id)
             }
+            localStorage.setItem('kennote-trash', JSON.stringify(cloneTrash))
             return cloneTrash
         })
     }

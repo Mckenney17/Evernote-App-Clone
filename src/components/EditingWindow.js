@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useRef } from 'react'
+import React, { useContext, useState, useEffect, useRef, useCallback } from 'react'
 import useFormatting from '../hooks/useFormatting'
 import AppContext from '../utils/AppContext'
 import { rgbToHex, extractSuperFamily } from '../utils/utilFuncs'
@@ -16,8 +16,9 @@ function EditingWindow({
     setSelectionDropTool,
     selectionDropTool,
     setNoteLastEdited,
+    setEditingActive,
 }) {
-    const { activeNoteId, updateNotes, setEditingActive } = useContext(AppContext)
+    const { activeNoteId, setNotebooks, activeNotebook } = useContext(AppContext)
     const [noteTitle, setNoteTitle] = useState('')
 
     useEffect(() => {
@@ -32,14 +33,38 @@ function EditingWindow({
         setNoteTitle(note.title)
     }, [activeNoteId, getNotes])
 
+    const updateNotes = useCallback((updatedNote) => {
+        setNotebooks((previousNotebooks) => {
+            const clonePNB = {...previousNotebooks}
+            const indexOfNote = clonePNB[activeNotebook].findIndex((obj) => obj.id === activeNoteId)
+            clonePNB[activeNotebook][indexOfNote] = updatedNote
+            localStorage.setItem('kennote-notebooks', JSON.stringify(clonePNB))
+            return clonePNB
+        })
+    }, [activeNoteId, activeNotebook, setNotebooks])
+    
     const handleTitleChange = (ev) => {
         setNoteTitle(ev.target.value)
         const note = getNotes().find((obj) => obj.id === activeNoteId)
         const updatedNote = { ...note, title: ev.target.value || 'Untitled', updatedAt: Date.now() }
         updateNotes(updatedNote)
     }
-    const titleBox = useRef(document.querySelector('.editor-body textarea'))
+    
     const iframe = useRef(document.querySelector('iframe'))
+    useEffect(() => {
+        const iframeDocument = iframe.current.contentDocument
+        const updateListItem = () => {
+        const note = getNotes().find((obj) => obj.id === activeNoteId)
+        const updatedNote = { ...note, bodyText: iframeDocument.body.innerHTML, summaryText: iframeDocument.body.querySelector('p')?.innerHTML || '', updatedAt: Date.now() }
+        updateNotes(updatedNote)
+        }
+
+        iframeDocument.addEventListener('keyup', updateListItem)
+        return () => {
+            iframeDocument.removeEventListener('keyup', updateListItem)
+        }
+    }, [activeNoteId, getNotes, iframe, updateNotes])
+
     const execCommand = (fs, sdu = false, vArg = null) => {
         const iframeDocument = iframe.current.contentDocument
         // iframeDocument.execCommand('styleWithCSS', false, true)
@@ -60,28 +85,13 @@ function EditingWindow({
 
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
-        const updateListItem = () => {
-            const note = getNotes().find((obj) => obj.id === activeNoteId)
-            const updatedNote = { ...note, bodyText: iframeDocument.body.innerHTML, summaryText: iframeDocument.body.querySelector('p')?.innerHTML || '', updatedAt: Date.now() }
-        updateNotes(updatedNote)
-        }
-
-        iframeDocument.addEventListener('keyup', updateListItem)
-        return () => {
-            iframeDocument.removeEventListener('keyup', updateListItem)
-        }
-    }, [activeNoteId, getNotes, iframe, updateNotes])
-
-    
-
-    useEffect(() => {
-        const iframeDocument = iframe.current.contentDocument
         if (!getNotes().length) return
         const note = getNotes().find((obj) => obj.id === activeNoteId)
         iframeDocument.body.innerHTML = note.bodyText
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeNoteId])
 
+    const titleBox = useRef(document.querySelector('.editor-body textarea'))
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
         const note = getNotes().find((obj) => obj.id === activeNoteId)

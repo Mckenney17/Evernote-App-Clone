@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useReducer, useRef, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useReducer, useRef, useState } from 'react'
 import AppContext from '../utils/AppContext'
 import './Editor.scss'
 import ToolBar from './ToolBar'
@@ -7,13 +7,14 @@ import { dateToLocaleString } from '../utils/utilFuncs'
 import NoteOptionsCard from './NoteOptionsCard'
 
 function Editor() {
-    const { notebooks, activeNotebook, editingActive, activeNotelist, trash } = useContext(AppContext)
+    const { notebooks, activeNotebook, activeNotelist, trash } = useContext(AppContext)
     const [expanded, setExpanded] = useState(false)
     const [noteOptionsCardActive, setNoteOptionsCardActive] = useState(false)
     const [noteLastEdited, setNoteLastEdited] = useState(null)
     const noteOptionsBtn = useRef(null)
 
     const [toolbarActive, setToolbarActive] = useState(true)
+    const [editingActive, setEditingActive] = useState(true)
     const [history, setHistory] = useState({ undo: 0, redo: 0 })
     const [selColor, setSelColor] = useState({ fore: '#000000', selFore: '#000000', back: '#ffef9e', selBack: '#ffef9e' })
     const [toolsState, setToolsState] = useState({
@@ -33,6 +34,17 @@ function Editor() {
         undo: false,
         redo: false,
     })
+
+    useEffect(() => {
+        const deactivateEditing = (ev) => {
+            const editorArea = document.querySelector('.editor');
+            if (!ev.path.includes(editorArea)) setEditingActive(false)
+        }
+        document.addEventListener('click', deactivateEditing)
+        return () => {
+            document.removeEventListener('click', deactivateEditing)
+        }
+    }, [])
 
     const selectTools = ['text-level', 'super-family', 'font-size', 'fore-color', 'back-color', 'insert-link']
     // [state, dispatch] of useReducer === [state, setState] of useState
@@ -68,7 +80,7 @@ function Editor() {
                     {editingActive ? <ToolBar toolbarActive={toolbarActive} selectionDropTool={selectionDropTool} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} selColor={selColor} setSelColor={setSelColor} history={history} />
                     : <span className='last-edited-info'>Last edited on {dateToLocaleString(noteLastEdited)}</span>}
                 </header>
-                <EditingWindow setNoteLastEdited={setNoteLastEdited} getNotes={getNotes} setToolbarActive={setToolbarActive} selectionDropTool={selectionDropTool} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} selColor={selColor} setSelColor={setSelColor} history={history} setHistory={setHistory} />
+                <EditingWindow setEditingActive={setEditingActive} setNoteLastEdited={setNoteLastEdited} getNotes={getNotes} setToolbarActive={setToolbarActive} selectionDropTool={selectionDropTool} setSelectionDropTool={setSelectionDropTool} toolsState={toolsState} setToolsState={setToolsState} selColor={selColor} setSelColor={setSelColor} history={history} setHistory={setHistory} />
             </React.Fragment> : null}
         </div>
     )

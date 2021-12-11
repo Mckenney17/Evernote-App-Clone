@@ -8,7 +8,7 @@ import NotelistViewActionCard from './NotelistViewActionCard'
 import SortActionCard from './SortActionCard'
 
 function Notelist() {
-    const { activeNotelist, notebooks, trash, setIsToplistView, createNewNote } = useContext(AppContext)
+    const { activeNotelist, notebooks, trash, setIsToplistView, createNewNote, setActiveNoteId, setTrash, activeNotebook } = useContext(AppContext)
     const [sortActions, setSortActions] = useState({ sortBy: 'Date Updated', order: 'asc', snig: false })
     const [viewActions, setViewActions] = useState({ view: 'Snippets', showImages: true, showBodyText: true, dateUpdated: false, dateCreated: true })
     const [activeAction, setActiveAction] = useState(null)
@@ -40,17 +40,26 @@ function Notelist() {
         }, 50)
     }
 
+    const notelistBody = useRef(document.querySelector('.notelist-body'))
+    const notelistHeader = useRef(document.querySelector('.notelist header'))
     useEffect(() => {
+        notelistBody.current.style.height = `${window.innerHeight - notelistHeader.current.getBoundingClientRect().height}px`
         const adjustHeight = () => {
             if (view === 'Top list') return
-            document.querySelector('.notelist-body').style.height = `${window.innerHeight - 95}px`
+            notelistBody.current.style.height = `${window.innerHeight - notelistHeader.current.getBoundingClientRect().height}px`
         }
 
         window.addEventListener('resize', adjustHeight)
         return () => {
             window.removeEventListener('resize', adjustHeight)
         }
-    }, [view])
+    }, [view, notelistBody, notelistHeader])
+
+    const emptyTrash = () => {
+        localStorage.setItem('kennote-trash', JSON.stringify([]))
+        setTrash([])
+        setActiveNoteId((notebooks[activeNotebook] || []).find((obj) => obj.updatedAt === Math.max(...notebooks[activeNotebook].map((obj) => obj.updatedAt)))?.id)
+    }
 
     const sortNotelist = (filteredNotes) => {
         return filteredNotes.sort((noteA, noteB) => {
@@ -77,7 +86,7 @@ function Notelist() {
     return (
         <div className={`notelist ${view === 'Top list' ? 'top-list-view-active' : ''}`}>
             <motion.span className="notelist-resizer" drag={view === 'Top list' ? 'y' : 'x'} onDrag={handleResizerDrag} dragMomentum={false} onDragEnd={handleDragEnd}></motion.span>
-            <header>
+            <header ref={notelistHeader}>
                 <div className="title">
                     <span className="title-icon">
                         {activeNotelist === 'Notes'
@@ -85,6 +94,7 @@ function Notelist() {
                         : <svg width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.298 17.93l.494-8.846H7.208l.514 8.85c.05.88.78 1.57 1.664 1.57h5.248c.885 0 1.615-.692 1.664-1.575z" fill="currentColor"></path><path fillRule="evenodd" clipRule="evenodd" d="M11.167 4.087a2.292 2.292 0 00-2.292 2.291v.205H5.75a.625.625 0 100 1.25h12.5a.625.625 0 100-1.25h-3.125v-.205a2.292 2.292 0 00-2.292-2.291h-1.666zm2.708 2.496v-.205c0-.575-.466-1.041-1.042-1.041h-1.666c-.576 0-1.042.466-1.042 1.041v.205h3.75z" fill="currentColor"></path></svg>}
                     </span>
                     <span>{activeNotelist}</span>
+                    <button style={{ opacity: activeNotelist === 'Trash' && trash.length ? 1 : 0 }} className='empty-trash' onClick={emptyTrash}>Empty Trash</button>
                 </div>
                 <div className="subheader">
                     <span className="notelist-count">{getNotes().length} note{getNotes().length === 1 ? '' : 's'}</span>
@@ -106,7 +116,7 @@ function Notelist() {
                 </div>
             </header>
             <div className="notelist-body-wrapper">
-                <ul style={{ height: `${view !== 'Top list' ? `${window.innerHeight - 95}px` : '100%'}` }} className={`notelist-body ${view.toLowerCase().replaceAll(' ', '-')}-container ${!getNotes().length ? 'empty' : ''}`}>
+                <ul ref={notelistBody} style={{ height: `${view !== 'Top list' ? `${window.innerHeight - 95}px` : '100%'}` }} className={`notelist-body ${view.toLowerCase().replaceAll(' ', '-')}-container ${!getNotes().length ? 'empty' : ''}`}>
                     {!['Cards', 'Snippets'].includes(view) && (
                         <div className="table-head">
                             <div style={{ width: '100px' }} className="title-col-th">Title<span className="resizer title-col-resizer"></span></div>
