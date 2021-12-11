@@ -5,7 +5,7 @@ import { allDocument } from '../utils/utilFuncs'
 import './NoteOptionsCard.scss'
 
 function NoteOptionsCard({ setNoteOptionsCardActive, noteOptionsBtn }) {
-    const { activeNoteId, activeNotebook, activeNotelist, trash, restore, permDelete, setActiveNoteId, setNotebooks, setTrash, notebooks } = useContext(AppContext)
+    const { activeNoteId, activeNotebook, activeNotelist, trash, setActiveNoteId, setNotebooks, setTrash, notebooks } = useContext(AppContext)
     const cardRef = useRef(null)
     useEffect(() => {
         const disappear = (ev) => {
@@ -31,6 +31,34 @@ function NoteOptionsCard({ setNoteOptionsCardActive, noteOptionsBtn }) {
             return clonePNB
         })
         setActiveNoteId((notebooks[activeNotebook] || []).find((obj) => obj.updatedAt === Math.max(...notebooks[activeNotebook].map((obj) => obj.updatedAt)))?.id)
+    }
+
+    const restore = (noteId) => {
+        setTrash((prevTrash) => {
+            const cloneTrash = [...prevTrash]
+            const indexOfNote = cloneTrash.findIndex((obj) => obj.id === noteId)
+            const restoredNote = cloneTrash.splice(indexOfNote, 1)[0]
+            const {belongsTo: ownerNotebook, trashedAt, ...note} = restoredNote
+            setNotebooks((previousNotebooks) => ({...previousNotebooks, [ownerNotebook]: [...previousNotebooks[ownerNotebook], note]}))
+            return cloneTrash
+        })
+        if (trash.length) {
+            setActiveNoteId(trash.find((obj) => obj.trashedAt === Math.max(...trash.map((obj) => obj.trashedAt)))?.id)
+        }
+    }
+
+    const permDelete = (noteId) => {
+        setTrash((prevTrash) => {
+            const cloneTrash = [...prevTrash]
+            const indexOfNote = cloneTrash.findIndex((obj) => obj.id === noteId)
+            cloneTrash.splice(indexOfNote, 1)
+            if (cloneTrash.length) {
+                setActiveNoteId(trash.find((obj) => obj.trashedAt === Math.max(...trash.map((obj) => obj.trashedAt)))?.id)
+            } else {
+                setActiveNoteId((notebooks[activeNotebook] || []).find((obj) => obj.updatedAt === Math.max(...notebooks[activeNotebook].map((obj) => obj.updatedAt)))?.id)
+            }
+            return cloneTrash
+        })
     }
 
     const handleNoteOptionClick = (ev, option) => {
