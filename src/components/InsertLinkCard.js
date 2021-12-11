@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react'
 import useSelectionDrop from '../hooks/useSelectionDrop';
 import './InsertLinkCard.scss'
 
-function InsertLinkCard({ iframeSel, iframeDocument, execCommand, format, setSelectionDropTool } : { iframeSel: Selection, iframeDocument: Document }) {
+function InsertLinkCard({ iframeSel, iframeDocument, format, setSelectionDropTool }) {
     const cardRef = useRef(null)
     useSelectionDrop({ cardRef, exSelector: 'insert-link', setSelectionDropTool })
     const insertionPoint = iframeSel.anchorNode.parentNode.getBoundingClientRect()

@@ -4,7 +4,7 @@ import useSelectionDrop from '../hooks/useSelectionDrop'
 import { hyphenate } from '../utils/utilFuncs'
 import './FontFamiliesCard.scss'
 
-function FontFamiliesCard({ setSelectionDropTool, toolsState, setToolsState, format }) {
+function FontFamiliesCard({ setSelectionDropTool, toolsState, format }) {
     const cardRef = useRef(null)
     useSelectionDrop({ cardRef, exSelector: 'super-family', setSelectionDropTool })
 

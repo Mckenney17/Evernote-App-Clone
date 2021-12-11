@@ -3,7 +3,7 @@ import './ForeColorsCard.scss'
 import useSelectionDrop from '../hooks/useSelectionDrop';
 import { motion } from 'framer-motion';
 
-function ForeColorsCard({ toolsState, setToolsState, setSelectionDropTool, selColor, setSelColor }) {
+function ForeColorsCard({ setSelectionDropTool, selColor, setSelColor }) {
     const cardRef = useRef(null)
     useSelectionDrop({ cardRef, exSelector: 'fore-color', setSelectionDropTool })
 

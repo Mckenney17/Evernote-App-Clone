@@ -3,7 +3,7 @@ import './BackColorsCard.scss'
 import useSelectionDrop from '../hooks/useSelectionDrop';
 import { motion } from 'framer-motion';
 
-function BackColorsCard({ toolsState, setToolsState, setSelectionDropTool , selColor, setSelColor }) {
+function BackColorsCard({ setSelectionDropTool , selColor, setSelColor }) {
     const cardRef = useRef(null)
     useSelectionDrop({ cardRef, exSelector: 'back-color', setSelectionDropTool })
 

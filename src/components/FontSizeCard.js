@@ -3,7 +3,7 @@ import React, { useRef } from 'react'
 import useSelectionDrop from '../hooks/useSelectionDrop'
 import './FontSizeCard.scss'
 
-function FontSizeCard({ setSelectionDropTool, toolsState, setToolsState, format }) {
+function FontSizeCard({ setSelectionDropTool, toolsState, format }) {
     const cardRef = useRef(null)
     useSelectionDrop({ cardRef, exSelector: 'font-size', setSelectionDropTool })
 

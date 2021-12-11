@@ -8,14 +8,6 @@ import ForeColorsCard from './ForeColorsCard'
 import BackColorsCard from './BackColorsCard'
 import useFormatting from '../hooks/useFormatting'
 
-/* 
-Undo & Redo logic
-if the iframe content !== '' // undo is active esle undo is inactive
-onkeyup event on the iframe document // pass the iframe's content in a string
-any changes made [without a keyup] or [with a keyup(Z with ctrlKey set to true)] don't update the string
-If that happens test whether string === iframe content // if false, make redo active
-else deactivate redo
-*/
 function ToolBar({
     toolsState,
     setToolsState,
