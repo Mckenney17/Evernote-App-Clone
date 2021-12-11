@@ -28,23 +28,6 @@ function App() {
         })
     }
 
-    const createNewNote = () => {
-        lastAssignedId.current++
-        localStorage.setItem('kennote-lastAssignedId', lastAssignedId.current)
-        setNotebooks((previousNotebooks) => {
-            const clonePNB = {...previousNotebooks}
-            if (clonePNB[activeNotebook]) {
-                clonePNB[activeNotebook].push({id: lastAssignedId.current, title: 'Untitled', bodyText: '', summaryText: '', createdAt: Date.now(), updatedAt: Date.now() })
-                return clonePNB
-            }
-            return {...clonePNB, [activeNotebook]: [{id: lastAssignedId.current, title: 'Untitled', bodyText: '', summaryText: '', createdAt: Date.now(), updatedAt: Date.now() }]}
-        })
-        setActiveNoteId(lastAssignedId.current)
-        if (activeNotelist === 'Trash') {
-            setActiveNotelist('Notes')
-        }
-    }
-
     const moveToTrash = (noteId, notebook) => {
         setNotebooks((previousNotebooks) => {
             const clonePNB = {...previousNotebooks}
@@ -114,7 +97,8 @@ function App() {
             trash,
             moveToTrash,
             updateNotes,
-            createNewNote,
+            setNotebooks,
+            lastAssignedId,
             activeNoteId,
             setActiveNoteId,
             setIsToplistView,

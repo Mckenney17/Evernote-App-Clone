@@ -5,7 +5,7 @@ import Search from './Search'
 import './Sidebar.scss'
 
 function Sidebar() {
-    const { setActiveNotelist, activeNotelist, createNewNote, setActiveNoteId, notebooks, activeNotebook, trash } = useContext(AppContext)
+    const { setActiveNotelist, activeNotelist, setNotebooks, lastAssignedId, setActiveNoteId, notebooks, activeNotebook, trash } = useContext(AppContext)
 
     const handleResizerDrag = (ev, info) => {
         document.querySelector('.sidebar').style.width = `${info.point.x}px`
@@ -24,6 +24,23 @@ function Sidebar() {
             setActiveNoteId((notebooks[activeNotebook] || []).find((obj) => obj.updatedAt === Math.max(...notebooks[activeNotebook].map((obj) => obj.updatedAt)))?.id);
         } else if (trash.length) {
             setActiveNoteId(trash.find((obj) => obj.trashedAt === Math.max(...trash.map((obj) => obj.trashedAt)))?.id)
+        }
+    }
+
+    const createNewNote = () => {
+        lastAssignedId.current++
+        localStorage.setItem('kennote-lastAssignedId', lastAssignedId.current)
+        setNotebooks((previousNotebooks) => {
+            const clonePNB = {...previousNotebooks}
+            if (clonePNB[activeNotebook]) {
+                clonePNB[activeNotebook].push({id: lastAssignedId.current, title: 'Untitled', bodyText: '', summaryText: '', createdAt: Date.now(), updatedAt: Date.now() })
+                return clonePNB
+            }
+            return {...clonePNB, [activeNotebook]: [{id: lastAssignedId.current, title: 'Untitled', bodyText: '', summaryText: '', createdAt: Date.now(), updatedAt: Date.now() }]}
+        })
+        setActiveNoteId(lastAssignedId.current)
+        if (activeNotelist === 'Trash') {
+            setActiveNotelist('Notes')
         }
     }
 
