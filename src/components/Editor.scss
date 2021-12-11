@@ -50,7 +50,7 @@
     }
 
 
-    .top-bar .left-side button {
+    .top-bar .left-side button, .top-bar .right-side button.note-options {
         background: transparent;
         display: block;
         max-height: 24px;
@@ -63,9 +63,7 @@
         &.expand-icon {
             color: gray(g12);
         }
-        &.note-options {
-            color: gray(g8);
-        }
+        color: gray(g8);
     }
 
     .editor-body {

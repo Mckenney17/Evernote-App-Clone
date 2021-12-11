@@ -17,10 +17,6 @@ function App() {
     const [isToplistView, setIsToplistView] = useState(false)
     const [notebooks, setNotebooks] = useState(JSON.parse(localStorage.getItem('kennote-notebooks')) || {});
     const [activeNoteId, setActiveNoteId] = useState((notebooks[activeNotebook] || []).find((obj) => obj.updatedAt === Math.max(...notebooks[activeNotebook].map((obj) => obj.updatedAt)))?.id)
-    
-
-    
-    
 
     return (
         <AppContext.Provider value = {{
