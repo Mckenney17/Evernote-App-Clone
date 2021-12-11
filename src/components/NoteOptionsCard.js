@@ -5,7 +5,7 @@ import { allDocument } from '../utils/utilFuncs'
 import './NoteOptionsCard.scss'
 
 function NoteOptionsCard({ setNoteOptionsCardActive, noteOptionsBtn }) {
-    const { activeNoteId, moveToTrash, activeNotebook, activeNotelist, trash, restore, permDelete } = useContext(AppContext)
+    const { activeNoteId, activeNotebook, activeNotelist, trash, restore, permDelete, setActiveNoteId, setNotebooks, setTrash, notebooks } = useContext(AppContext)
     const cardRef = useRef(null)
     useEffect(() => {
         const disappear = (ev) => {
@@ -21,6 +21,17 @@ function NoteOptionsCard({ setNoteOptionsCardActive, noteOptionsBtn }) {
             allDocument.removeEventListener('click', disappear)
         }
     }, [noteOptionsBtn, setNoteOptionsCardActive])
+
+    const moveToTrash = (noteId, notebook) => {
+        setNotebooks((previousNotebooks) => {
+            const clonePNB = {...previousNotebooks}
+            const indexOfNote = clonePNB[notebook].findIndex((obj) => obj.id === noteId)
+            const deletedNote = clonePNB[notebook].splice(indexOfNote, 1)[0]
+            setTrash((prevTrash) => [...prevTrash, {...deletedNote, belongsTo: notebook, trashedAt: Date.now()}])
+            return clonePNB
+        })
+        setActiveNoteId((notebooks[activeNotebook] || []).find((obj) => obj.updatedAt === Math.max(...notebooks[activeNotebook].map((obj) => obj.updatedAt)))?.id)
+    }
 
     const handleNoteOptionClick = (ev, option) => {
         if (option === 'Move to Trash') {

@@ -28,16 +28,7 @@ function App() {
         })
     }
 
-    const moveToTrash = (noteId, notebook) => {
-        setNotebooks((previousNotebooks) => {
-            const clonePNB = {...previousNotebooks}
-            const indexOfNote = clonePNB[notebook].findIndex((obj) => obj.id === noteId)
-            const deletedNote = clonePNB[notebook].splice(indexOfNote, 1)[0]
-            setTrash((prevTrash) => [...prevTrash, {...deletedNote, belongsTo: notebook, trashedAt: Date.now()}])
-            return clonePNB
-        })
-        setActiveNoteId((notebooks[activeNotebook] || []).find((obj) => obj.updatedAt === Math.max(...notebooks[activeNotebook].map((obj) => obj.updatedAt)))?.id)
-    }
+    
 
     const restore = (noteId) => {
         setTrash((prevTrash) => {
@@ -95,7 +86,6 @@ function App() {
             notebooks,
             activeNotebook,
             trash,
-            moveToTrash,
             updateNotes,
             setNotebooks,
             lastAssignedId,
@@ -107,6 +97,7 @@ function App() {
             restore,
             permDelete,
             emptyTrash,
+            setTrash,
         }}>
             <div className="app-wrapper">
                 <Sidebar />
