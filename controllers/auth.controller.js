@@ -6,13 +6,13 @@ exports.sessionCheck = (req, res) => {
 }
 
 exports.getLogin = (req, res) => {
-    res.send(req.csrfToken())
+    res.json({ csrfToken: req.csrfToken() })
 }
 
 exports.postLogin = async (req, res) => {
     const { email, password } = req.body
     try {
-        const user = User.findOne({ email })
+        const user = await User.findOne({ email })
         if (!user) {
             return res.status(401).json({ errorMessage: 'Incorrect Email or Password' })
         }

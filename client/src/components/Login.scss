@@ -1,2 +1,33 @@
 @import '../utils/style-defs';
 
+.login-page {
+    @include pos(absolute, 50%, $l: 50%);
+    transform: translate(-50%, -50%);
+    width: 300px;
+    form {
+        display: block;
+        width: 100%;
+    }
+
+    input, button {
+        font-size: tscale(ts15);
+        line-height: tscale(ts15);
+    border-radius: 4px;
+    }
+    
+    input {
+        height: 30px;
+        border: 1px solid #000;
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 5px 10px;
+    }
+    
+    button {
+        width: 100%;
+        height: 50px;
+        display: block;
+        background: $sbc;
+        color: #fff;
+    }
+}
