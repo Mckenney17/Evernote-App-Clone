@@ -1,0 +1,33 @@
+{
+  "name": "kennote-app-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "dependencies": {
+    "express": "^4.17.2",
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
+    "connect-mongodb-session": "^3.1.1",
+    "cors": "^2.8.5",
+    "csurf": "^1.11.0",
+    "dotenv": "^10.0.0",
+    "express-session": "^1.17.2",
+    "mongodb": "^3.7.3",
+    "mongoose": "^5.13.7",
+    "nodemailer": "^6.7.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mckenney17/Evernote-App-Clone.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mckenney17/Evernote-App-Clone/issues"
+  },
+  "homepage": "https://github.com/Mckenney17/Evernote-App-Clone#readme"
+}
