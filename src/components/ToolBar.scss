@@ -9,7 +9,7 @@
         content: '';
         @include pos(absolute, 0, 0, 0, 0);
         background: rgba(#fff, .7);
-        z-index: 1;
+        z-index: 5;
     }
 
     .divider:last-of-type {
