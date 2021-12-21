@@ -4,8 +4,13 @@ import axios from 'axios'
 function SessionCheck() {
     useEffect(() => {
         (async () => {
-            const result = await axios.get('/session_check')
-            console.log(result.data)
+            const session = await axios.get('/session_check')
+            const { isAuthenticated, user } = session.data
+            if (!isAuthenticated) {
+                window.location.pathname = '/login'
+            } else {
+                window.location.pathname = `/user${user._id}`
+            }
         })()
     }, [])
     return (

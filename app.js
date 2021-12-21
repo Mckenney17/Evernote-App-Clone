@@ -1,20 +1,48 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const session = require('express-session')
+const MongoDBStore = require('connect-mongodb-session')(session)
+const csrf = require('csurf')
 const cors = require('cors')
 const dotenv = require('dotenv')
 
-const app = express()
-
 dotenv.config()
+const app = express()
+const sessionStore = new MongoDBStore({
+    uri: process.env.MONGODB_URI,
+    collection: 'sessions'
+})
 
 app.use(express.json())
 app.use(cors())
 
 const authRoutes = require('./routes/auth.route')
 const appRoutes = require('./routes/app.route')
+const User = require('./models/user.model')
 
-app.use(authRoutes)
+app.use(session({
+    secret: 'lobodobo',
+    saveUninitialized: false,
+    resave: false,
+    store: sessionStore,
+}))
+app.use(csrf())
+
 app.use(appRoutes)
+app.use(authRoutes)
+app.use(async (req, res, next) => {
+    try {
+        const user = await User.findById(req.session.user._id)
+        if (user) {
+            req.user = user
+            next()
+        } else {
+            next()
+        }
+    } catch (e) {
+        console.log(e)
+    }
+})
 
 if(process.env.NODE_ENV === 'production'){    
     app.use(express.static('client/build'))
@@ -23,7 +51,7 @@ if(process.env.NODE_ENV === 'production'){
     });
 }
 (async () => {
-    await mongoose.connect(process.env.MONGODB_URI_LOCAL, { useNewUrlParser: true, useUnifiedTopology: true })
+    await mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     app.listen(5000 || process.env.PORT, () => {
         console.log('Server running')
     })
