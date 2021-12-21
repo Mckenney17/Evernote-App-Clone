@@ -1,8 +1,11 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const dotenv = require('dotenv')
 
 const app = express()
+
+dotenv.config()
 
 app.use(express.json())
 app.use(cors())
@@ -21,5 +24,7 @@ if(process.env.NODE_ENV === 'production'){
 }
 (async () => {
     await mongoose.connect(process.env.MONGODB_URI_LOCAL, { useNewUrlParser: true, useUnifiedTopology: true })
-    app.listen(5000 || process.env.PORT)
+    app.listen(5000 || process.env.PORT, () => {
+        console.log('Server running')
+    })
 })()
