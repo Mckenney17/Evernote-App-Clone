@@ -18,7 +18,7 @@ function App() {
                     <Route path='/signup' exact component={Signup} />
                     <Route path='/verify_email' exact component={VerificationRequest} />
                     <Route path='/' exact component={AuthCheck} />
-                    <Route path='/verify_email/:verificationToken' exact component={} />
+                    <Route path='/verify_email/:verificationToken' exact component={VerificationReport} />
                     <Route path='/:userId' exact component={Home} />
                 </Switch>
             </Router>

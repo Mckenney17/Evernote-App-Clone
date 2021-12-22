@@ -2,7 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import Spinner from './Spinner'
 
-function VerificationSuccess({ match }) {
+function VerificationReport({ match }) {
     const [pageReady, setPageReady] = useState(false)
     const [verificationMessage, setVerificationMessage]= useState('')
     useEffect(() => {
@@ -35,4 +35,4 @@ function VerificationSuccess({ match }) {
     )
 }
 
-export default VerificationSuccess
+export default VerificationReport
