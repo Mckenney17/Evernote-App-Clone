@@ -7,6 +7,7 @@ const Login = React.lazy(() => import('./Login'))
 const Signup = React.lazy(() => import('./Signup'))
 const Home = React.lazy(() => import('./Home'))
 const VerificationRequest = React.lazy(() => import('./VerificationRequest'))
+const VerificationReport = React.lazy(() => import('./VerificationReport'))
 
 function App() {
     return (
@@ -15,8 +16,9 @@ function App() {
                 <Switch>
                     <Route path='/login' exact component={Login} />
                     <Route path='/signup' exact component={Signup} />
-                    <Route path='/verify' exact component={VerificationRequest} />
+                    <Route path='/verify_email' exact component={VerificationRequest} />
                     <Route path='/' exact component={AuthCheck} />
+                    <Route path='/verify_email/:verificationToken' exact component={} />
                     <Route path='/:userId' exact component={Home} />
                 </Switch>
             </Router>

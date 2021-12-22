@@ -98,11 +98,15 @@ exports.resendVerification = (req, res) => {
 }
 
 exports.verifyEmail = async (req, res) => {
-    const { verificationToken } = req.params;
-    const user = User.findOne({ verificationToken })
-    if (!user) return res.status(401)
-    user.emailVerified = true
-    user.verificationToken = undefined
-    await user.save()
-    res.status(200)
+    try {
+        const { verificationToken } = req.params;
+        const user = User.findOne({ verificationToken })
+        if (!user) return res.status(401)
+        user.emailVerified = true
+        user.verificationToken = undefined
+        await user.save()
+        res.status(200)
+    } catch (e) {
+        console.log(e)
+    }
 }
