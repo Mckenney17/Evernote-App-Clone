@@ -82,19 +82,25 @@ exports.emailValidate = async (req, res) => {
     }
 }
 
-exports.resendVerification = (req, res) => {
-    const { email, origin } = req.body
-    const verificationToken = crypto.randomBytes(32).toString('hex')
-    transporter.sendMail({
-        from: 'apps.mckenney@gmail.com',
-        to: email,
-        subject: 'Kennote App - Verify your email',
-        html: `
-        <h2>Kennote App - Email verification</h2>
-        <p><a href='${origin}/verify_email/${verificationToken}'>Click to verify your email.</a></p>
-        `
-    })
-    res.json({ successMessage: 'Verification Sent' })
+exports.resendVerification = async (req, res) => {
+    try {
+        const { email, origin } = req.body
+        const verificationToken = crypto.randomBytes(32).toString('hex')
+        transporter.sendMail({
+            from: 'apps.mckenney@gmail.com',
+            to: email,
+            subject: 'Kennote App - Verify your email',
+            html: `
+            <h2>Kennote App - Email verification</h2>
+            <p><a href='${origin}/verify_email/${verificationToken}'>Click to verify your email.</a></p>
+            `
+        })
+        req.session.email = ''
+        await req.session.save()
+        res.json({ successMessage: 'Verification Sent' })
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 exports.verifyEmail = async (req, res) => {

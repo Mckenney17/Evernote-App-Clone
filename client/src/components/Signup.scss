@@ -23,7 +23,6 @@
         @include flex($ai: center);
         margin-bottom: 2px;
         color: $error;
-        align-self: flex-start;
         font-size: tscale(ts13);
         animation: error_blink .2s linear infinite;
         span {
