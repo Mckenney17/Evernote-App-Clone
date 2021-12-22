@@ -1,20 +1,26 @@
 import React from 'react'
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom'
-import Home from './Home'
-import Login from './Login'
 import SessionCheck from './SessionCheck'
-import Signup from './Signup'
+import Spinner from './Spinner'
+
+const Login = React.lazy(() => import('./Login'))
+const Signup = React.lazy(() => import('./Signup'))
+const Home = React.lazy(() => import('./Home'))
+const VerificationRequest = React.lazy(() => import('./VerificationRequest'))
 
 function App() {
     return (
-        <Router>
-            <Switch>
-                <Route path='/login' exact component={Login} />
-                <Route path='/signup' exact component={Signup} />
-                <Route path='/' exact component={SessionCheck} />
-                <Route path='/:userId' exact component={Home} />
-            </Switch>
-        </Router>
+        <React.Suspense fallback={<Spinner />}>
+            <Router>
+                <Switch>
+                    <Route path='/login' exact component={Login} />
+                    <Route path='/signup' exact component={Signup} />
+                    <Route path='/verify' exact component={VerificationRequest} />
+                    <Route path='/' exact component={SessionCheck} />
+                    <Route path='/:userId' exact component={Home} />
+                </Switch>
+            </Router>
+        </React.Suspense>
     )
 }
 

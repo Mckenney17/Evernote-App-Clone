@@ -7,7 +7,7 @@
     border-radius: 4px;
     box-shadow: 0 0 7px rgba(#000, .3);
     opacity: 0;
-    padding: 15px 15px 15px;
+    padding: 15px;
     @include flex($fd: column);
 
     div[class|="link"] {

@@ -1,33 +1,100 @@
 @import '../utils/style-defs';
 
 .login-page {
-    @include pos(absolute, 50%, $l: 50%);
-    transform: translate(-50%, -50%);
-    width: 300px;
+    width: 100%;
+    height: 100%;
+    @include flex(center, center);
+    background: linear-gradient(270deg, $sbc, $pbc);
+
+    .logo {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 4px solid $pbc;
+        position: relative;
+        margin: 5px 0;
+        &::after {
+            @include pos(absolute, 50%, $l: 50%);
+            transform: translate(-55%, -57%);
+            content: 'K';
+            color: $sbc;
+            font-size: 70px;
+            line-height: 70px;
+            font-family: 'Harrington';
+            font-weight: 900;
+        }
+    }
+
     form {
-        display: block;
-        width: 100%;
+        width: 300px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 7px rgba(#000, .2);
+        padding: 15px;
+        @include flex(center, center, column);
+    }
+
+    .error-message {
+        @include flex($ai: center);
+        margin-bottom: 2px;
+        color: $error;
+        align-self: flex-start;
+        font-size: tscale(ts13);
+        animation: error_blink .2s linear infinite;
+        span {
+            max-height: 20px;
+            display: block;
+        }
+    }
+
+    @keyframes error_blink {
+        100% {
+            color: transparent;
+        }
     }
 
     input, button {
-        font-size: tscale(ts15);
-        line-height: tscale(ts15);
-    border-radius: 4px;
+        font-size: tscale(ts14);
+        line-height: tscale(ts14);
+        border-radius: 4px;
     }
     
     input {
-        height: 30px;
-        border: 1px solid #000;
         width: 100%;
         margin-bottom: 10px;
-        padding: 5px 10px;
+        background: gray(g19);
+        padding: 11px;
+        color: gray(g6);
+        border: 1px solid transparent;
+        transition: border .15s linear;
+
+        &:focus {
+            border-color: lighten($sbc, 20);
+        }
+
+        &::placeholder {
+            color: gray(g12);
+        }
     }
     
     button {
         width: 100%;
-        height: 50px;
         display: block;
-        background: $sbc;
+        transition: all .1s linear;
+        background: $pbc;
         color: #fff;
+        padding: 11px 19px;
+        &:hover {
+            background: darken($pbc, 5);
+        }
+    }
+
+    a {
+        margin-top: 15px;
+        color: $sbc;
+        font-size: tscale(ts13);
+        &:hover {
+            text-decoration: underline;
+        }
     }
 }
