@@ -37,6 +37,7 @@ exports.postLogin = async (req, res) => {
         }
         req.session.isAuthenticated = true
         req.session.user = user
+        req.session.email = ''
         await req.session.save()
         res.json({ user })
     } catch (e) {
@@ -45,35 +46,43 @@ exports.postLogin = async (req, res) => {
 }
 
 exports.postSignup = async (req, res) => {
-    const { _csrf, origin, ...userData } = req.body
-    const { email, password } = userData
-    const userExists = await User.findOne({ email })
-    if (userExists) return res.status(401).json({ errorMessage: 'Email already taken, try another.' })
-    const hashedPassword = await bcrypt.hash(password, 12)
-    const verificationToken = crypto.randomBytes(32).toString('hex')
-    const user = new User({ ...userData, password: hashedPassword, emailVerified: false, verificationToken })
-    await user.save()
-    req.session.email = email
-    res.json({ successMessage: 'Account created successfully.' })
-    transporter.sendMail({
-        from: 'apps.mckenney@gmail.com',
-        to: email,
-        subject: 'Kennote App - Verify your email',
-        html: `
-        <h2>Kennote App - Email verification</h2>
-        <p><a href='${origin}/verify_email/${verificationToken}'>Verify your email.</a></p>
-        `
-    })
+    try {
+        const { _csrf, origin, ...userData } = req.body
+        const { email, password } = userData
+        const userExists = await User.findOne({ email })
+        if (userExists) return res.status(401).json({ errorMessage: 'Email already taken, try another.' })
+        const hashedPassword = await bcrypt.hash(password, 12)
+        const verificationToken = crypto.randomBytes(32).toString('hex')
+        const user = new User({ ...userData, password: hashedPassword, emailVerified: false, verificationToken })
+        await user.save()
+        req.session.email = email
+        res.json({ successMessage: 'Account created successfully.' })
+        transporter.sendMail({
+            from: 'apps.mckenney@gmail.com',
+            to: email,
+            subject: 'Kennote App - Verify your email',
+            html: `
+            <h2>Kennote App - Email verification</h2>
+            <p><a href='${origin}/verify_email/${verificationToken}'>Verify your email.</a></p>
+            `
+        })
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 exports.emailValidate = async (req, res) => {
-    const { email } = req.body
-    const userExists = await User.findOne({ email })
-    if (userExists) return res.status(401)
-    res.status(200)
+    try {
+        const { email } = req.body
+        const userExists = await User.findOne({ email })
+        if (userExists) return res.status(401)
+        res.status(200)
+    } catch (e) {
+        console.log(e)
+    }
 }
 
-exports.resendVerification = async (req, res) => {
+exports.resendVerification = (req, res) => {
     const { email, origin } = req.body
     const verificationToken = crypto.randomBytes(32).toString('hex')
     transporter.sendMail({
@@ -86,4 +95,14 @@ exports.resendVerification = async (req, res) => {
         `
     })
     res.json({ successMessage: 'Verification Sent' })
+}
+
+exports.verifyEmail = async (req, res) => {
+    const { verificationToken } = req.params;
+    const user = User.findOne({ verificationToken })
+    if (!user) return res.status(401)
+    user.emailVerified = true
+    user.verificationToken = undefined
+    await user.save()
+    res.status(200)
 }

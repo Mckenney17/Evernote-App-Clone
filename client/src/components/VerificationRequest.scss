@@ -1,2 +1,19 @@
 @import '../utils/style-defs';
 
+.verification-request {
+    @include pos(absolute, 50%, 50%);
+    transform: translate(-50%, -50%);
+    @include flex($ai: center, $fd: column);
+
+    .logo {
+        @include logo;
+    }
+
+    p > span {
+        font-weight: bold;
+    }
+
+    span:last-child {
+        font-size: tscale(ts13);
+    }
+}

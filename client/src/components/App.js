@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom'
-import SessionCheck from './SessionCheck'
+import AuthCheck from './AuthCheck'
 import Spinner from './Spinner'
 
 const Login = React.lazy(() => import('./Login'))
@@ -16,7 +16,7 @@ function App() {
                     <Route path='/login' exact component={Login} />
                     <Route path='/signup' exact component={Signup} />
                     <Route path='/verify' exact component={VerificationRequest} />
-                    <Route path='/' exact component={SessionCheck} />
+                    <Route path='/' exact component={AuthCheck} />
                     <Route path='/:userId' exact component={Home} />
                 </Switch>
             </Router>

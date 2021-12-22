@@ -19,4 +19,6 @@ router.post('/email_validate', authController.emailValidate)
 
 router.post('/resend_verification', authController.resendVerification)
 
+router.get('/verify_email/:verificationToken', authController.verifyEmail)
+
 module.exports = router

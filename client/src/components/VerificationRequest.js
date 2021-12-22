@@ -33,8 +33,9 @@ function VerificationRequest() {
         <React.Fragment>
             {pageReady ? (
             <div className='verification-request'>
+                <div className="logo"></div>
                 <h1>Verification Required</h1>
-                <p>Follow the link we sent to {email} to verify your email and proceed.</p>
+                <p>Follow the link we sent to <span>{email}</span> to verify your email and proceed.</p>
                 <span>Didn't receive link?<button onClick={handleLinkResend}>Resend</button></span>
             </div>
             ) : <Spinner />}

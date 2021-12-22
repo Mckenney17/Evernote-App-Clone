@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import axios from 'axios'
 import Spinner from './Spinner'
 
-function SessionCheck() {
+function AuthCheck() {
     useEffect(() => {
         (async () => {
             const session = await axios.get('/session')
@@ -10,7 +10,7 @@ function SessionCheck() {
             if (!isAuthenticated) {
                 window.location.pathname = '/login'
             } else {
-                window.location.pathname = `/user${user._id}`
+                window.location.pathname = `/user${user._id.toString()}`
             }
         })()
     }, [])
@@ -19,4 +19,4 @@ function SessionCheck() {
     )
 }
 
-export default SessionCheck
+export default AuthCheck
