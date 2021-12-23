@@ -4,11 +4,10 @@ const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session)
 const csrf = require('csurf')
 const cors = require('cors')
-const dotenv = require('dotenv')
 const compression = require('compression')
+require('dotenv').config()
 
 
-dotenv.config()
 const app = express()
 app.use(compression())
 app.use(express.json())
