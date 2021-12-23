@@ -9,7 +9,6 @@ const Home = React.lazy(() => import('./Home'))
 const VerificationRequest = React.lazy(() => import('./VerificationRequest'))
 const VerificationReport = React.lazy(() => import('./VerificationReport'))
 
-
 function App() {
     return (
         <React.Suspense fallback={<Spinner />}>
