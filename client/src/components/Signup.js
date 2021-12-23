@@ -8,6 +8,7 @@ function Signup() {
     const [{firstName, lastName, email, password, confirmPassword }, setInputData] = useState({firstName: '', lastName: '', email: '', password: '', confirmPassword: '' })
     const [csrfToken, setCsrfToken] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         (async () => {
@@ -30,8 +31,8 @@ function Signup() {
             await axios.post('/email_validate', { email: ev.target.value, _csrf: csrfToken })
             ev.target.style.borderColor = ''
         } catch(e) {
-            const {res} = e
-            if (res.status === 401) {
+            const {response} = e
+            if (response.status === 401) {
                 ev.target.style.borderColor = 'red'
             }
         }
@@ -49,12 +50,14 @@ function Signup() {
             origin: window.location.origin,
         }
         try {
+            setLoading(true)
             await axios.post('/signup', signupData)
             window.location.pathname = '/verify_email'
         } catch(e) {
             const errRes = e.response;
             const { errorMessage} = errRes.data
             setErrorMessage(errorMessage)
+            setLoading(false)
         }
     }
 
@@ -72,10 +75,12 @@ function Signup() {
                     </div>
                     <input value={firstName} onChange={(ev) => handleInputChange(ev, 'firstName')} type="text" name="first_name" required placeholder='Firstname' />
                     <input value={lastName} onChange={(ev) => handleInputChange(ev, 'lastName')} type="text" name="last_name" placeholder='Lastname' />
-                    <input value={email} onChange={(ev) => { handleInputChange(ev, 'email'); handleEmailValidation(ev); }} type="email" name="email" required placeholder='Email' />
+                    <input value={email} onBlur={handleEmailValidation} onChange={(ev) => handleInputChange(ev, 'email')} type="email" name="email" required placeholder='Email' />
                     <input value={password} onChange={(ev) => handleInputChange(ev, 'password')} type="password" name="pwd" required placeholder='Password' />
                     <input value={confirmPassword} onChange={(ev) => handleInputChange(ev, 'confirmPassword')} type="password" name="cpwd" required placeholder='Confirm Password' />
-                    <button type="submit">Sign Up</button>
+                    <button className={loading ? 'loading' : ''} type="submit">
+                    {loading ? <span></span> : 'Sign Up'}
+                    </button>
                 </form>
             </React.Fragment>
             : <Spinner /> }

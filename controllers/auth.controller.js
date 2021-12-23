@@ -28,12 +28,12 @@ exports.postLogin = async (req, res) => {
         if (!user) {
             return res.status(401).json({ errorMessage: 'Incorrect Email or Password' })
         }
-        if (!user.emailVerified) {
-            return res.status(401).json({ errorMessage: 'Verification Error' })
-        }
         const doMatch = await bcrypt.compare(password, user.password)
         if (!doMatch) {
             return res.status(401).json({ errorMessage: 'Incorrect Email or Password' })
+        }
+        if (!user.emailVerified) {
+            return res.status(401).json({ errorMessage: 'Verification Error' })
         }
         req.session.isAuthenticated = true
         req.session.user = user
@@ -74,8 +74,8 @@ exports.emailValidate = async (req, res) => {
     try {
         const { email } = req.body
         const userExists = await User.findOne({ email })
-        if (userExists) return res.status(401)
-        res.status(200)
+        if (userExists) return res.status(401).json({ errorMessage: 'Email already taken.' })
+        res.status(200).json({ successMessage: 'OK' })
     } catch (e) {
         console.log(e)
     }

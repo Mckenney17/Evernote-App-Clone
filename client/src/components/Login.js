@@ -9,6 +9,7 @@ function Login() {
     const [{ email, password }, setInputData] = useState({ email: '', password: '' })
     const [csrfToken, setCsrfToken] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         (async () => {
@@ -34,13 +35,14 @@ function Login() {
             _csrf: csrfToken,
         }
         try {
+            setLoading(true)
             const res = await axios.post('/login', loginData)
-            console.log(res)
             const { user } = res.data
             window.location.pathname = `/user${user._id.toString()}`
         } catch(e) {
             const errRes = e.response;
             const { errorMessage } = errRes.data
+            setLoading(false)
             if (errorMessage === 'Verification Error') {
                 window.location.pathname = '/verify_email'
                 return
@@ -63,7 +65,9 @@ function Login() {
                     </div>
                     <input value={email} onChange={(ev) => handleInputChange(ev, 'email')} type="email" name="email" required placeholder='Email' />
                     <input value={password} onChange={(ev) => handleInputChange(ev, 'password')} type="password" name="pwd" required placeholder='Password' />
-                    <button type="submit">Login</button>
+                    <button className={loading ? 'loading' : ''} type="submit">
+                    {loading ? <span></span> : 'Login'}
+                    </button>
                     <Link to='/signup'>Don't have an account? Sign Up</Link>
                 </form>
             </React.Fragment>
