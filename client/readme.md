@@ -6,4 +6,4 @@ I share my progress and learning experiences on [Twitter](https://www.twitter.co
 
 This is the App I'm currently honing my skills with.
 
-[View App](https://evernote-app-clone.netlify.app)
+[View App](https://kennote.heroku.app)
