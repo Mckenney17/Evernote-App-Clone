@@ -56,7 +56,7 @@ if (process.env.NODE_ENV === 'production'){
 
 (async () => {
     await mongoose.connect(process.env.MONGODB_URI_REMOTE, { useNewUrlParser: true, useUnifiedTopology: true })
-    app.listen(5000 || process.env.PORT, '0.0.0.0', () => {
+    app.listen(process.env.PORT || 5000, () => {
         console.log('Server running')
     })
 })()
