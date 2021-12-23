@@ -5,7 +5,7 @@ const MongoDBStore = require('connect-mongodb-session')(session)
 const csrf = require('csurf')
 const cors = require('cors')
 const compression = require('compression')
-require('dotenv').config({ path: `${__dirname}/.env` })
+require('dotenv').config()
 
 
 const app = express()
