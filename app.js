@@ -9,7 +9,7 @@ const dotenv = require('dotenv')
 dotenv.config()
 const app = express()
 const sessionStore = new MongoDBStore({
-    uri: process.env.MONGODB_URI,
+    uri: process.env.MONGODB_URI_REMOTE,
     collection: 'sessions'
 })
 
@@ -50,7 +50,7 @@ if(process.env.NODE_ENV === 'production'){
     });
 }
 (async () => {
-    await mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    await mongoose.connect(process.env.MONGODB_URI_REMOTE, { useNewUrlParser: true, useUnifiedTopology: true })
     app.listen(5000 || process.env.PORT, () => {
         console.log('Server running')
     })
