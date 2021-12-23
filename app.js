@@ -5,16 +5,20 @@ const MongoDBStore = require('connect-mongodb-session')(session)
 const csrf = require('csurf')
 const cors = require('cors')
 const dotenv = require('dotenv')
+const compression = require('compression')
+
+app.use(compression())
 
 dotenv.config()
 const app = express()
+app.use(express.json())
+app.use(cors())
+
 const sessionStore = new MongoDBStore({
     uri: process.env.MONGODB_URI_REMOTE,
     collection: 'sessions'
 })
 
-app.use(express.json())
-app.use(cors())
 
 const authRoutes = require('./routes/auth.route')
 const appRoutes = require('./routes/app.route')
