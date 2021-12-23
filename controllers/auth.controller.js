@@ -28,7 +28,7 @@ exports.postLogin = async (req, res) => {
         if (!user) {
             return res.status(401).json({ errorMessage: 'Incorrect Email or Password' })
         }
-        if (!user.emailValidate) {
+        if (!user.emailVerified) {
             return res.status(401).json({ errorMessage: 'Verification Error' })
         }
         const doMatch = await bcrypt.compare(password, user.password)
@@ -37,7 +37,6 @@ exports.postLogin = async (req, res) => {
         }
         req.session.isAuthenticated = true
         req.session.user = user
-        req.session.email = ''
         await req.session.save()
         res.json({ user })
     } catch (e) {
@@ -86,6 +85,9 @@ exports.resendVerification = async (req, res) => {
     try {
         const { email, origin } = req.body
         const verificationToken = crypto.randomBytes(32).toString('hex')
+        const user = await User.findOne({ email })
+        user.verificationToken = verificationToken
+        await user.save()
         transporter.sendMail({
             from: 'apps.mckenney@gmail.com',
             to: email,
@@ -95,7 +97,6 @@ exports.resendVerification = async (req, res) => {
             <p><a href='${origin}/verify_email/${verificationToken}'>Click to verify your email.</a></p>
             `
         })
-        req.session.email = ''
         await req.session.save()
         res.json({ successMessage: 'Verification Sent' })
     } catch (e) {
@@ -106,12 +107,14 @@ exports.resendVerification = async (req, res) => {
 exports.verifyEmail = async (req, res) => {
     try {
         const { verificationToken } = req.params;
-        const user = User.findOne({ verificationToken })
-        if (!user) return res.status(401)
+        const user = await User.findOne({ verificationToken })
+        if (!user) return res.status(401).json({ errorMessage: 'Verification Failed' })
         user.emailVerified = true
         user.verificationToken = undefined
         await user.save()
-        res.status(200)
+        req.session.email = undefined
+        await req.session.save()
+        res.json({ successMessage: 'Verification Successful' })
     } catch (e) {
         console.log(e)
     }

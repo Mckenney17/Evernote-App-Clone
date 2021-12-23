@@ -27,7 +27,7 @@ function VerificationReport({ match }) {
         <React.Fragment>
         {pageReady ? (
         <div className='verification-success'>
-            <p style={{ fontSize: '50px' }}>{verificationMessage}</p>
+            <p style={{ fontSize: '30px' }}>{verificationMessage}</p>
         </div>
         )
         : <Spinner />}

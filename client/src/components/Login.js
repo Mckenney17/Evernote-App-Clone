@@ -35,6 +35,7 @@ function Login() {
         }
         try {
             const res = await axios.post('/login', loginData)
+            console.log(res)
             const { user } = res.data
             window.location.pathname = `/user${user._id.toString()}`
         } catch(e) {
