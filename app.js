@@ -15,7 +15,7 @@ app.use(express.json())
 app.use(cors())
 
 const sessionStore = new MongoDBStore({
-    uri: process.env.MONGODB_URI_LOCAL,
+    uri: process.env.NODE_ENV === 'production' ? process.env.MONGODB_URI_REMOTE : process.env.MONGODB_URI_LOCAL,
     collection: 'sessions'
 })
 
@@ -55,7 +55,7 @@ if (process.env.NODE_ENV === 'production'){
 }
 
 (async () => {
-    await mongoose.connect(process.env.MONGODB_URI_LOCAL, { useNewUrlParser: true, useUnifiedTopology: true })
+    await mongoose.connect(process.env.NODE_ENV === 'production' ? process.env.MONGODB_URI_REMOTE : process.env.MONGODB_URI_LOCAL, { useNewUrlParser: true, useUnifiedTopology: true })
     app.listen(process.env.PORT || 5000, () => {
         console.log('Server running')
     })

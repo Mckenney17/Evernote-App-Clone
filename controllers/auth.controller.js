@@ -64,6 +64,8 @@ exports.postSignup = async (req, res) => {
             <h2>Kennote App - Email verification</h2>
             <p><a href='${origin}/verify_email/${verificationToken}'>Verify your email.</a></p>
             `
+        }, (err) => {
+            
         })
     } catch (e) {
         console.log(e)
@@ -96,9 +98,10 @@ exports.resendVerification = async (req, res) => {
             <h2>Kennote App - Email verification</h2>
             <p><a href='${origin}/verify_email/${verificationToken}'>Click to verify your email.</a></p>
             `
+        }, (err) => {
+            if (err) res.status(404).json({ errorMessage: 'Request Failed. Check your internet connection.' })
+            else res.json({ successMessage: 'Verification Link Sent' })
         })
-        await req.session.save()
-        res.json({ successMessage: 'Verification Sent' })
     } catch (e) {
         console.log(e)
     }
