@@ -31,6 +31,13 @@ app.use(session({
 }))
 app.use(csrf())
 
+if (process.env.NODE_ENV === 'production'){    
+    app.use(express.static('client/build'))
+    app.get(' * ', (req, res) => {
+        res.sendFile (path.join(__dirname, 'client', 'build', 'index.html'))
+    });
+}
+
 app.use(appRoutes)
 app.use(authRoutes)
 app.use(async (req, res, next) => {
@@ -46,12 +53,6 @@ app.use(async (req, res, next) => {
     }
 })
 
-if(process.env.NODE_ENV === 'production'){    
-    app.use(express.static('client/build'))
-    app.get(' * ', (req, res) => {
-        res.sendFile (path.join(__dirname, 'client', 'build', 'index.html'))
-    });
-}
 (async () => {
     await mongoose.connect(process.env.MONGODB_URI_REMOTE, { useNewUrlParser: true, useUnifiedTopology: true })
     app.listen(5000 || process.env.PORT, () => {
