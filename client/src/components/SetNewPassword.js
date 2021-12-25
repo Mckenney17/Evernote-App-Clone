@@ -1,5 +1,7 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import useAuthFormCommonLogic from '../hooks/useAuthFormCommonLogic'
+import useFormInputChange from '../hooks/useFormInputChange'
 import './SetNewPassword.scss'
 import Spinner from './Spinner'
 
@@ -10,21 +12,9 @@ function SetNewPassword({ match }) {
     const [errorMessage, setErrorMessage] = useState('')
     const [loading, setLoading] = useState(false)
 
-    useEffect(() => {
-        (async () => {
-            const res = await axios.get('/auth_token')
-            const { csrfToken } = res.data
-            setCsrfToken(csrfToken)
-            setPageReady(true)
-        })()
-    }, [])
+    useAuthFormCommonLogic(setCsrfToken, setPageReady)
 
-    const handleInputChange = (ev, field) => {
-        setInputData((prevInputData) => ({...prevInputData, [field]: ev.target.value}))
-        if (errorMessage) {
-            setErrorMessage('')
-        }
-    }
+    const handleInputChange = useFormInputChange(setInputData, errorMessage, setErrorMessage)
 
     const handleNewPasswordSubmit = async (ev) => {
         ev.preventDefault()

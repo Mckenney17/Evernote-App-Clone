@@ -1,7 +1,7 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Spinner from './Spinner'
 import './ConfirmPwdReset.scss'
+import useEmailAuths from '../hooks/useEmailAuths'
 
 function ConfirmPwdReset() {
     const [pageReady, setPageReady] = useState(false)
@@ -9,37 +9,16 @@ function ConfirmPwdReset() {
     const [csrfToken, setCsrfToken] = useState('')
     const [loading, setLoading] = useState(false)
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const session = await axios.get('/session')
-                const authRes = await axios.get('/auth_token')
-                const { pwd_reset_email } = session.data
-                const { csrfToken } = authRes.data
-                if (pwd_reset_email) setPwdResetEmail(pwd_reset_email)
-                else {
-                    window.location.pathname = '/'
-                }
-                setCsrfToken(csrfToken)
-                setPageReady(true)
-            } catch (e) {
-                console.log(e)
-            }
-        })()
-    }, [])
-
-    const handleCofirmationResend = async () => {
-        try {
-            setLoading(true)
-            const res = await axios.post('/resend_pwd_reset_confirmation', { email: pwdResetEmail, origin: window.location.origin, _csrf: csrfToken })
-            alert(res.data.successMessage)
-            setLoading(false)
-        } catch (e) {
-            const { response } = e
-            setLoading(false)
-            alert(response.data.errorMessage)
-        }
-    }
+    const handleCofirmationResend = useEmailAuths({
+        setEmail: setPwdResetEmail,
+        email: pwdResetEmail,
+        setCsrfToken,
+        setPageReady,
+        setLoading,
+        csrfToken,
+        emailAuthProp: 'pwd_reset_email',
+        emailAuthUrl: '/resend_pwd_reset_confirmation',
+    })
 
     return (
         <React.Fragment>
