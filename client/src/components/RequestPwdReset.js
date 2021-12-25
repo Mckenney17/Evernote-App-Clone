@@ -1,12 +1,11 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import './Login.scss'
+import './RequestPwdReset.scss'
 import Spinner from './Spinner'
 
-function Login() {
+function RequestPwdReset() {
     const [pageReady, setPageReady] = useState(false)
-    const [{ email, password }, setInputData] = useState({ email: '', password: '' })
+    const [{email}, setInputData] = useState({email: ''})
     const [csrfToken, setCsrfToken] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const [loading, setLoading] = useState(false)
@@ -27,36 +26,31 @@ function Login() {
         }
     }
 
-    const handleLoginSubmit = async (ev) => {
+    const handleRequestPwdResetSubmit = async (ev) => {
         ev.preventDefault()
-        const loginData = {
+        const resetData = {
             email,
-            password,
             _csrf: csrfToken,
+            origin: window.location.origin,
         }
         try {
             setLoading(true)
-            const res = await axios.post('/login', loginData)
-            const { user } = res.data
-            window.location.pathname = `/user/${user._id.toString()}`
+            await axios.post('/reset', resetData)
+            window.location.pathname = '/confirm_pwd_reset'
         } catch(e) {
             const errRes = e.response;
-            const { errorMessage } = errRes.data
-            setLoading(false)
-            if (errorMessage === 'Verification Error') {
-                window.location.pathname = '/verify_email'
-                return
-            }
+            const { errorMessage} = errRes.data
             setErrorMessage(errorMessage)
+            setLoading(false)
         }
     }
 
     return (
-        <div className='login-page'>
+        <div className='request-pwd-reset-page'>
             {pageReady ?
             <React.Fragment>
-            <form action="/login" method="post" onSubmit={handleLoginSubmit}>
-                <div className='logo'></div>
+            <form action="/pwd_reset" method="post" onSubmit={handleRequestPwdResetSubmit}>
+                    <div className='logo'></div>
                     <div className='error-message' style={ errorMessage ? { opacity: 1 } : { opacity: 0 }}>
                         <span className='info-icon'><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fillRule="evenodd" clipRule="evenodd" d="M8.25706 3.09882C9.02167 1.73952 10.9788 1.73952 11.7434 3.09882L17.3237 13.0194C18.0736 14.3526 17.1102 15.9999 15.5805 15.9999H4.4199C2.89025 15.9999 1.92682 14.3526 2.67675 13.0194L8.25706 3.09882ZM11.0001 13C11.0001 13.5523 10.5524 14 10.0001 14C9.44784 14 9.00012 13.5523 9.00012 13C9.00012 12.4477 9.44784 12 10.0001 12C10.5524 12 11.0001 12.4477 11.0001 13ZM10.0001 5C9.44784 5 9.00012 5.44772 9.00012 6V9C9.00012 9.55228 9.44784 10 10.0001 10C10.5524 10 11.0001 9.55228 11.0001 9V6C11.0001 5.44772 10.5524 5 10.0001 5Z" fill="currentColor"/>
@@ -64,12 +58,7 @@ function Login() {
                         {errorMessage}
                     </div>
                     <input value={email} onChange={(ev) => handleInputChange(ev, 'email')} type="email" name="email" required placeholder='Email' />
-                    <input value={password} onChange={(ev) => handleInputChange(ev, 'password')} type="password" name="pwd" required placeholder='Password' />
-                    <button className={loading ? 'loading' : ''} type="submit">
-                    {loading ? <span></span> : 'Login'}
-                    </button>
-                    <Link className='signup' to='/signup'>Don't have an account? Sign Up</Link>
-                    <Link className='pwdreset' to='/request_pwd_reset'>Forgot Password</Link>
+                    <button className={loading ? 'loading' : ''} type="submit">{loading ? <span></span> : 'Reset'}</button>
                 </form>
             </React.Fragment>
             : <Spinner /> }
@@ -77,4 +66,4 @@ function Login() {
     )
 }
 
-export default Login
+export default RequestPwdReset

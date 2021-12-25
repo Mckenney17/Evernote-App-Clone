@@ -1,0 +1,5 @@
+@import '../utils/style-defs';
+
+.request-pwd-reset-page {
+    @include auth-form;
+}
