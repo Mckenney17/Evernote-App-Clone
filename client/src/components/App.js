@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom'
 import AuthCheck from './AuthCheck'
 import Login from './Login'
@@ -8,14 +8,27 @@ import ConfirmPwdReset from './ConfirmPwdReset'
 import VerificationRequest from './VerificationRequest'
 import VerificationReport from './VerificationReport'
 import SetNewPassword from './SetNewPassword'
+import Home from './Home'
 import Error404 from './Error404'
-import Spinner from './Spinner'
-
-const Home = React.lazy(() => import('./Home'))
+import AuthContext from '../utils/AuthContext'
 
 function App() {
+    const [pageReady, setPageReady] = useState(false)
+    const [csrfToken, setCsrfToken] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
+    const [loading, setLoading] = useState(false)
+
     return (
-        <React.Suspense fallback={<Spinner />}>
+        <AuthContext value = {{
+            pageReady,
+            setPageReady,
+            csrfToken,
+            setCsrfToken,
+            errorMessage,
+            setErrorMessage,
+            loading,
+            setLoading,
+        }}>
             <Router>
                 <Switch>
                     <Route path='/login' exact component={Login} />
@@ -30,7 +43,7 @@ function App() {
                     <Route path='/' component={Error404} />
                 </Switch>
             </Router>
-        </React.Suspense>
+        </AuthContext>
     )
 }
 

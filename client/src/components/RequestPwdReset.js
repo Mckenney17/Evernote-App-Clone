@@ -1,16 +1,21 @@
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import useAuthFormCommonLogic from '../hooks/useAuthFormCommonLogic'
 import useFormInputChange from '../hooks/useFormInputChange'
+import AuthContext from '../utils/AuthContext'
 import './RequestPwdReset.scss'
 import Spinner from './Spinner'
 
 function RequestPwdReset() {
-    const [pageReady, setPageReady] = useState(false)
+    const { pageReady,
+        setPageReady,
+        csrfToken,
+        setCsrfToken,
+        errorMessage,
+        setErrorMessage,
+        loading,
+        setLoading } = useContext(AuthContext)
     const [{email}, setInputData] = useState({email: ''})
-    const [csrfToken, setCsrfToken] = useState('')
-    const [errorMessage, setErrorMessage] = useState('')
-    const [loading, setLoading] = useState(false)
 
     useAuthFormCommonLogic(setCsrfToken, setPageReady)
 

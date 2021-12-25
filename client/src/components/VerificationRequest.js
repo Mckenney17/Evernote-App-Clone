@@ -1,13 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import useEmailAuths from '../hooks/useEmailAuths'
+import AuthContext from '../utils/AuthContext'
 import Spinner from './Spinner'
 import './VerificationRequest.scss'
 
 function VerificationRequest() {
-    const [pageReady, setPageReady] = useState(false)
+    const { pageReady,
+        setPageReady,
+        csrfToken,
+        setCsrfToken,
+        loading,
+        setLoading } = useContext(AuthContext)
     const [emailToVerify, setEmailToVerify] = useState('')
-    const [csrfToken, setCsrfToken] = useState('')
-    const [loading, setLoading] = useState(false)
 
     const handleLinkResend = useEmailAuths({
         setEmail: setEmailToVerify,

@@ -1,17 +1,22 @@
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import useAuthFormCommonLogic from '../hooks/useAuthFormCommonLogic'
 import useFormInputChange from '../hooks/useFormInputChange'
+import AuthContext from '../utils/AuthContext'
 import './Signup.scss'
 import Spinner from './Spinner'
 
 function Signup() {
-    const [pageReady, setPageReady] = useState(false)
+    const { pageReady,
+        setPageReady,
+        csrfToken,
+        setCsrfToken,
+        errorMessage,
+        setErrorMessage,
+        loading,
+        setLoading } = useContext(AuthContext)
     const [{firstName, lastName, email, password, confirmPassword }, setInputData] = useState({firstName: '', lastName: '', email: '', password: '', confirmPassword: '' })
-    const [csrfToken, setCsrfToken] = useState('')
-    const [errorMessage, setErrorMessage] = useState('')
-    const [loading, setLoading] = useState(false)
 
     useAuthFormCommonLogic(setCsrfToken, setPageReady)
 

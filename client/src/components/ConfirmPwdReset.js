@@ -1,13 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Spinner from './Spinner'
 import './ConfirmPwdReset.scss'
 import useEmailAuths from '../hooks/useEmailAuths'
+import AuthContext from '../utils/AuthContext'
 
 function ConfirmPwdReset() {
-    const [pageReady, setPageReady] = useState(false)
+    const { pageReady,
+        setPageReady,
+        csrfToken,
+        setCsrfToken,
+        loading,
+        setLoading } = useContext(AuthContext)
     const [pwdResetEmail, setPwdResetEmail] = useState('')
-    const [csrfToken, setCsrfToken] = useState('')
-    const [loading, setLoading] = useState(false)
 
     const handleCofirmationResend = useEmailAuths({
         setEmail: setPwdResetEmail,

@@ -1,9 +1,10 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
+import AuthContext from '../utils/AuthContext'
 import Spinner from './Spinner'
 
 function VerificationReport({ match }) {
-    const [pageReady, setPageReady] = useState(false)
+    const { pageReady, setPageReady} = useContext(AuthContext)
     const [verificationMessage, setVerificationMessage]= useState('')
     useEffect(() => {
         let ctd;
@@ -22,7 +23,7 @@ function VerificationReport({ match }) {
         return () => {
             clearTimeout(ctd)
         }
-    }, [match])
+    }, [match, setPageReady])
     return (
         <React.Fragment>
         {pageReady ? (
