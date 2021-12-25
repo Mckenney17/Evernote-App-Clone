@@ -26,7 +26,15 @@ const UserSchema = new Schema({
     verificationToken: {
         type: String,
         required: false,
-    }
+    },
+    passwordResetToken: {
+        type: String,
+        required: false,
+    },
+    passwordResetTokenExpires: {
+        type: Date,
+        required: false,
+    },
 })
 
 UserSchema.virtual('fullName').get(function() {

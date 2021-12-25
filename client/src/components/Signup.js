@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import './Signup.scss'
 import Spinner from './Spinner'
 
@@ -81,6 +82,7 @@ function Signup() {
                     <button className={loading ? 'loading' : ''} type="submit">
                     {loading ? <span></span> : 'Sign Up'}
                     </button>
+                    <Link to='/login'>Have an account? Login</Link>
                 </form>
             </React.Fragment>
             : <Spinner /> }

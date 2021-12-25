@@ -68,7 +68,8 @@ function Login() {
                     <button className={loading ? 'loading' : ''} type="submit">
                     {loading ? <span></span> : 'Login'}
                     </button>
-                    <Link to='/signup'>Don't have an account? Sign Up</Link>
+                    <Link className='signup' to='/signup'>Don't have an account? Sign Up</Link>
+                    <Link className='resetpwd' to='/reset'>Forgot Password</Link>
                 </form>
             </React.Fragment>
             : <Spinner /> }

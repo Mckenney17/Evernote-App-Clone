@@ -2,4 +2,8 @@
 
 .login-page {
     @include auth-form;
+
+    a.resetpwd {
+        color: $error;
+    }
 }
