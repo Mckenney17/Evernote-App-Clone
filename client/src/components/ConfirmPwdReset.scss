@@ -1,0 +1,38 @@
+@import '../utils/style-defs';
+
+.pwd_reset_confirmation {
+    @include pos(absolute, 50%, $l: 50%);
+    transform: translate(-50%, -50%);
+    @include flex($ai: center, $fd: column);
+    width: 100%;
+
+    .logo {
+        @include logo;
+    }
+
+    p > span {
+        font-weight: bold;
+    }
+
+    & > span {
+        font-size: tscale(ts16);
+        margin-top: 5px;
+        color: $pbc;
+    }
+
+    button {
+        margin-top: 10px;
+        // padding: 13px 19px;
+        width: 89px;
+        height: 41px;
+        font-size: tscale(ts15);
+        line-height: tscale(ts15);
+        color: #fff;
+        background: $sbc;
+        border-radius: 4px;
+        &:hover {
+            background: darken($sbc, 10);
+        }
+        @include loading-btn;
+    }
+}

@@ -134,7 +134,7 @@ exports.verifyEmail = async (req, res) => {
     }
 }
 
-exportst.RequestPwdReset = async (req, res) => {
+exports.requestPwdReset = async (req, res) => {
     try {
         const { origin, email } = req.body
         const user = await User.findOne({ email })
