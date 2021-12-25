@@ -49,7 +49,7 @@ function RequestPwdReset() {
         <div className='request-pwd-reset-page'>
             {pageReady ?
             <React.Fragment>
-            <form action="/pwd_reset" method="post" onSubmit={handleRequestPwdResetSubmit}>
+            <form action="/request_pwd_reset" method="post" onSubmit={handleRequestPwdResetSubmit}>
                     <div className='form-title'>Password Reset</div>
                     <div className='logo'></div>
                     <div className='error-message' style={ errorMessage ? { opacity: 1 } : { opacity: 0 }}>

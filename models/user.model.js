@@ -37,6 +37,15 @@ const UserSchema = new Schema({
     },
 })
 
+UserSchema.methods = {
+    async update(pathsObj) {
+        for (const [key, value] of Object.entries(pathsObj)) {
+            this[key] = value
+        }
+        await this.save()
+    }
+}
+
 UserSchema.virtual('fullName').get(function() {
     return `${this.firstName} ${this.lastName}`
 })

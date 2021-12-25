@@ -91,8 +91,7 @@ exports.resendVerification = async (req, res) => {
         const { email, origin } = req.body
         const verificationToken = crypto.randomBytes(32).toString('hex')
         const user = await User.findOne({ email })
-        user.verificationToken = verificationToken
-        await user.save()
+        await user.update({ verificationToken })
         transporter.sendMail({
             from: 'apps.mckenney@gmail.com',
             to: email,
@@ -115,9 +114,7 @@ exports.verifyEmail = async (req, res) => {
         const { verificationToken } = req.params;
         const user = await User.findOne({ verificationToken })
         if (!user) return res.status(401).json({ errorMessage: 'Verification Failed' })
-        user.emailVerified = true
-        user.verificationToken = undefined
-        await user.save()
+        await user.update({ emailVerified: true, verificationToken: undefined })
         req.session.email = undefined
         await req.session.save()
         res.json({ successMessage: 'Verification Successful' })
@@ -128,6 +125,36 @@ exports.verifyEmail = async (req, res) => {
             html: `
             <h2>Kennote App - Verification Successful</h2>
             <p>${user.fullName}, your email has been successfully verified. Enjoy the App.</p>
+            `
+        }, (err) => {
+            
+        })
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+exportst.RequestPwdReset = async (req, res) => {
+    try {
+        const { origin, email } = req.body
+        const user = await User.findOne({ email })
+        if (!user) {
+            return res.status(401).json({ errorMessage: 'Incorrect Email or Password' })
+        }
+        const passwordResetToken = crypto.randomBytes(32).toString('hex')
+        const passwordResetTokenExpires = Date.now() + (1 * 60 * 60 * 1000); // one hour
+        await user.update({ passwordResetToken, passwordResetTokenExpires })
+        req.session.pwd_reset_email = email
+        req.session.save()
+        res.json({ successMessage: 'Password Reset Requestied' })
+        transporter.sendMail({
+            from: 'apps.mckenney@gmail.com',
+            to: email,
+            subject: 'Kennote App - Change your Password',
+            html: `
+            <h2>Kennote App - Password Reset Confirmation</h2>
+            <p>${user.fullName}</p>
+            <p><a href='${origin}/new_password/${passwordResetToken}'>Confirm password reset</a></p>
             `
         }, (err) => {
             
