@@ -1,12 +1,11 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import './Login.scss'
+import './SetNewPassword.scss'
 import Spinner from './Spinner'
 
-function Login() {
+function SetNewPassword() {
     const [pageReady, setPageReady] = useState(false)
-    const [{ email, password }, setInputData] = useState({ email: '', password: '' })
+    const [{ newPassword, confirmNewPassword }, setInputData] = useState({ newPassword: '', confirmNewPassword: '' })
     const [csrfToken, setCsrfToken] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const [loading, setLoading] = useState(false)
@@ -27,36 +26,31 @@ function Login() {
         }
     }
 
-    const handleLoginSubmit = async (ev) => {
+    const handleNewPasswordSubmit = async (ev) => {
         ev.preventDefault()
-        const loginData = {
-            email,
-            password,
+        if (newPassword !== confirmNewPassword) return setErrorMessage('Password mismatch')
+        const newPasswordData = {
+            newPassword,
             _csrf: csrfToken,
         }
         try {
             setLoading(true)
-            const res = await axios.post('/login', loginData)
-            const { user } = res.data
-            window.location.pathname = `/user/${user._id.toString()}`
+            await axios.post('/set_new_password', newPasswordData)
+            window.location.pathname = '/login'
         } catch(e) {
             const errRes = e.response;
             const { errorMessage } = errRes.data
             setLoading(false)
-            if (errorMessage === 'Verification Error') {
-                window.location.pathname = '/verify_email'
-                return
-            }
             setErrorMessage(errorMessage)
         }
     }
 
     return (
-        <div className='login-page'>
+        <div className='set-new-password'>
             {pageReady ?
             <React.Fragment>
-            <form action="/login" method="post" onSubmit={handleLoginSubmit}>
-                    <div className="form-title">Login</div>
+            <form action="/set_new_password" method="post" onSubmit={handleNewPasswordSubmit}>
+                    <div className="form-title">Set new Password</div>
                     <div className='logo'></div>
                     <div className='error-message' style={ errorMessage ? { opacity: 1 } : { opacity: 0 }}>
                         <span className='info-icon'><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -64,11 +58,9 @@ function Login() {
                         </svg></span>
                         {errorMessage}
                     </div>
-                    <input value={email} onChange={(ev) => handleInputChange(ev, 'email')} type="email" name="email" required placeholder='Email' />
-                    <input value={password} onChange={(ev) => handleInputChange(ev, 'password')} type="password" name="pwd" required placeholder='Password' />
-                    <button className={loading ? 'loading' : ''} type="submit">{loading ? <span></span> : 'Login'}</button>
-                    <Link className='signup' to='/signup'>Don't have an account? Sign Up</Link>
-                    <Link className='pwdreset' to='/request_pwd_reset'>Forgot Password</Link>
+                    <input value={newPassword} onChange={(ev) => handleInputChange(ev, 'newPassword')} type="password" name="pwd" required placeholder='New Password' />
+                    <input value={confirmNewPassword} onChange={(ev) => handleInputChange(ev, 'confirmNewPassword')} type="password" name="cpwd" required placeholder='Confirm New Password' />
+                    <button className={loading ? 'loading' : ''} type="submit">{loading ? <span></span> : 'Reset Password'}</button>
                 </form>
             </React.Fragment>
             : <Spinner /> }
@@ -76,4 +68,4 @@ function Login() {
     )
 }
 
-export default Login
+export default SetNewPassword

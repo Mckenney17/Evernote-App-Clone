@@ -21,11 +21,11 @@ function App() {
                     <Route path='/signup' exact component={Signup} />
                     <Route path='/verify_email' exact component={VerificationRequest} />
                     <Route path='/request_pwd_reset' exact component={RequestPwdReset} />
-                    <Route path='/confirm_pwd_reset' exact component={ConfirmPwdReset}/>
+                    <Route path='/confirm_pwd_reset' exact component={ConfirmPwdReset} />
                     <Route path='/' exact component={AuthCheck} />
                     <Route path='/verify_email/:verificationToken' exact component={VerificationReport} />
                     <Route path='/user/:userId' exact component={Home} />
-                    <Route path='/' component={Error404}/>
+                    <Route path='/' component={Error404} />
                 </Switch>
             </Router>
         </React.Suspense>

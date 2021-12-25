@@ -35,7 +35,7 @@ function RequestPwdReset() {
         }
         try {
             setLoading(true)
-            await axios.post('/reset', resetData)
+            await axios.post('/request_pwd_reset', resetData)
             window.location.pathname = '/confirm_pwd_reset'
         } catch(e) {
             const errRes = e.response;
