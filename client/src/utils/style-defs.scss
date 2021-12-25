@@ -134,6 +134,11 @@ $fweight: (
     @include flex(center, center);
     background: linear-gradient(270deg, $sbc, $pbc);
 
+    .form-title {
+        font-size: tscale(ts16);
+        font-weight: weight(bold);
+    }
+
     .logo {
         @include logo;
     }

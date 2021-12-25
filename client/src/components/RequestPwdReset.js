@@ -50,6 +50,7 @@ function RequestPwdReset() {
             {pageReady ?
             <React.Fragment>
             <form action="/pwd_reset" method="post" onSubmit={handleRequestPwdResetSubmit}>
+                    <div className='form-title'>Password Reset</div>
                     <div className='logo'></div>
                     <div className='error-message' style={ errorMessage ? { opacity: 1 } : { opacity: 0 }}>
                         <span className='info-icon'><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
