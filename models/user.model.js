@@ -38,7 +38,7 @@ const UserSchema = new Schema({
 })
 
 UserSchema.methods = {
-    async update(pathsObj) {
+    async updateUser(pathsObj) {
         for (const [key, value] of Object.entries(pathsObj)) {
             this[key] = value
         }

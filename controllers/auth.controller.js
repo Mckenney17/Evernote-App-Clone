@@ -91,7 +91,7 @@ exports.resendVerification = async (req, res) => {
         const { email, origin } = req.body
         const verificationToken = crypto.randomBytes(32).toString('hex')
         const user = await User.findOne({ email })
-        await user.update({ verificationToken })
+        await user.updateUser({ verificationToken })
         transporter.sendMail({
             from: 'apps.mckenney@gmail.com',
             to: email,
@@ -109,15 +109,14 @@ exports.resendVerification = async (req, res) => {
     }
 }
 
-exports.verifyEmail = async (req, res) => {
+exports.verifyEmail = async (req, res, next) => {
     try {
         const { verificationToken } = req.params;
         const user = await User.findOne({ verificationToken })
         if (!user) return res.status(401).json({ errorMessage: 'Verification Failed' })
-        await user.update({ emailVerified: true, verificationToken: undefined })
+        await user.updateUser({ emailVerified: true, verificationToken: undefined })
         req.session.email = undefined
         await req.session.save()
-        res.json({ successMessage: 'Verification Successful' })
         transporter.sendMail({
             from: 'apps.mckenney@gmail.com',
             to: email,
@@ -129,6 +128,10 @@ exports.verifyEmail = async (req, res) => {
         }, (err) => {
             
         })
+        if (process.env.NODE_ENV === 'production') {
+            return next()
+        }
+        res.json({ successMessage: 'Verification Successful' })
     } catch (e) {
         console.log(e)
     }
@@ -143,7 +146,7 @@ exports.requestPwdReset = async (req, res) => {
         }
         const passwordResetToken = crypto.randomBytes(32).toString('hex')
         const passwordResetTokenExpires = Date.now() + (1 * 60 * 60 * 1000); // one hour
-        await user.update({ passwordResetToken, passwordResetTokenExpires })
+        await user.updateUser({ passwordResetToken, passwordResetTokenExpires })
         req.session.pwd_reset_email = email
         req.session.save()
         res.json({ successMessage: 'Password Reset Requestied' })
@@ -155,6 +158,33 @@ exports.requestPwdReset = async (req, res) => {
             <h2>Kennote App - Password Reset Confirmation</h2>
             <p>${user.fullName}</p>
             <p><a href='${origin}/new_password/${passwordResetToken}'>Confirm password reset</a></p>
+            `
+        }, (err) => {
+            
+        })
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+exports.setNewPassword = async (req, res) => {
+    try {
+        const { passwordResetToken } = req.params
+        const { newPassword } = req.body
+        const user = User.findOne({ passwordResetToken, passwordResetTokenExpires: { $gt: Date.now() } })
+        if (!user) return res.status(401).json({ errorMessage: 'Password Rest Token expired. Please try again.' })
+        const hashedPassword = await bcrypt.hash(newPassword, 12)
+        await user.updateUser({ password: hashedPassword, passwordResetToken: undefined, passwordResetTokenExpires: undefined })
+        req.session.pwd_reset_email = undefined
+        await req.session.save()
+        transporter.sendMail({
+            from: 'apps.mckenney@gmail.com',
+            to: email,
+            subject: 'Kennote App - Password Change Successful',
+            html: `
+            <h2>Kennote App - Password Changed Successfully</h2>
+            <p>${user.fullName}</p>
+            <p>Your password has been changed. Try logging in with the new password.</p>
             `
         }, (err) => {
             

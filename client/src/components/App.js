@@ -7,6 +7,7 @@ import RequestPwdReset from './RequestPwdReset'
 import ConfirmPwdReset from './ConfirmPwdReset'
 import VerificationRequest from './VerificationRequest'
 import VerificationReport from './VerificationReport'
+import SetNewPassword from './SetNewPassword'
 import Error404 from './Error404'
 import Spinner from './Spinner'
 
@@ -24,6 +25,7 @@ function App() {
                     <Route path='/confirm_pwd_reset' exact component={ConfirmPwdReset} />
                     <Route path='/' exact component={AuthCheck} />
                     <Route path='/verify_email/:verificationToken' exact component={VerificationReport} />
+                    <Route path='/set_new_password/:passwordResetToken' exact component={SetNewPassword} />
                     <Route path='/user/:userId' exact component={Home} />
                     <Route path='/' component={Error404} />
                 </Switch>

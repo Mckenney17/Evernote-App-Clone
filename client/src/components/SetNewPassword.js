@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import './SetNewPassword.scss'
 import Spinner from './Spinner'
 
-function SetNewPassword() {
+function SetNewPassword({ match }) {
     const [pageReady, setPageReady] = useState(false)
     const [{ newPassword, confirmNewPassword }, setInputData] = useState({ newPassword: '', confirmNewPassword: '' })
     const [csrfToken, setCsrfToken] = useState('')
@@ -35,13 +35,11 @@ function SetNewPassword() {
         }
         try {
             setLoading(true)
-            await axios.post('/set_new_password', newPasswordData)
+            await axios.post(`/set_new_password/${match.params.passwordResetToken}`, newPasswordData)
             window.location.pathname = '/login'
         } catch(e) {
-            const errRes = e.response;
-            const { errorMessage } = errRes.data
-            setLoading(false)
-            setErrorMessage(errorMessage)
+            alert(e.response.data.errorMessage)
+            window.location.pathname = '/request_pwd_reset'
         }
     }
 

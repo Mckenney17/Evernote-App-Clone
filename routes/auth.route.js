@@ -21,4 +21,10 @@ router.get('/verify_email/:verificationToken', authController.verifyEmail)
 
 router.post('/request_pwd_reset', authController.requestPwdReset)
 
+router.route('/set_new_password/:passwordResetToken')
+.post(authController.setNewPassword)
+.get((req, res, next) => {
+    next()
+})
+
 module.exports = router
