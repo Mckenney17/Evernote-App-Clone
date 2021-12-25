@@ -46,7 +46,7 @@ function VerificationRequest() {
             {pageReady ? (
             <div className='verification-request'>
                 <div className="logo"></div>
-                <h1>Verification Required</h1>
+                <h1>Email verification required</h1>
                 <p>Follow the link we sent to <span>{email}</span> to verify your email and proceed.</p>
                 <span>Didn't receive link? (or related issues.)</span>
                 <button className={loading ? 'loading' : ''} onClick={handleLinkResend}>{loading ? <span></span> : 'Resend'}</button>

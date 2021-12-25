@@ -38,7 +38,7 @@ function Login() {
             setLoading(true)
             const res = await axios.post('/login', loginData)
             const { user } = res.data
-            window.location.pathname = `/user${user._id.toString()}`
+            window.location.pathname = `/user/${user._id.toString()}`
         } catch(e) {
             const errRes = e.response;
             const { errorMessage } = errRes.data

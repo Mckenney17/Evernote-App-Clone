@@ -33,6 +33,8 @@ exports.postLogin = async (req, res) => {
             return res.status(401).json({ errorMessage: 'Incorrect Email or Password' })
         }
         if (!user.emailVerified) {
+            req.session.email = email
+            await req.session.save()
             return res.status(401).json({ errorMessage: 'Verification Error' })
         }
         req.session.isAuthenticated = true
@@ -55,6 +57,7 @@ exports.postSignup = async (req, res) => {
         const user = new User({ ...userData, password: hashedPassword, emailVerified: false, verificationToken })
         await user.save()
         req.session.email = email
+        await req.session.save()
         res.json({ successMessage: 'Account created successfully.' })
         transporter.sendMail({
             from: 'apps.mckenney@gmail.com',
@@ -118,6 +121,17 @@ exports.verifyEmail = async (req, res) => {
         req.session.email = undefined
         await req.session.save()
         res.json({ successMessage: 'Verification Successful' })
+        transporter.sendMail({
+            from: 'apps.mckenney@gmail.com',
+            to: email,
+            subject: 'Kennote App - Verification successful',
+            html: `
+            <h2>Kennote App - Verification Successful</h2>
+            <p>${user.fullName}, your email has been successfully verified. Enjoy the App.</p>
+            `
+        }, (err) => {
+            
+        })
     } catch (e) {
         console.log(e)
     }

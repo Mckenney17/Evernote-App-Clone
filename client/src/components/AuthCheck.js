@@ -10,7 +10,7 @@ function AuthCheck() {
             if (!isAuthenticated) {
                 window.location.pathname = '/login'
             } else {
-                window.location.pathname = `/user${user._id.toString()}`
+                window.location.pathname = `/user/${user._id.toString()}`
             }
         })()
     }, [])

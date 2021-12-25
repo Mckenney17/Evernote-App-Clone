@@ -1,6 +1,7 @@
 import React from 'react'
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom'
 import AuthCheck from './AuthCheck'
+import Error404 from './Error404'
 import Spinner from './Spinner'
 
 const Login = React.lazy(() => import('./Login'))
@@ -19,7 +20,8 @@ function App() {
                     <Route path='/verify_email' exact component={VerificationRequest} />
                     <Route path='/' exact component={AuthCheck} />
                     <Route path='/verify_email/:verificationToken' exact component={VerificationReport} />
-                    <Route path='/:userId' exact component={Home} />
+                    <Route path='/user/:userId' exact component={Home} />
+                    <Route path='/' component={Error404}/>
                 </Switch>
             </Router>
         </React.Suspense>
