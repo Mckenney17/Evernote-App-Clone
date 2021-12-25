@@ -19,7 +19,7 @@ function App() {
     const [loading, setLoading] = useState(false)
 
     return (
-        <AuthContext value = {{
+        <AuthContext.Provider value = {{
             pageReady,
             setPageReady,
             csrfToken,
@@ -43,7 +43,7 @@ function App() {
                     <Route path='/' component={Error404} />
                 </Switch>
             </Router>
-        </AuthContext>
+        </AuthContext.Provider>
     )
 }
 
