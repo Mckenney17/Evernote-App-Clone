@@ -9,15 +9,13 @@ import Spinner from './Spinner'
 
 function Signup() {
     const { pageReady,
-        setPageReady,
         csrfToken,
-        setCsrfToken,
         errorMessage,
         setErrorMessage,
         setLoading } = useContext(AuthContext)
     const [{firstName, lastName, email, password, confirmPassword }, setInputData] = useState({firstName: '', lastName: '', email: '', password: '', confirmPassword: '' })
 
-    useAuthFormCommonLogic(setCsrfToken, setPageReady)
+    useAuthFormCommonLogic()
 
     const handleInputChange = useFormInputChange(setInputData, errorMessage, setErrorMessage)
 

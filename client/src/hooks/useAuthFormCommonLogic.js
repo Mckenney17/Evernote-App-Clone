@@ -1,7 +1,9 @@
 import axios from "axios"
-import { useEffect } from "react"
+import { useEffect, useContext } from "react"
+import AuthContext from "../utils/AuthContext"
 
-const useAuthFormCommonLogic = (setCsrfToken, setPageReady) => {
+const useAuthFormCommonLogic = () => {
+    const { setCsrfToken, setPageReady, setErrorMessage } = useContext(AuthContext)
     useEffect(() => {
         (async () => {
             const session = await axios.get('/session')
@@ -19,6 +21,10 @@ const useAuthFormCommonLogic = (setCsrfToken, setPageReady) => {
             setPageReady(true)
         })()
     }, [setCsrfToken, setPageReady])
+
+    useEffect(() => {
+        setErrorMessage('')
+    }, [setErrorMessage])
 
 }
 

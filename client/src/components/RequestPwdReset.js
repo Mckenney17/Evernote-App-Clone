@@ -9,15 +9,13 @@ import Spinner from './Spinner'
 
 function RequestPwdReset() {
     const { pageReady,
-        setPageReady,
         csrfToken,
-        setCsrfToken,
         errorMessage,
         setErrorMessage,
         setLoading } = useContext(AuthContext)
     const [{email}, setInputData] = useState({email: ''})
 
-    useAuthFormCommonLogic(setCsrfToken, setPageReady)
+    useAuthFormCommonLogic()
 
     const handleInputChange = useFormInputChange(setInputData, errorMessage, setErrorMessage)
 

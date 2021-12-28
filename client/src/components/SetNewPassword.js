@@ -9,15 +9,13 @@ import Spinner from './Spinner'
 
 function SetNewPassword({ match }) {
     const { pageReady,
-        setPageReady,
         csrfToken,
-        setCsrfToken,
         errorMessage,
         setErrorMessage,
         setLoading } = useContext(AuthContext)
     const [{ newPassword, confirmNewPassword }, setInputData] = useState({ newPassword: '', confirmNewPassword: '' })
 
-    useAuthFormCommonLogic(setCsrfToken, setPageReady)
+    useAuthFormCommonLogic()
 
     const handleInputChange = useFormInputChange(setInputData, errorMessage, setErrorMessage)
 
