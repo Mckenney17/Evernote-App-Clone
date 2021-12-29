@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
+import axios from 'axios'
 import AppContext from '../utils/AppContext'
 import './Home.scss'
 import Editor from './Editor'
@@ -9,34 +10,47 @@ import Sidebar from './Sidebar'
 // notelist
 // editor
 
-function Home() {
+function Home({ match }) {
     const lastAssignedId = useRef(parseInt(localStorage.getItem('kennote-lastAssignedId')) || 0)
     const [activeNotelist, setActiveNotelist] = useState('Notes');
     const [activeNotebook] =  useState('First Notebook')
-    const [trash, setTrash] = useState(JSON.parse(localStorage.getItem('kennote-trash')) || [])
+    const [trash, setTrash] = useState([])
     const [isToplistView, setIsToplistView] = useState(false)
-    const [notebooks, setNotebooks] = useState(JSON.parse(localStorage.getItem('kennote-notebooks')) || {});
-    const [activeNoteId, setActiveNoteId] = useState((notebooks[activeNotebook] || []).find((obj) => obj.updatedAt === Math.max(...notebooks[activeNotebook].map((obj) => obj.updatedAt)))?.id)
+    const [notes, setNotes] = useState([]);
+    const [activeNoteId, setActiveNoteId] = useState('')
+    const [user, setUser] = useState(null)
+
+    useEffect(() => {
+        (async () => {
+            const session = await axios.get('/session')
+            if (session.data.user._id !== match.params.userId) {
+                window.location.pathname = '/'
+                return
+            }
+            setUser(session.data.user)
+        })()
+    }, [match.params.userId])
 
     return (
         <AppContext.Provider value = {{
             activeNotelist,
             setActiveNotelist,
-            notebooks,
+            notes,
             activeNotebook,
             trash,
-            setNotebooks,
+            setNotes,
             lastAssignedId,
             activeNoteId,
             setActiveNoteId,
             setIsToplistView,
             setTrash,
+            user,
         }}>
             <div className="app-wrapper">
                 <Sidebar />
                 <div className={`notelist-with-editor ${isToplistView ? 'top-list-view-active' : ''}`}>
                     <Notelist />
-                    <Editor/>
+                    {/* <Editor/> */}
                 </div>
             </div>
         </AppContext.Provider>

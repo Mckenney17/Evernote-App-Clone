@@ -2,13 +2,15 @@ const express = require('express')
 
 const authController = require('../controllers/auth.controller')
 
+const cleanupSessionEmail = require('../middleware/cleanup')
+
 const router = express.Router()
 
 router.get('/session', authController.getSession)
 
 router.get('/auth_token', authController.getAuthToken)
 
-router.post('/login', authController.postLogin)
+router.post('/login', cleanupSessionEmail, authController.postLogin)
 
 router.post('/signup', authController.postSignup)
 

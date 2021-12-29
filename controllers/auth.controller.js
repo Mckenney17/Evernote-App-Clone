@@ -2,6 +2,7 @@ const User = require("../models/user.model")
 const bcrypt = require('bcryptjs')
 const nodemailer = require('nodemailer')
 const crypto = require('crypto')
+const Notebook = require("../models/notebook.model")
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -68,6 +69,11 @@ exports.postLogin = async (req, res) => {
         req.session.isAuthenticated = true
         req.session.user = user
         await req.session.save()
+        const notebook = await Notebook.find()
+        console.log(notebook)
+        if (!notebook) {
+            await new Notebook({ name: 'firstNotebook', notes: [], notesQuantity: 0, ownerId: user._id }).save()
+        }
         res.json({ user })
     } catch (e) {
         console.log(e)

@@ -1,11 +1,23 @@
 import { motion } from 'framer-motion'
-import React, { useContext } from 'react'
+import axios from 'axios'
+import React, { useContext, useEffect } from 'react'
 import AppContext from '../utils/AppContext'
+import AuthContext from '../utils/AuthContext'
+import { camelCase } from '../utils/utilFuncs'
 import Search from './Search'
 import './Sidebar.scss'
 
 function Sidebar() {
-    const { setActiveNotelist, activeNotelist, setNotebooks, lastAssignedId, setActiveNoteId, notebooks, activeNotebook, trash } = useContext(AppContext)
+    const { setActiveNotelist, activeNotelist, setNotes, setActiveNoteId, notes, activeNotebook, trash, user } = useContext(AppContext)
+    const { setCsrfToken, setPageReady, csrfToken } = useContext(AuthContext)
+    useEffect(() => {
+        (async () => {
+            const authRes = await axios.get('/auth_token')
+            const { csrfToken } = authRes.data
+            setCsrfToken(csrfToken)
+            setPageReady(true)
+        })()
+    }, [setCsrfToken, setPageReady])
 
     const handleResizerDrag = (ev, info) => {
         document.querySelector('.sidebar').style.width = `${info.point.x}px`
@@ -21,24 +33,25 @@ function Sidebar() {
         ev.preventDefault()
         setActiveNotelist(notelistLabel)
         if (notelistLabel !=='Trash') {
-            setActiveNoteId((notebooks[activeNotebook] || []).find((obj) => obj.updatedAt === Math.max(...notebooks[activeNotebook].map((obj) => obj.updatedAt)))?.id);
+            setActiveNoteId(notes.find((obj) => obj.updatedAt === Math.max(...notes.map((obj) => obj.updatedAt)))?._id);
         } else if (trash.length) {
-            setActiveNoteId(trash.find((obj) => obj.trashedAt === Math.max(...trash.map((obj) => obj.trashedAt)))?.id)
+            setActiveNoteId(trash.find((obj) => obj.trashedAt === Math.max(...trash.map((obj) => obj.trashedAt)))?._id)
         }
     }
 
-    const createNewNote = () => {
-        lastAssignedId.current++
-        localStorage.setItem('kennote-lastAssignedId', lastAssignedId.current)
-        setNotebooks((previousNotebooks) => {
-            const clonePNB = {...previousNotebooks}
-            if (clonePNB[activeNotebook]) {
-                clonePNB[activeNotebook].push({id: lastAssignedId.current, title: 'Untitled', bodyText: '', summaryText: '', createdAt: Date.now(), updatedAt: Date.now() })
-                return clonePNB
-            }
-            return {...clonePNB, [activeNotebook]: [{id: lastAssignedId.current, title: 'Untitled', bodyText: '', summaryText: '', createdAt: Date.now(), updatedAt: Date.now() }]}
+    const createNewNote = async () => {
+        // post note to database
+        const res = await axios.post(`/add_new_note/${camelCase(activeNotebook)}`, {
+            _csrf: csrfToken,
+            ownerId: user._id,
+            title: '',
+            bodyText: '',
+            summaryText: '',
         })
-        setActiveNoteId(lastAssignedId.current)
+        const { lastAddedNote } = res.data
+        // get last added note from database = note from server
+        setNotes((previousNotes) => [...previousNotes, lastAddedNote])
+        setActiveNoteId(lastAddedNote._id)
         if (activeNotelist === 'Trash') {
             setActiveNotelist('Notes')
         }
