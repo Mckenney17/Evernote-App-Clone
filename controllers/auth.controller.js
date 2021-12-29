@@ -70,8 +70,7 @@ exports.postLogin = async (req, res) => {
         req.session.user = user
         await req.session.save()
         const notebook = await Notebook.find()
-        console.log(notebook)
-        if (!notebook) {
+        if (!notebook.length) {
             await new Notebook({ name: 'firstNotebook', notes: [], notesQuantity: 0, ownerId: user._id }).save()
         }
         res.json({ user })

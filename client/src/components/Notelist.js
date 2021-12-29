@@ -9,7 +9,7 @@ import NotelistViewActionCard from './NotelistViewActionCard'
 import SortActionCard from './SortActionCard'
 
 function Notelist() {
-    const { activeNotelist, notes, setNotes, trash, setIsToplistView, createNewNote, setActiveNoteId, setTrash, activeNotebook } = useContext(AppContext)
+    const { activeNotelist, notes, setNotes, trash, setIsToplistView, createNewNote, setActiveNoteId, setTrash } = useContext(AppContext)
     const [sortActions, setSortActions] = useState(JSON.parse(localStorage.getItem('kennote-sortActions')) || { sortBy: 'Date Updated', order: 'asc', snig: false })
     const [viewActions, setViewActions] = useState(JSON.parse(localStorage.getItem('kennote-viewActions')) || { view: 'Snippets', showImages: true, showBodyText: true, dateUpdated: false, dateCreated: true })
     const [activeAction, setActiveAction] = useState(null)
@@ -162,7 +162,7 @@ function Notelist() {
                         )}
                         {getNotes().length ?
                             getNotes().map((noteObj, index, noteObjArr) => {
-                                const { id, title, summaryText, updatedAt, createdAt } = noteObj
+                                const { _id: id, title, summaryText, updatedAt, createdAt } = noteObj
                                 const prop = sortByToProp(sortBy)
                                 const currentGroup = ['title'].includes(prop) ? noteObj[prop][0].toUpperCase() : dateToLocaleString(noteObj[prop])
                                 const previousGroup = ['title'].includes(prop) ? noteObjArr[index-1]?.[prop][0].toUpperCase() : dateToLocaleString(noteObjArr[index-1]?.[prop])

@@ -33,8 +33,6 @@ app.use(session({
 app.use(csrf())
 
 
-app.use(appRoutes)
-app.use(authRoutes)
 app.use(async (req, res, next) => {
     try {
         if (!req.session.user) {
@@ -47,6 +45,9 @@ app.use(async (req, res, next) => {
         console.log(e)
     }
 })
+app.use(appRoutes)
+app.use(authRoutes)
+
 if (process.env.NODE_ENV === 'production'){    
     app.use(express.static(path.join(__dirname, 'client', 'build')))
     app.get('/*', (req, res) => {

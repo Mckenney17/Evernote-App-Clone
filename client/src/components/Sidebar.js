@@ -44,7 +44,7 @@ function Sidebar() {
         const res = await axios.post(`/add_new_note/${camelCase(activeNotebook)}`, {
             _csrf: csrfToken,
             ownerId: user._id,
-            title: '',
+            title: 'Untitled',
             bodyText: '',
             summaryText: '',
         })

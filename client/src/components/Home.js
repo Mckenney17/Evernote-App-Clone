@@ -23,7 +23,7 @@ function Home({ match }) {
     useEffect(() => {
         (async () => {
             const session = await axios.get('/session')
-            if (session.data.user._id !== match.params.userId) {
+            if (!session.data.user || session.data.user._id !== match.params.userId) {
                 window.location.pathname = '/'
                 return
             }

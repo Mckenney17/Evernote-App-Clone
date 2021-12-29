@@ -13,7 +13,7 @@ const NoteSchema = new Schema({
     },
     summaryText: {
         type: String,
-        required: true,
+        required: false,
     },
     ownerId: {
         type: Schema.Types.ObjectId,

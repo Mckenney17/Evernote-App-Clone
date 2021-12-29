@@ -2,14 +2,15 @@ const Note = require("../models/note.model")
 const Notes = require("../models/note.model")
 const Notebook = require("../models/notebook.model")
 
-const modNotes = (notes) => notes.map((note) => ({ ...note, updatedAt: new Date(note.updatedAt).valueOf(), createdAt: new Date(note.createdAt).valueOf() }))
+const modNote = (note) => ({ ...note, updatedAt: new Date(note.updatedAt).valueOf(), createdAt: new Date(note.createdAt).valueOf() })
+
 
 exports.getNotes = async (req, res) => {
     try {
         const { category } = req.params
         if (category === 'allNotes') {
-            const notes = await Notes.find()
-            res.json({ noteItems: modNotes(notes) })
+            const notes = await Notes.find({ ownerId: req.user._id })
+            res.json({ noteItems: notes.map((note) => modNote(note._doc)) })
         }
     } catch (e) {
         console.log(e)
@@ -24,7 +25,7 @@ exports.addNewNote = async (req, res) => {
         const lastAddedNote = await newNote.save()
         const notebook = await Notebook.findOne({ name: notebookName })
         await notebook.addNote(lastAddedNote)
-        res.json({ lastAddedNote })
+        res.json({ lastAddedNote: modNote(lastAddedNote._doc) })
     } catch (e) {
         console.log(e)
     }
