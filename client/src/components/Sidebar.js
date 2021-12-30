@@ -8,7 +8,7 @@ import Search from './Search'
 import './Sidebar.scss'
 
 function Sidebar() {
-    const { setActiveNotelist, activeNotelist, setNotes, setActiveNoteId, notes, activeNotebook, trash, user } = useContext(AppContext)
+    const { setActiveNotelist, activeNotelist, setNotes, setActiveNoteId, notes, activeNotebook, trash, user, setNotelistReady } = useContext(AppContext)
     const { setCsrfToken, setPageReady, csrfToken } = useContext(AuthContext)
     useEffect(() => {
         (async () => {
@@ -47,11 +47,16 @@ function Sidebar() {
             title: 'Untitled',
             bodyText: '',
             summaryText: '',
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
         })
         const { lastAddedNote } = res.data
         // get last added note from database = note from server
-        setNotes((previousNotes) => [...previousNotes, lastAddedNote])
-        setActiveNoteId(lastAddedNote._id)
+        setNotes((previousNotes) => {
+            setActiveNoteId(lastAddedNote._id)
+            return [...previousNotes, lastAddedNote]
+        })
+        setNotelistReady(true)
         if (activeNotelist === 'Trash') {
             setActiveNotelist('Notes')
         }

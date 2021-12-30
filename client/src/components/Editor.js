@@ -7,7 +7,7 @@ import { dateToLocaleString } from '../utils/utilFuncs'
 import NoteOptionsCard from './NoteOptionsCard'
 
 function Editor() {
-    const { notebooks, activeNotebook, activeNotelist, trash } = useContext(AppContext)
+    const { notes, activeNotelist, trash, notelistReady } = useContext(AppContext)
     const [expanded, setExpanded] = useState(false)
     const [noteOptionsCardActive, setNoteOptionsCardActive] = useState(false)
     const [noteLastEdited, setNoteLastEdited] = useState(null)
@@ -56,8 +56,9 @@ function Editor() {
     }, { selectionDropTool: null })
     
     const getNotes = useCallback(() => {
-        return activeNotelist !== 'Trash' || !trash.length ? notebooks[activeNotebook] || [] : trash;
-    }, [activeNotelist, notebooks, activeNotebook, trash])
+        if (!notelistReady) return []
+        return activeNotelist !== 'Trash' || !trash.length ? notes : trash;
+    }, [activeNotelist, trash, notes, notelistReady])
 
     return (
         <div className={`editor ${expanded ? 'expanded' : 'collapsed'}`}>

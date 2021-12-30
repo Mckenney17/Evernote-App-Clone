@@ -12,6 +12,7 @@ require('dotenv').config()
 const app = express()
 app.use(compression())
 app.use(express.json())
+app.use(express.static(path.join(__dirname, 'client', 'public')))
 app.use(cors())
 
 const sessionStore = new MongoDBStore({
@@ -45,9 +46,8 @@ app.use(async (req, res, next) => {
         console.log(e)
     }
 })
-app.use(appRoutes)
 app.use(authRoutes)
-
+app.use(appRoutes)
 if (process.env.NODE_ENV === 'production'){    
     app.use(express.static(path.join(__dirname, 'client', 'build')))
     app.get('/*', (req, res) => {

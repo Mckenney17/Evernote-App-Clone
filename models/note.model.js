@@ -15,11 +15,19 @@ const NoteSchema = new Schema({
         type: String,
         required: false,
     },
+    createdAt: {
+        type: Number,
+        required: true,
+    },
+    updatedAt: {
+        type: Number,
+        required: true,
+    },
     ownerId: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: "User",
     },
-}, { timestamps: true })
+})
 
 module.exports = mongoose.model('Note', NoteSchema)

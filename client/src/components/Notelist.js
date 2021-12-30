@@ -9,13 +9,13 @@ import NotelistViewActionCard from './NotelistViewActionCard'
 import SortActionCard from './SortActionCard'
 
 function Notelist() {
-    const { activeNotelist, notes, setNotes, trash, setIsToplistView, createNewNote, setActiveNoteId, setTrash } = useContext(AppContext)
+    const { activeNotelist, notes, setNotes, trash, setIsToplistView, createNewNote, setActiveNoteId, setTrash, notelistReady, setNotelistReady } = useContext(AppContext)
     const [sortActions, setSortActions] = useState(JSON.parse(localStorage.getItem('kennote-sortActions')) || { sortBy: 'Date Updated', order: 'asc', snig: false })
     const [viewActions, setViewActions] = useState(JSON.parse(localStorage.getItem('kennote-viewActions')) || { view: 'Snippets', showImages: true, showBodyText: true, dateUpdated: false, dateCreated: true })
     const [activeAction, setActiveAction] = useState(null)
     const sortActionBtnRef = useRef(null)
     const viewActionBtnRef = useRef(null)
-    const [notelistReady, setNotelistReady] = useState(false)
+    
 
     const {sortBy, order, snig} = sortActions;
     const {view} = viewActions;
@@ -74,15 +74,25 @@ function Notelist() {
     }
 
     const sortNotelist = (filteredNotes) => {
-        return filteredNotes.sort((noteA, noteB) => {
-            return [['Title', 'title'], ['Date Created', 'createdAt'], ['Date Updated', 'updatedAt']]
-            .reduce((acc, [name, prop]) => {
-                if (sortBy === name) {
-                    return acc + (order === 'desc' ? (noteA[prop] < noteB[prop] ? 1 : noteA[prop] > noteB[prop] ? -1 : 0) : (noteA[prop] < noteB[prop] ? -1 : noteA[prop] > noteB[prop] ? 1 : 0))
+        const prop = sortByToProp(sortBy)
+        // insertionSort
+        const unsorted = [...filteredNotes]
+        for (let i = 1; i < unsorted.length; i++) {
+            const focusItem = unsorted[i]
+            if (order === 'asc') {
+                if (focusItem[prop] < unsorted[i - 1][prop]) {
+                    unsorted[i] = unsorted[i - 1]
+                    unsorted[i - 1] = focusItem
                 }
-                return acc
-            }, 0)
-        })
+            } else {
+                if (focusItem[prop] > unsorted[i - 1][prop]) {
+                    unsorted[i] = unsorted[i - 1]
+                    unsorted[i - 1] = focusItem
+                }
+            }
+        }
+        const sorted = unsorted
+        return sorted
     }
 
     useEffect(() => {
@@ -98,7 +108,7 @@ function Notelist() {
             setNotelistReady(true)
             // loading ends
         })()
-    }, [activeNotelist, setActiveNoteId, setNotes])
+    }, [activeNotelist, setActiveNoteId, setNotelistReady, setNotes])
 
     useEffect(() => {
         if (activeNotelist !== 'Trash') return
@@ -108,7 +118,7 @@ function Notelist() {
             setTrash(trashItems)
             setNotelistReady(true)
         })()
-    }, [activeNotelist, setTrash])
+    }, [activeNotelist, setNotelistReady, setTrash])
 
     const getNotes = () => {
         if (activeNotelist === 'Trash') {

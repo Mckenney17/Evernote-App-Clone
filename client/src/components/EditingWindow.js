@@ -18,34 +18,33 @@ function EditingWindow({
     setNoteLastEdited,
     setEditingActive,
 }) {
-    const { activeNoteId, setNotebooks, activeNotebook } = useContext(AppContext)
+    const { activeNoteId, setNotes } = useContext(AppContext)
     const [noteTitle, setNoteTitle] = useState('')
 
     useEffect(() => {
         if (!getNotes().length) return
-        const note = getNotes().find((obj) => obj.id === activeNoteId)
+        const note = getNotes().find((obj) => obj._id === activeNoteId)
         setNoteLastEdited(note.updatedAt)
     }, [activeNoteId, getNotes, setNoteLastEdited])
 
     useEffect(() => {
         if (!getNotes().length) return
-        const note = getNotes().find((obj) => obj.id === activeNoteId)
+        const note = getNotes().find((obj) => obj._id === activeNoteId)
         setNoteTitle(note.title)
     }, [activeNoteId, getNotes])
 
     const updateNotes = useCallback((updatedNote) => {
-        setNotebooks((previousNotebooks) => {
-            const clonePNB = {...previousNotebooks}
-            const indexOfNote = clonePNB[activeNotebook].findIndex((obj) => obj.id === activeNoteId)
-            clonePNB[activeNotebook][indexOfNote] = updatedNote
-            localStorage.setItem('kennote-notebooks', JSON.stringify(clonePNB))
-            return clonePNB
+        setNotes((previousNotes) => {
+            const clonePN = [...previousNotes]
+            const indexOfNote = clonePN.findIndex((obj) => obj._id === activeNoteId)
+            clonePN[indexOfNote] = updatedNote
+            return clonePN
         })
-    }, [activeNoteId, activeNotebook, setNotebooks])
+    }, [activeNoteId, setNotes])
     
     const handleTitleChange = (ev) => {
         setNoteTitle(ev.target.value)
-        const note = getNotes().find((obj) => obj.id === activeNoteId)
+        const note = getNotes().find((obj) => obj._id === activeNoteId)
         const updatedNote = { ...note, title: ev.target.value || 'Untitled', updatedAt: Date.now() }
         updateNotes(updatedNote)
     }
@@ -54,9 +53,9 @@ function EditingWindow({
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
         const updateListItem = () => {
-        const note = getNotes().find((obj) => obj.id === activeNoteId)
-        const updatedNote = { ...note, bodyText: iframeDocument.body.innerHTML, summaryText: iframeDocument.body.querySelector('p')?.innerHTML || '', updatedAt: Date.now() }
-        updateNotes(updatedNote)
+            const note = getNotes().find((obj) => obj._id === activeNoteId)
+            const updatedNote = { ...note, bodyText: iframeDocument.body.innerHTML, summaryText: iframeDocument.body.querySelector('p')?.innerHTML || '', updatedAt: Date.now() }
+            updateNotes(updatedNote)
         }
 
         iframeDocument.addEventListener('keyup', updateListItem)
@@ -86,15 +85,15 @@ function EditingWindow({
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
         if (!getNotes().length) return
-        const note = getNotes().find((obj) => obj.id === activeNoteId)
+        const note = getNotes().find((obj) => obj._id === activeNoteId)
         iframeDocument.body.innerHTML = note.bodyText
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeNoteId])
 
     const titleBox = useRef(document.querySelector('.editor-body textarea'))
     useEffect(() => {
         const iframeDocument = iframe.current.contentDocument
-        const note = getNotes().find((obj) => obj.id === activeNoteId)
+        const note = getNotes().find((obj) => obj._id === activeNoteId)
         if (note.hasOwnProperty('trashedAt')) {
             iframeDocument.designMode = 'off'
             titleBox.current.setAttribute('disabled', '')
@@ -105,11 +104,11 @@ function EditingWindow({
         
         ;['SourceSansPro-Regular', 'SourceSansPro-Italic', 'SourceSansPro-BoldItalic', 'SourceSerifPro-Regular', 'SourceSerifPro-It', 'SourceSerifPro-BoldIt']
         .forEach((font) => {
-            iframeDocument.head.insertAdjacentHTML('beforeend', `<link rel="preload" as="font" type="font/woff2" href="fonts/${font}.woff2" crossorigin>`)
+            iframeDocument.head.insertAdjacentHTML('beforeend', `<link rel="preload" as="font" type="font/woff2" href="/fonts/${font}.woff2" crossorigin>`)
         })
 
         const link = document.createElement('link')
-        link.href ='editorIframe.css'
+        link.href ='/editorIframe.css'
         link.rel = 'preload'
         link.as = 'style'
         link.addEventListener('load', (ev) => {

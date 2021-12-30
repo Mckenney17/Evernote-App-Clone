@@ -8,4 +8,6 @@ router.get('/get_notes/:category', appController.getNotes)
 
 router.post('/add_new_note/:notebook', appController.addNewNote)
 
+router.put('/update_note/:noteId', appController.updateNote)
+
 module.exports = router
