@@ -54,7 +54,7 @@ function EditingWindow({
         const iframeDocument = iframe.current.contentDocument
         const updateListItem = () => {
             const note = getNotes().find((obj) => obj._id === activeNoteId)
-            const updatedNote = { ...note, bodyText: iframeDocument.body.innerHTML, summaryText: iframeDocument.body.querySelector('p')?.innerHTML || '', updatedAt: Date.now() }
+            const updatedNote = { ...note, bodyText: iframeDocument.body.innerHTML, summaryText: iframeDocument.body.querySelector('p')?.innerHTML?.replace(/<.+>(.*)<\/.+>/g, (m, g) => g) || '', updatedAt: Date.now() }
             updateNotes(updatedNote)
         }
 
